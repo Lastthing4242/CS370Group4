@@ -429,5 +429,10 @@ namespace Mirror
             object IEnumerator.Current => Current;
             public void Dispose() { }
         }
+
+        public static implicit operator SyncList<T>(List<GameObject> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
