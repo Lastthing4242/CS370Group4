@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using Mirror;
+using System;
 
 public class PlayerManager : NetworkBehaviour
 {
-    public UIManager UIManager;
+    public GameManager GameManager;
+    public GameObject PlayerLibraryText;
+    public GameObject OpponentLibraryText;
     public GameObject Card1;
     public GameObject Card2;
     public GameObject Card3;
@@ -65,20 +69,11 @@ public class PlayerManager : NetworkBehaviour
     public GameObject PlayerLibrary;
     public GameObject OpponentLibrary;
     public GameObject DropZone;
-    //public int ClientIdentifier = 0;
-
-    List<GameObject> cards = new List<GameObject>();
-    List<GameObject> PlayerDeck = new List<GameObject>();
-    List<GameObject> OpponentDeck = new List<GameObject>();
-
-    [SyncVar]
-    int CardsPlayed = 0;
-
-    [SyncVar]
+    public string Name;
     int CardsLeftInLibrary = 0;
 
     [SyncVar]
-    int OpponentLibraryCount = 0;
+    int CardsPlayed = 0;
 
 
 
@@ -143,183 +138,60 @@ public class PlayerManager : NetworkBehaviour
         Card52 = GameObject.Find("Card52");
         Card53 = GameObject.Find("Card53");
         Card54 = GameObject.Find("Card54");
+    }
 
-        
 
+    public void Awake()
+    {
+        Debug.Log("Name Check: ");
+        Debug.Log(Name);
+        Name = GameManager.NameGenerator();
+        Debug.Log(Name);
     }
 
     [Server]
     public override void OnStartServer()
     {
-        cards.Add(Card1);
-        cards.Add(Card2); 
-        cards.Add(Card3);
-        cards.Add(Card4);
-        cards.Add(Card5);
-        cards.Add(Card6);
-        cards.Add(Card7);
-        cards.Add(Card8);
-        cards.Add(Card9);
-        cards.Add(Card10);
-        cards.Add(Card11);
-        cards.Add(Card12);
-        cards.Add(Card13);
-        cards.Add(Card14);
-        cards.Add(Card15);
-        cards.Add(Card16);
-        cards.Add(Card17);
-        cards.Add(Card18);
-        cards.Add(Card19);
-        cards.Add(Card20);
-        cards.Add(Card21);
-        cards.Add(Card22);
-        cards.Add(Card23);
-        cards.Add(Card24);
-        cards.Add(Card25);
-        cards.Add(Card26);
-        cards.Add(Card27);
-        cards.Add(Card28);
-        cards.Add(Card29);
-        cards.Add(Card30);
-        cards.Add(Card31);
-        cards.Add(Card32);
-        cards.Add(Card33);
-        cards.Add(Card34);
-        cards.Add(Card35);
-        cards.Add(Card36);
-        cards.Add(Card37);
-        cards.Add(Card38);
-        cards.Add(Card39);
-        cards.Add(Card40);
-        cards.Add(Card41);
-        cards.Add(Card42);
-        cards.Add(Card43);
-        cards.Add(Card44);
-        cards.Add(Card45);
-        cards.Add(Card46);
-        cards.Add(Card47);
-        cards.Add(Card48);
-        cards.Add(Card49);
-        cards.Add(Card50);
-        cards.Add(Card51);
-        cards.Add(Card52);
-        cards.Add(Card53);
-        cards.Add(Card54);
 
-        PlayerDeck.Add(Card1);
-        PlayerDeck.Add(Card2);
-        PlayerDeck.Add(Card3);
-        PlayerDeck.Add(Card4);
-        PlayerDeck.Add(Card5);
-        PlayerDeck.Add(Card6);
-        PlayerDeck.Add(Card7);
-        PlayerDeck.Add(Card8);
-        PlayerDeck.Add(Card9);
-        PlayerDeck.Add(Card10);
-        PlayerDeck.Add(Card11);
-        PlayerDeck.Add(Card12);
-        PlayerDeck.Add(Card13);
-        PlayerDeck.Add(Card14);
-        PlayerDeck.Add(Card15);
-        PlayerDeck.Add(Card16);
-        PlayerDeck.Add(Card17);
-        PlayerDeck.Add(Card18);
-        PlayerDeck.Add(Card19);
-        PlayerDeck.Add(Card20);
-        PlayerDeck.Add(Card21);
-        PlayerDeck.Add(Card22);
-        PlayerDeck.Add(Card23);
-        PlayerDeck.Add(Card24);
-        PlayerDeck.Add(Card25);
-        PlayerDeck.Add(Card26);
-        PlayerDeck.Add(Card27);
-
-        OpponentDeck.Add(Card1);
-        OpponentDeck.Add(Card2);
-        OpponentDeck.Add(Card3);
-        OpponentDeck.Add(Card4);
-        OpponentDeck.Add(Card5);
-        OpponentDeck.Add(Card6);
-        OpponentDeck.Add(Card7);
-        OpponentDeck.Add(Card8);
-        OpponentDeck.Add(Card9);
-        OpponentDeck.Add(Card10);
-        OpponentDeck.Add(Card11);
-        OpponentDeck.Add(Card12);
-        OpponentDeck.Add(Card13);
-        OpponentDeck.Add(Card14);
-        OpponentDeck.Add(Card15);
-        OpponentDeck.Add(Card16);
-        OpponentDeck.Add(Card17);
-        OpponentDeck.Add(Card18);
-        OpponentDeck.Add(Card19);
-        OpponentDeck.Add(Card20);
-        OpponentDeck.Add(Card21);
-        OpponentDeck.Add(Card22);
-        OpponentDeck.Add(Card23);
-        OpponentDeck.Add(Card24);
-        OpponentDeck.Add(Card25);
-        OpponentDeck.Add(Card26);
-        OpponentDeck.Add(Card27);
     }
 
 
-    [Command]
+        [Command]
     public void CmdDealCards()
     {
-        if ((CardsLeftInLibrary == 0) || (OpponentLibraryCount == 0))
+        if ((CardsLeftInLibrary == 0))
         {
-            Shuffler(cards, PlayerDeck, OpponentDeck); // Shuffles the deck, creates two smaller deck lists, each should have what the other does not.
-            CardsLeftInLibrary = PlayerDeck.Count;
-            OpponentLibraryCount = OpponentDeck.Count;
-            Debug.Log("finishing this if statemnt by changing cards left in library value.");
+            GameManager.Shuffler<GameObject>();
+            Debug.Log("We survived the grand shuffle");
+            if (Name == "Bob")
+            {
+                CardsLeftInLibrary = GameManager.BobCards.Count;
+                Debug.Log("Bob's if statement");
+            }
+            else if (Name == "Karen")
+            {
+                CardsLeftInLibrary = GameManager.KarenCards.Count;
+                Debug.Log("Karen's if statement");
+            }
         }
-        if (hasAuthority)//isLocalPlayer)
+        if (Name == "Bob")
         {
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
-            GameObject Card = Instantiate(PlayerDeck[CardsLeftInLibrary], new Vector2(0, 0), Quaternion.identity);
+            GameObject Card = Instantiate(GameManager.BobCards[CardsLeftInLibrary], new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
             RpcShowCard(Card, "Dealt Hand");
+            GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
         }
-        else if (!hasAuthority)//isClient)
+        else if (Name == "Karen")
         {
-            OpponentLibraryCount = OpponentLibraryCount - 1;
-            GameObject Card = Instantiate(OpponentDeck[OpponentLibraryCount], new Vector2(0, 0), Quaternion.identity);
+            CardsLeftInLibrary = CardsLeftInLibrary - 1;
+            GameObject Card = Instantiate(GameManager.KarenCards[CardsLeftInLibrary], new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
             RpcShowCard(Card, "Dealt Hand");
+            GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
         }
-        UIManager.UpdatePlayerText(CardsLeftInLibrary, OpponentLibraryCount);
     }
 
-    public void Shuffler<T>(List<T> list, List<T> playerList, List<T> OpponentList)//this is imperfect for some reason
-    {
-        System.Random random = new System.Random();
-        int n = list.Count;
-        while (n>1)
-        {
-            int k = random.Next(n);
-            n--;
-            T temp = list[k];
-            list[k] = list[n];
-            list[n] = temp;
-            Debug.Log(list[n]);
-        }
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (i < 27)
-            {
-                playerList[i] = list[i];
-                //Debug.Log("PLAYERLIST: ");
-                //Debug.Log(playerList[i]);
-            }
-            else
-            {
-                OpponentList[i - 27] = list[i];
-                //Debug.Log("ENEMYLIST: ");
-                //Debug.Log(OpponentList[i-27]);
-            }
-        }
-    }
 
     public void PlayCard(GameObject Card)
     {
@@ -328,11 +200,13 @@ public class PlayerManager : NetworkBehaviour
         Debug.Log(CardsPlayed);
     }
 
+
     [Command]
     void CmdPlayCard(GameObject Card)
     {
         RpcShowCard(Card, "Played");
     }
+
 
     [ClientRpc]
     void RpcShowCard(GameObject Card, string type)
