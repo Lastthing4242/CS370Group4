@@ -22,10 +22,6 @@ public class Zoom : MonoBehaviour
         foundCard = false;
         while (!foundCard)
         {
-            Debug.Log("entered the while loop. This is from GameManager:");
-            Debug.Log(GameManager.CardList[i].getId());
-            Debug.Log("This is from gameObject:");
-            Debug.Log(gameObject.GetComponent<CardStats>().getId());
             if (gameObject.GetComponent<CardStats>().getId() == GameManager.CardList[i].getId())
             {
                 bigCard = Instantiate(GameManager.CardList[i].getCard(), new Vector2(Input.mousePosition.x, Input.mousePosition.y + 250), Quaternion.identity);
@@ -49,14 +45,6 @@ public class Zoom : MonoBehaviour
                 }
             }
         }
-        /*
-        bigCard = Instantiate(gameObject, new Vector2(Input.mousePosition.x, Input.mousePosition.y + 250), Quaternion.identity);
-        bigCard.transform.SetParent(Canvas.transform, true);
-        bigCard.layer = LayerMask.NameToLayer("Zoom");
-
-        RectTransform rect = bigCard.GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(240, 344);
-        */
     }
 
     public void offHover()
