@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Zoom : MonoBehaviour
 {
+    public GameManager GameManager;
+    public CardStats CardStats;
     public GameObject Canvas;
+    public bool foundCard = false;
 
     private GameObject bigCard;
 
@@ -15,12 +18,45 @@ public class Zoom : MonoBehaviour
 
     public void zoomOnHover()
     {
+        int i = 0;
+        foundCard = false;
+        while (!foundCard)
+        {
+            Debug.Log("entered the while loop. This is from GameManager:");
+            Debug.Log(GameManager.CardList[i].getId());
+            Debug.Log("This is from gameObject:");
+            Debug.Log(gameObject.GetComponent<CardStats>().getId());
+            if (gameObject.GetComponent<CardStats>().getId() == GameManager.CardList[i].getId())
+            {
+                bigCard = Instantiate(GameManager.CardList[i].getCard(), new Vector2(Input.mousePosition.x, Input.mousePosition.y + 250), Quaternion.identity);
+                bigCard.transform.SetParent(Canvas.transform, true);
+                bigCard.layer = LayerMask.NameToLayer("Zoom");
+
+                RectTransform rect = bigCard.GetComponent<RectTransform>();
+                rect.sizeDelta = new Vector2(240, 344);
+                foundCard = true;
+            }
+            else
+            {
+                if (i == 53)
+                {
+                    i = 0;
+                    foundCard = true;//this is a lie. I should really throw an error, but I don't think that's a good idea.
+                }
+                else
+                {
+                    i++;
+                }
+            }
+        }
+        /*
         bigCard = Instantiate(gameObject, new Vector2(Input.mousePosition.x, Input.mousePosition.y + 250), Quaternion.identity);
         bigCard.transform.SetParent(Canvas.transform, true);
         bigCard.layer = LayerMask.NameToLayer("Zoom");
 
         RectTransform rect = bigCard.GetComponent<RectTransform>();
         rect.sizeDelta = new Vector2(240, 344);
+        */
     }
 
     public void offHover()

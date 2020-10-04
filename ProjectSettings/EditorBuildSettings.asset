@@ -6,12 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/mainTitle.unity
-    guid: f61d009ff0cc66f48bfe49e5cd7bb1c1
-  - enabled: 1
-    path: Assets/Scenes/gameRules.unity
-    guid: 3da457112f0ec8e47b5554368f36fceb
-  - enabled: 1
     path: Assets/ProjectWar_v.8.29.20.unity
     guid: feac905d68ce2244394dcfab13c57209
   m_configObjects: {}

@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 5465709519906769686}
   - component: {fileID: 4788891108867078079}
   - component: {fileID: 4188120043461734196}
+  - component: {fileID: -1436222757480040202}
   m_Layer: 8
   m_Name: Card2
   m_TagString: Untagged
@@ -242,7 +243,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2558c9e4cb447f41bba259e3c3ab556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameManager: {fileID: 0}
+  CardStats: {fileID: 0}
   Canvas: {fileID: 0}
+  foundCard: 0
 --- !u!114 &5465709519906769686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,3 +295,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardFace: {fileID: 21300000, guid: 253f77db4bfbd23428ad6bd71bc00f15, type: 3}
   CardRear: {fileID: 21300000, guid: cb746999def2eeb48aae83bb78c272b2, type: 3}
+--- !u!114 &-1436222757480040202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3530235822937794886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22743deae72fecf4db523702567627b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 0
+  CardName: 
+  CardHealth: 0
+  CardPower: 0
+  card: {fileID: 0}

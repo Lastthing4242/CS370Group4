@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using UnityEngine;
 
 namespace Mirror
 {
@@ -427,6 +428,11 @@ namespace Mirror
             public void Reset() => index = -1;
             object IEnumerator.Current => Current;
             public void Dispose() { }
+        }
+
+        public static implicit operator SyncList<T>(List<GameObject> v)
+        {
+            throw new NotImplementedException();
         }
     }
 }
