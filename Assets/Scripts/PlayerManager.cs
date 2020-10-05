@@ -5,6 +5,7 @@ using UnityEngine;
 using Mirror;
 using System;
 
+
 public class PlayerManager : NetworkBehaviour
 {
     public GameManager GameManager;
@@ -70,10 +71,15 @@ public class PlayerManager : NetworkBehaviour
     public GameObject OpponentLibrary;
     public GameObject DropZone;
     public string Name;
-    int CardsLeftInLibrary = 0;
+
+    [SyncVar]
+    public int CardsLeftInLibrary = 0;
 
     [SyncVar]
     int CardsPlayed = 0;
+
+    [SyncVar]  // Make someCooldown sync
+    public SyncListInt CardIds = new SyncListInt();
 
 
 
@@ -138,58 +144,65 @@ public class PlayerManager : NetworkBehaviour
         Card52 = GameObject.Find("Card52");
         Card53 = GameObject.Find("Card53");
         Card54 = GameObject.Find("Card54");
+        for (int i = 1; i < 55; i++)
+        {
+            CardIds.Add(i);
+        }
     }
 
 
     public void Awake()
     {
-        Debug.Log("Name Check: ");
-        Debug.Log(Name);
         Name = GameManager.NameGenerator();
-        Debug.Log(Name);
     }
 
     [Server]
     public override void OnStartServer()
     {
+        
+    }
 
+    public void Shuffler<GameObject>()
+    {
+        System.Random random = new System.Random();
+        int n = CardIds.Count;
+        while (n > 1)
+        {
+            int k = random.Next(n);
+            n--;
+            int temp = CardIds[k];
+            CardIds[k] = CardIds[n];
+            CardIds[n] = temp;
+        }
+    }
+
+    public GameObject Fetch(int num)
+    {
+        GameObject card = GameManager.cards[num - 1].GetComponent<CardStats>().getCard();
+        return card;
     }
 
 
-        [Command]
+    [Command]
     public void CmdDealCards()
     {
         if ((CardsLeftInLibrary == 0))
         {
-            GameManager.Shuffler<GameObject>();
-            Debug.Log("We survived the grand shuffle");
+            Shuffler<GameObject>();
             if (Name == "Bob")
             {
-                CardsLeftInLibrary = GameManager.BobCards.Count;
-                Debug.Log("Bob's if statement");
+                CardsLeftInLibrary = GameManager.cards.Count;
             }
             else if (Name == "Karen")
             {
-                CardsLeftInLibrary = GameManager.KarenCards.Count;
-                Debug.Log("Karen's if statement");
+                CardsLeftInLibrary = GameManager.cards.Count;
             }
         }
-        if (Name == "Bob")
-        {
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
-            GameObject Card = Instantiate(GameManager.BobCards[CardsLeftInLibrary], new Vector2(0, 0), Quaternion.identity);
+            GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
             RpcShowCard(Card, "Dealt Hand");
             GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
-        }
-        else if (Name == "Karen")
-        {
-            CardsLeftInLibrary = CardsLeftInLibrary - 1;
-            GameObject Card = Instantiate(GameManager.KarenCards[CardsLeftInLibrary], new Vector2(0, 0), Quaternion.identity);
-            NetworkServer.Spawn(Card, connectionToClient);
-            RpcShowCard(Card, "Dealt Hand");
-            GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
-        }
     }
 
 
