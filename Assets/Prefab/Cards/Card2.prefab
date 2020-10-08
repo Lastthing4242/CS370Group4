@@ -73,7 +73,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 253f77db4bfbd23428ad6bd71bc00f15, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cdfc38da2d6efc6429e75b68d4a89d76, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -293,7 +293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 878ccff22a0e61c408dc7a701c1d4499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardFace: {fileID: 21300000, guid: 253f77db4bfbd23428ad6bd71bc00f15, type: 3}
+  CardFace: {fileID: 21300000, guid: cdfc38da2d6efc6429e75b68d4a89d76, type: 3}
   CardRear: {fileID: 21300000, guid: cb746999def2eeb48aae83bb78c272b2, type: 3}
 --- !u!114 &-1436222757480040202
 MonoBehaviour:
