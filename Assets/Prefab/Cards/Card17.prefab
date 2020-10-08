@@ -11,13 +11,13 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 7c3acefbd9651244f9fd6551576a25c1,
+      objectReference: {fileID: 21300000, guid: 13e213b9e80ccec46ba7c1b42067329c,
         type: 3}
     - target: {fileID: 498389423276404779, guid: 31d951091ed62df499d6530aa2382ce3,
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 7c3acefbd9651244f9fd6551576a25c1,
+      objectReference: {fileID: 21300000, guid: 13e213b9e80ccec46ba7c1b42067329c,
         type: 3}
     - target: {fileID: 606077116122357771, guid: 31d951091ed62df499d6530aa2382ce3,
         type: 3}
