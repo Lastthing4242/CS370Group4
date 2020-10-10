@@ -70,20 +70,17 @@ public class PlayerManager : NetworkBehaviour
     public GameObject PlayerLibrary;
     public GameObject OpponentLibrary;
     public GameObject DropZone;
-    //public int ClientIdentifier = 0;
+    public string Name;
 
-    List<GameObject> cards = new List<GameObject>();
-    List<GameObject> PlayerDeck = new List<GameObject>();
-    List<GameObject> OpponentDeck = new List<GameObject>();
+    [SyncVar]
+    public int CardsLeftInLibrary = 0;
 
     [SyncVar]
     int CardsPlayed = 0;
 
-    [SyncVar]
-    int CardsLeftInLibrary = 0;
+    [SyncVar]  // Make someCooldown sync
+    public SyncListInt CardIds = new SyncListInt();
 
-    [SyncVar]
-    int OpponentLibraryCount = 0;
 
 
 
