@@ -12,6 +12,7 @@ public class CardStats : MonoBehaviour
     public int CardHealth;
     public int CardPower;
     public GameObject card;
+    public char suit;
 
     public CardStats()//this showed up in the video I saw on how to do this, so I left it here
         {
@@ -19,13 +20,14 @@ public class CardStats : MonoBehaviour
 
         }
 
-    public CardStats(int id, string name, int health, int power, GameObject Card)//this doesn't help here, but helps log all the cards in general
+    public CardStats(int id, string name, int health, int power, GameObject Card, char Suit)//this doesn't help here, but helps log all the cards in general
     {
         Id = id;
         CardName = name;
         CardHealth = health;
         CardPower = power;
         card = Card;
+        suit = Suit;
     }
 
     public void EasySet(CardStats x)//this doesn't help here, but helps log all the cards in general
@@ -35,6 +37,17 @@ public class CardStats : MonoBehaviour
         CardHealth = x.getHealth();
         CardPower = x.getPower();
         card = x.getCard();
+        suit = x.getSuit();
+    }
+
+    public void setHealth(int NewHealth)
+    {
+        CardHealth = NewHealth;
+    }
+
+    public char getSuit()
+    {
+        return suit;
     }
 
     public GameObject getCard()

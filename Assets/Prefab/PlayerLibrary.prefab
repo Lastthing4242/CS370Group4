@@ -238,6 +238,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerLibraryText
       objectReference: {fileID: 0}
+    - target: {fileID: 8258060454263446547, guid: 74b113b88bd54d54c938218d4da3c2a2,
+        type: 3}
+      propertyPath: m_Text
+      value: Calculating Cards Left
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74b113b88bd54d54c938218d4da3c2a2, type: 3}
 --- !u!224 &4775754126981331424 stripped
