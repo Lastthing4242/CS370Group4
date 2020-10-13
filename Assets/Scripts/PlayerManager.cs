@@ -69,8 +69,23 @@ public class PlayerManager : NetworkBehaviour
     public GameObject OpponentArea;
     public GameObject PlayerLibrary;
     public GameObject OpponentLibrary;
-    public GameObject DropZone;
+	//Remove because original DropZone no longer exists
+    //public GameObject DropZone;
     public string Name;
+	
+	//probably need to find these at runtime rather than dragging prefabs
+	public GameObject PlayerSlot1;
+	public GameObject PlayerSlot2;
+	public GameObject PlayerSlot3;
+	public GameObject PlayerSlot4;
+	public GameObject PlayerSlot5;
+	public GameObject EnemySlot1;
+	public GameObject EnemySlot2;
+	public GameObject EnemySlot3;
+	public GameObject EnemySlot4;
+	public GameObject EnemySlot5;
+	public List<GameObject> PlayerSockets = new List<GameObject>();
+	public List<GameObject> EnemySockets = new List<GameObject>();
 
     [SyncVar]
     public int CardsLeftInLibrary = 0;
@@ -90,7 +105,9 @@ public class PlayerManager : NetworkBehaviour
 
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
-        DropZone = GameObject.Find("DropZone");
+		//Removed because original DropZone no longer exists.
+        //DropZone = GameObject.Find("DropZone");
+		
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
         Card3 = GameObject.Find("Card3");
@@ -145,13 +162,36 @@ public class PlayerManager : NetworkBehaviour
         Card52 = GameObject.Find("Card52");
         Card53 = GameObject.Find("Card53");
         Card54 = GameObject.Find("Card54");
+		
+		PlayerSlot1 = GameObject.Find("PlayerSlot1");
+		PlayerSlot2 = GameObject.Find("PlayerSlot2");
+		PlayerSlot3 = GameObject.Find("PlayerSlot3");
+		PlayerSlot4 = GameObject.Find("PlayerSlot4");
+		PlayerSlot5 = GameObject.Find("PlayerSlot5");
+		EnemySlot1 = GameObject.Find("EnemySlot1");
+		EnemySlot2 = GameObject.Find("EnemySlot2");
+		EnemySlot3 = GameObject.Find("EnemySlot3");
+		EnemySlot4 = GameObject.Find("EnemySlot4");
+		EnemySlot5 = GameObject.Find("EnemySlot5");
+		
+		
         for (int i = 1; i < 55; i++)
         {
             CardIds.Add(i);
         }
-    }
-
-        
+	
+		//not sure we need this if individual slots can be identified
+		PlayerSockets.Add(PlayerSlot1);
+		PlayerSockets.Add(PlayerSlot2);
+		PlayerSockets.Add(PlayerSlot3);
+		PlayerSockets.Add(PlayerSlot4);
+		PlayerSockets.Add(PlayerSlot5);
+		EnemySockets.Add(EnemySlot1);
+		EnemySockets.Add(EnemySlot2);
+		EnemySockets.Add(EnemySlot3);
+		EnemySockets.Add(EnemySlot4);
+		EnemySockets.Add(EnemySlot5);
+    }     
 
     public void Awake()
     {
@@ -203,28 +243,29 @@ public class PlayerManager : NetworkBehaviour
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
-            RpcShowCard(Card, "Dealt Hand");
+			// added PlayerArea as placeholder since no slots needed
+            RpcShowCard(Card, "Dealt Hand", PlayerArea);
             GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
     }
 
 
-    public void PlayCard(GameObject Card)
+    public void PlayCard(GameObject Card, GameObject dropZone)
     {
-        CmdPlayCard(Card);
+        CmdPlayCard(Card, dropZone);
         CardsPlayed++;
         Debug.Log(CardsPlayed);
     }
 
 
     [Command]
-    void CmdPlayCard(GameObject Card)
+    void CmdPlayCard(GameObject Card, GameObject dropZone)
     {
-        RpcShowCard(Card, "Played");
+        RpcShowCard(Card, "Played", dropZone);
     }
 
 
     [ClientRpc]
-    void RpcShowCard(GameObject Card, string type)
+    void RpcShowCard(GameObject Card, string type, GameObject dropZone)
     {
         if (type == "Dealt Hand")
         {
@@ -240,9 +281,59 @@ public class PlayerManager : NetworkBehaviour
         }
         else if (type == "Played")
         {
-            Card.transform.SetParent(DropZone.transform, false);
+			if(hasAuthority)
+			{
+				Debug.Log("slotNumber = " + dropZone + "PlayerSockets num = " + PlayerSockets.Count);
+				Card.transform.SetParent(dropZone.transform, false);
+			}
+			// moved into if statement above
+            //Card.transform.SetParent(DropZone.transform, false);
             if (!hasAuthority)
             {
+				if(dropZone == PlayerSlot1)
+				{
+					Card.transform.SetParent(EnemySlot1.transform, false);
+				}
+				if(dropZone == PlayerSlot2)
+				{
+					Card.transform.SetParent(EnemySlot2.transform, false);
+				}
+				if(dropZone == PlayerSlot3)
+				{
+					Card.transform.SetParent(EnemySlot3.transform, false);
+				}
+				if(dropZone == PlayerSlot4)
+				{
+					Card.transform.SetParent(EnemySlot4.transform, false);
+				}
+				if(dropZone == PlayerSlot5)
+				{
+					Card.transform.SetParent(EnemySlot5.transform, false);
+				}
+				
+				/*
+				*****Switch doesn't appear to work with non-constants***********
+				
+				switch (dropZone)
+				{
+					case GameObject.Find("PlayerSlot1"):
+						Card.transform.SetParent(EnemySlot1.transform, false);
+						break;
+					case PlayerSlot2:
+						Card.transform.SetParent(EnemySlot2.transform, false);
+						break;
+					case PlayerSlot3:
+						Card.transform.SetParent(EnemySlot3.transform, false);
+						break;
+					case PlayerSlot4:
+						Card.transform.SetParent(EnemySlot4.transform, false);
+						break;
+					case PlayerSlot5:
+						Card.transform.SetParent(EnemySlot5.transform, false);
+						break;
+				}
+				*/
+				
                 Card.GetComponent<FlipCard>().Flip();
             }
         }
