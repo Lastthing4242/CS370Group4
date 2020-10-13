@@ -71,15 +71,15 @@ public class PlayerManager : NetworkBehaviour
     public GameObject OpponentLibrary;
     public GameObject DropZone;
     public string Name;
+    static public bool AlreadyMadeDeck = false;
 
-    [SyncVar]
-    public int CardsLeftInLibrary = 0;
+    static public int CardsLeftInLibrary = 0;
 
     [SyncVar]
     int CardsPlayed = 0;
 
-    [SyncVar]  // Make someCooldown sync
-    public SyncListInt CardIds = new SyncListInt();
+
+    static public List<int> CardIds = new List<int> { };
 
 
 
@@ -144,28 +144,39 @@ public class PlayerManager : NetworkBehaviour
         Card52 = GameObject.Find("Card52");
         Card53 = GameObject.Find("Card53");
         Card54 = GameObject.Find("Card54");
+        if(AlreadyMadeDeck == false)
+        {
+            FillList();
+        }
+        for (int i = 0; i < 54; i++)
+        {
+            Debug.Log(CardIds[i]);
+        }
+
+    }
+
+
+    [Server]
+    public void FillList()
+    {
         for (int i = 1; i < 55; i++)
         {
             CardIds.Add(i);
         }
+        AlreadyMadeDeck = true;
     }
-
 
     public void Awake()
     {
         Name = GameManager.NameGenerator();
     }
 
-    [Server]
-    public override void OnStartServer()
-    {
-        
-    }
 
-    public void Shuffler<GameObject>()
+    public void CmdShuffler()
     {
         System.Random random = new System.Random();
         int n = CardIds.Count;
+
         while (n > 1)
         {
             int k = random.Next(n);
@@ -173,6 +184,7 @@ public class PlayerManager : NetworkBehaviour
             int temp = CardIds[k];
             CardIds[k] = CardIds[n];
             CardIds[n] = temp;
+
         }
     }
 
@@ -186,19 +198,15 @@ public class PlayerManager : NetworkBehaviour
     [Command]
     public void CmdDealCards()
     {
+
         if ((CardsLeftInLibrary == 0))
         {
-            Shuffler<GameObject>();
-            if (Name == "Bob")
-            {
-                CardsLeftInLibrary = GameManager.cards.Count;
-            }
-            else if (Name == "Karen")
-            {
-                CardsLeftInLibrary = GameManager.cards.Count;
-            }
+            CmdShuffler();
+            CardsLeftInLibrary = GameManager.cards.Count;
+
         }
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
+            Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
             RpcShowCard(Card, "Dealt Hand");
