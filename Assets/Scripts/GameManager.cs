@@ -6,6 +6,14 @@ using Mirror;
 
 public class GameManager : MonoBehaviour
 {
+	//*****Add GameState, PlayerHealth, OpponentHealth JRV20201013
+	public string GameState = "Deal";
+	//should probably find these from a game object on screen
+	//also should probably use getter/setter methods and make private?
+	public int PlayerHealth = 100;
+	public int EnemyHealth = 100;
+	
+	// ******End of addition JRV20201013
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
     public GameObject Card1;
@@ -67,7 +75,6 @@ public class GameManager : MonoBehaviour
     public static List<GameObject> cards = new List<GameObject>();
 
     public static List<CardStats> CardList = new List<CardStats>();
-
 
     public void Awake()
     {
@@ -265,6 +272,27 @@ public class GameManager : MonoBehaviour
             OpponentLibraryText.GetComponent<Text>().text = "Cards left: " + CardCount;
         }
     }
+	
+	//*****Add ChangeGameState in order to increment between Deal, Play and Battle JRV20201013
+	
+	public void ChangeGameState(string changeStateRequest)
+	{
+		if (changeStateRequest == "Deal")
+		{
+			
+		}
+		else if (changeStateRequest == "Play")
+		{
+			
+		}
+		else if (changeStateRequest == "Battle")
+		{
+			
+		}
+	}
+	
+	// ******End of addition JRV20201013
+	
 
     public void Fight(GameObject CardOne, GameObject CardTwo)
     {

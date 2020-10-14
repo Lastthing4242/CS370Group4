@@ -6,6 +6,8 @@ TagManager:
   tags:
   - EmptyPlayerSlot
   - FullPlayerSlot
+  - FullSlot
+  - EmptySlot
   layers:
   - Default
   - TransparentFX

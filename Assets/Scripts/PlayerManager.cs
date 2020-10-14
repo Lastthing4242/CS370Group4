@@ -285,6 +285,8 @@ public class PlayerManager : NetworkBehaviour
 			{
 				Debug.Log("slotNumber = " + dropZone + "PlayerSockets num = " + PlayerSockets.Count);
 				Card.transform.SetParent(dropZone.transform, false);
+				// added tag set
+				dropZone.tag = "FullSlot";
 			}
 			// moved into if statement above
             //Card.transform.SetParent(DropZone.transform, false);
@@ -293,22 +295,27 @@ public class PlayerManager : NetworkBehaviour
 				if(dropZone == PlayerSlot1)
 				{
 					Card.transform.SetParent(EnemySlot1.transform, false);
+					EnemySlot1.tag = "FullSlot";
 				}
 				if(dropZone == PlayerSlot2)
 				{
 					Card.transform.SetParent(EnemySlot2.transform, false);
+					EnemySlot2.tag = "FullSlot";
 				}
 				if(dropZone == PlayerSlot3)
 				{
 					Card.transform.SetParent(EnemySlot3.transform, false);
+					EnemySlot3.tag = "FullSlot";
 				}
 				if(dropZone == PlayerSlot4)
 				{
 					Card.transform.SetParent(EnemySlot4.transform, false);
+					EnemySlot4.tag = "FullSlot";
 				}
 				if(dropZone == PlayerSlot5)
 				{
 					Card.transform.SetParent(EnemySlot5.transform, false);
+					EnemySlot5.tag = "FullSlot";
 				}
 				
 				/*
