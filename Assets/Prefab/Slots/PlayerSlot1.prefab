@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 8081008332042449074}
   - component: {fileID: 3091434423329707403}
   - component: {fileID: 1699367139354543337}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: PlayerSlot1
-  m_TagString: EmptyPlayerSlot
+  m_TagString: EmptySlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

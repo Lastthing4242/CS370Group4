@@ -93,10 +93,11 @@ public class PlayerManager : NetworkBehaviour
     [SyncVar]
     int CardsPlayed = 0;
 
-    [SyncVar]  // Make someCooldown sync
-    public SyncListInt CardIds = new SyncListInt();
-
-
+    //[SyncVar]  // Make someCooldown sync
+    //public SyncListInt CardIds = new SyncListInt();
+	
+	//Pasted from JJ code 
+	static public List<int> CardIds = new List<int> { };
 
 
     public override void OnStartClient()
@@ -263,7 +264,8 @@ public class PlayerManager : NetworkBehaviour
         RpcShowCard(Card, "Played", dropZone);
     }
 
-
+	
+	// Added parameter dropzone to facilitate showing enemy cards JRV20201013
     [ClientRpc]
     void RpcShowCard(GameObject Card, string type, GameObject dropZone)
     {
@@ -343,6 +345,33 @@ public class PlayerManager : NetworkBehaviour
 				
                 Card.GetComponent<FlipCard>().Flip();
             }
+        }
+    }
+	
+	//Added public method for destroying card JRV20201014
+	public void DestroyCard(GameObject card, GameObject dropZone)
+	{
+		CmdDestroyCard(card, dropZone);
+	}
+	
+	//Added Cmd method for destroying card JRV20201014
+	[Command]
+	public void CmdDestroyCard(GameObject card, GameObject dropZone)
+	{
+		RpcDestroyCard(card, dropZone, "Destroy Card");
+	}
+	
+	// Added Rpc method for destroying card JRV20201014
+	// Maybe we don't want to do this and insetad move card to graveyard??
+	[ClientRpc]
+    void RpcDestroyCard(GameObject card, GameObject dropZone, string type)
+    {
+        if (type == "Destroy Card")
+        {
+           //Destroy(card);
+		   dropZone.tag = "EmptySlot";
+		   GameObject.Destroy(card.gameObject);
+		   
         }
     }
 }

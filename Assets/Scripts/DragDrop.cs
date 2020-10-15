@@ -49,9 +49,10 @@ public class DragDrop : NetworkBehaviour
         }
     }
 
+	// Added conditional on tag of slot
     private void OnCollisionEnter2D(Collision2D collision)
     {
-		if(collision.gameObject.tag == "EmptyPlayerSlot")
+		if(collision.gameObject.tag == "EmptySlot")
 		{
 			isOverDropZone = true;
 			dropZone = collision.gameObject;
