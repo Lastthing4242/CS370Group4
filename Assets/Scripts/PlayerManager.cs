@@ -358,20 +358,35 @@ public class PlayerManager : NetworkBehaviour
 	[Command]
 	public void CmdDestroyCard(GameObject card, GameObject dropZone)
 	{
-		RpcDestroyCard(card, dropZone, "Destroy Card");
+		RpcDestroyCard(card, dropZone);
 	}
 	
 	// Added Rpc method for destroying card JRV20201014
 	// Maybe we don't want to do this and insetad move card to graveyard??
+	// Fixed by checking for authority and clearing the corrected slots JRV20201016
 	[ClientRpc]
-    void RpcDestroyCard(GameObject card, GameObject dropZone, string type)
+    void RpcDestroyCard(GameObject card, GameObject dropZone)
     {
-        if (type == "Destroy Card")
-        {
-           //Destroy(card);
+		GameObject.Destroy(card.gameObject);
+	   
+		if(hasAuthority)
+		{
 		   dropZone.tag = "EmptySlot";
-		   GameObject.Destroy(card.gameObject);
-		   
-        }
+		}
+		if (!hasAuthority)
+		{
+			for(int i = 0; i < PlayerSockets.Count; i++)
+			{
+				if(dropZone == PlayerSockets[i].gameObject)
+				{
+					EnemySockets[i].gameObject.tag = "EmptySlot";
+				}
+				if(dropZone == EnemySockets[i].gameObject)
+				{
+					PlayerSockets[i].gameObject.tag = "EmptySlot";
+				}					
+			}
+	   
+		}
     }
 }

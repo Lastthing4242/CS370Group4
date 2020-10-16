@@ -8,202 +8,51 @@ public class Battle : NetworkBehaviour
 	public GameManager GameManager;
 	public PlayerManager PlayerManager;
 	public NetworkIdentity networkIdentity;
-	
-	public GameObject PlayerSlot1;
-	public GameObject PlayerSlot2;
-	public GameObject PlayerSlot3;
-	public GameObject PlayerSlot4;
-	public GameObject PlayerSlot5;
-	public GameObject EnemySlot1;
-	public GameObject EnemySlot2;
-	public GameObject EnemySlot3;
-	public GameObject EnemySlot4;
-	public GameObject EnemySlot5;
+
 	public List<GameObject> PlayerSlots = new List<GameObject>();
 	public List<GameObject> EnemySlots = new List<GameObject>();
 	
-	private bool slotsLoaded = false;
-	//Probably not. Better to group by Player/Enemy slots
-	/*
-	private List<GameObject> Slots3 = new List<GameObject>();
-	private List<GameObject> Slots4 = new List<GameObject>();
-	private List<GameObject> Slots5 = new List<GameObject>();
-	*/
-	
     // Start is called before the first frame update
+	// Doesnt seem to work when called here
     void Start()
-    {	/*	
-        GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-		NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-		PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-		
-		
-		PlayerSlot1 = GameObject.Find("PlayerSlot1");
-		PlayerSlot2 = GameObject.Find("PlayerSlot2");
-		PlayerSlot3 = GameObject.Find("PlayerSlot3");
-		PlayerSlot4= GameObject.Find("PlayerSlot4");
-		PlayerSlot5 = GameObject.Find("PlayerSlot5");
-		EnemySlot1 = GameObject.Find("EnemySlot1");
-		EnemySlot2 = GameObject.Find("EnemySlot2");
-		EnemySlot3 = GameObject.Find("EnemySlot3");
-		EnemySlot4 = GameObject.Find("EnemySlot4");
-		EnemySlot5 = GameObject.Find("EnemySlot5");	
-		*/
-		
-		//Probably not. Better to group by Player/Enemy slots
-		/*
-		Slots1.Add(PlayerSlot1);
-		Slots1.Add(EnemySlot1);
-		Slots2.Add(PlayerSlot2);
-		Slots2.Add(EnemySlot2);
-		Slots3.Add(PlayerSlot3);
-		Slots3.Add(EnemySlot3);
-		Slots4.Add(PlayerSlot4);
-		Slots4.Add(EnemySlot4);
-		Slots5.Add(PlayerSlot5);
-		Slots5.Add(EnemySlot5);
-		*/
-		
-		/*
-		Slots1.Add(PlayerSlot1);
-		*/
-    }
-	
-	//Copy from Start() method.
-	// may need to be in here to find things after the game has launched
-	
-	public override void OnStartClient()
-	{
-		base.OnStartClient();
-		
+    {	
 		//GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		//NetworkIdentity networkIdentity = NetworkClient.connection.identity;
 		//PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-		
-		// Weird -- needed to be in the Fight function.  Maybe not initilized yet??
-		/*
-		PlayerSlot1 = GameObject.Find("PlayerSlot1");
-		PlayerSlot2 = GameObject.Find("PlayerSlot2");
-		PlayerSlot3 = GameObject.Find("PlayerSlot3");
-		PlayerSlot4= GameObject.Find("PlayerSlot4");
-		PlayerSlot5 = GameObject.Find("PlayerSlot5");
-		EnemySlot1 = GameObject.Find("EnemySlot1");
-		EnemySlot2 = GameObject.Find("EnemySlot2");
-		EnemySlot3 = GameObject.Find("EnemySlot3");
-		EnemySlot4 = GameObject.Find("EnemySlot4");
-		EnemySlot5 = GameObject.Find("EnemySlot5");	
-		*/
-		
-		//Probably not. Better to group by Player/Enemy slots
-		/*
-		Slots1.Add(PlayerSlot1);
-		Slots1.Add(EnemySlot1);
-		Slots2.Add(PlayerSlot2);
-		Slots2.Add(EnemySlot2);
-		Slots3.Add(PlayerSlot3);
-		Slots3.Add(EnemySlot3);
-		Slots4.Add(PlayerSlot4);
-		Slots4.Add(EnemySlot4);
-		Slots5.Add(PlayerSlot5);
-		Slots5.Add(EnemySlot5);
-		
-		
-		//Slots1.Add(PlayerSlot1);
-		//Slots2.Add(EnemySlot1);
-	}
-	
-    // Update is called once per frame
-	// Not Needed???
-    void Update()
-    {
-        PlayerSlot1 = GameObject.Find("PlayerSlot1");
-		PlayerSlot2 = GameObject.Find("PlayerSlot2");
-		PlayerSlot3 = GameObject.Find("PlayerSlot3");
-		PlayerSlot4 = GameObject.Find("PlayerSlot4");
-		PlayerSlot5 = GameObject.Find("PlayerSlot5");
-		EnemySlot1 = GameObject.Find("EnemySlot1");
-		EnemySlot2 = GameObject.Find("EnemySlot2");
-		EnemySlot3 = GameObject.Find("EnemySlot3");
-		EnemySlot4 = GameObject.Find("EnemySlot4");
-		EnemySlot5 = GameObject.Find("EnemySlot5");	
-		/*
-		PlayerSlots.Add(PlayerSlot1);
-		PlayerSlots.Add(PlayerSlot2);
-		PlayerSlots.Add(PlayerSlot3);
-		PlayerSlots.Add(PlayerSlot4);
-		PlayerSlots.Add(PlayerSlot5);
-		EnemySlots.Add(EnemySlot1);
-		EnemySlots.Add(EnemySlot2);
-		EnemySlots.Add(EnemySlot3);
-		EnemySlots.Add(EnemySlot4);
-		EnemySlots.Add(EnemySlot5);
-		
-		GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-		networkIdentity = NetworkClient.connection.identity;
-		PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-		*/
     }
-	
-	public void loadSlots()
-	{
-		PlayerSlot1 = GameObject.Find("PlayerSlot1");
-		PlayerSlot2 = GameObject.Find("PlayerSlot2");
-		PlayerSlot3 = GameObject.Find("PlayerSlot3");
-		PlayerSlot4 = GameObject.Find("PlayerSlot4");
-		PlayerSlot5 = GameObject.Find("PlayerSlot5");
-		EnemySlot1 = GameObject.Find("EnemySlot1");
-		EnemySlot2 = GameObject.Find("EnemySlot2");
-		EnemySlot3 = GameObject.Find("EnemySlot3");
-		EnemySlot4 = GameObject.Find("EnemySlot4");
-		EnemySlot5 = GameObject.Find("EnemySlot5");	
-		
-		PlayerSlots.Add(PlayerSlot1);
-		PlayerSlots.Add(PlayerSlot2);
-		PlayerSlots.Add(PlayerSlot3);
-		PlayerSlots.Add(PlayerSlot4);
-		PlayerSlots.Add(PlayerSlot5);
-		EnemySlots.Add(EnemySlot1);
-		EnemySlots.Add(EnemySlot2);
-		EnemySlots.Add(EnemySlot3);
-		EnemySlots.Add(EnemySlot4);
-		EnemySlots.Add(EnemySlot5);
-	
-		
-		slotsLoaded = true;
-	}
-	
+
+	// Updated this method to use the already defined slots and Lists from PlayerManager so as to not duplicate code.
+	// Method compares cards that are across from one another and deal damage to one another concurrently.
 	public void Fight()
-	{
-		if(!slotsLoaded)
-		{
-			loadSlots();
-		}
-		
+	{	
+		// declare here or error occurs.
 		GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		NetworkIdentity networkIdentity = NetworkClient.connection.identity;
 		PlayerManager = networkIdentity.GetComponent<PlayerManager>();
 		
-		for (int i = 0; i < PlayerSlots.Count; i++)
+		for (int i = 0; i < PlayerManager.PlayerSockets.Count; i++)
 		{
-			
-			if(PlayerSlots[i].gameObject.tag == "FullSlot" && EnemySlots[i].gameObject.tag == "FullSlot")
+			// Determine if BOTH sockets are full
+			if(PlayerManager.PlayerSockets[i].gameObject.tag == "FullSlot" && PlayerManager.EnemySockets[i].gameObject.tag == "FullSlot")
 			{
-				Debug.Log("Child count for Player Slots " + i + "  " + PlayerSlots[i].transform.childCount + " before the fight " + PlayerSlots[i].gameObject.tag);
-				Debug.Log("Child count for Enemy Slots " + i + "  " + EnemySlots[i].transform.childCount + " before the fight " + EnemySlots[i].gameObject.tag);
+				Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + " before the fight " + PlayerManager.PlayerSockets[i].gameObject.tag);
+				Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + " before the fight " + PlayerManager.EnemySockets[i].gameObject.tag);
 				
 				Debug.Log("The Player Slots Are Full in Slots : " + i);
-				Debug.Log(PlayerSlots[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth);
+				Debug.Log(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth);
 				
-				int playerCardPower = PlayerSlots[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
-				int enemyCardPower = EnemySlots[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
-				int playerCardHealth = PlayerSlots[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
-				int enemyCardHealth = EnemySlots[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
+				// retrieve player stats
+				int playerCardPower = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
+				int enemyCardPower = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
+				int playerCardHealth = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
+				int enemyCardHealth = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
 				
 				Debug.Log("Slot " + i + " playerCardPower " + playerCardPower + " before fight");
 				Debug.Log("Slot " + i + " playerCardHealth " + playerCardHealth + " before fight");
 				Debug.Log("Slot " + i + " enemyCardPower " + enemyCardPower + " before fight");
 				Debug.Log("Slot " + i + " enemyCardHealth " + enemyCardHealth + " before fight");
 				
+				// reduce each cards life along side the others attack (temp variables) until at least one is dead 
 				while(playerCardHealth > 0 && enemyCardHealth > 0)
 				{
 					if(playerCardPower > 0)
@@ -223,28 +72,27 @@ public class Battle : NetworkBehaviour
 				Debug.Log("Slot " + i + " enemyCardPower " + enemyCardPower + " after fight");
 				Debug.Log("Slot " + i + " enemyCardHealth " + enemyCardHealth + " after fight");
 				
+				// Determine which or if both cards died and remove those cards, and modify the other cards life appropriately
 				if(playerCardHealth == 0)
 				{
-					PlayerManager.DestroyCard(PlayerSlots[i].transform.GetChild(0).gameObject, PlayerSlots[i].gameObject);
-					EnemySlots[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = enemyCardHealth;
+					PlayerManager.DestroyCard(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject, PlayerManager.PlayerSockets[i].gameObject);
+					PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = enemyCardHealth;
 				}
 				if(enemyCardHealth == 0)
 				{
-					PlayerManager.DestroyCard(EnemySlots[i].transform.GetChild(0).gameObject, EnemySlots[i].gameObject);
-					PlayerSlots[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = playerCardHealth;
+					PlayerManager.DestroyCard(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject, PlayerManager.EnemySockets[i].gameObject);
+					PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = playerCardHealth;
 				}
 
-				Debug.Log("Child count for Player Slots " + i + "  " + PlayerSlots[i].transform.childCount + "after the fight " + PlayerSlots[i].gameObject.tag);
-				Debug.Log("Child count for Enemy Slots " + i + "  " + EnemySlots[i].transform.childCount + "after the fight " + EnemySlots[i].gameObject.tag);				
+				Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "after the fight " + PlayerManager.PlayerSockets[i].gameObject.tag);
+				Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "after the fight " + PlayerManager.EnemySockets[i].gameObject.tag);				
 			}
 			else // probably add some code to attack the other players health
 			{
 				Debug.Log("The Player Slots Are Empty in Slots : " + i);
-				Debug.Log("Child count for Player Slots " + i + "  " + PlayerSlots[i].transform.childCount + "When empty tag = " + PlayerSlots[i].gameObject.tag);
-				Debug.Log("Child count for Enemy Slots " + i + "  " + EnemySlots[i].transform.childCount + "When empty tag = " + EnemySlots[i].gameObject.tag);
-				
+				Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "When empty tag = " + PlayerManager.PlayerSockets[i].gameObject.tag);
+				Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "When empty tag = " + PlayerManager.EnemySockets[i].gameObject.tag);				
 			}
 		}	
-	}
-	
+	}	
 }
