@@ -192,6 +192,13 @@ public class PlayerManager : NetworkBehaviour
 		EnemySockets.Add(EnemySlot3);
 		EnemySockets.Add(EnemySlot4);
 		EnemySockets.Add(EnemySlot5);
+		
+		// Reset slots to Empty state when disconnecting / reconnecting host client
+		for (int i = 0; i < PlayerSockets.Count; i++)
+		{
+			PlayerSockets[i].gameObject.tag = "EmptySlot";
+			EnemySockets[i].gameObject.tag = "EmptySlot";
+		}
     }     
 
     public void Awake()
