@@ -70,9 +70,7 @@ public class PlayerManager : NetworkBehaviour
     public GameObject PlayerLibrary;
     public GameObject OpponentLibrary;
     public string Name;
-    static public bool AlreadyMadeDeck = false;
 	
-	//probably need to find these at runtime rather than dragging prefabs
 	public GameObject PlayerSlot1;
 	public GameObject PlayerSlot2;
 	public GameObject PlayerSlot3;
@@ -86,15 +84,12 @@ public class PlayerManager : NetworkBehaviour
 	public List<GameObject> PlayerSockets = new List<GameObject>();
 	public List<GameObject> EnemySockets = new List<GameObject>();
 
+	static public bool AlreadyMadeDeck = false;
     static public int CardsLeftInLibrary = 0;
+	static public List<int> CardIds = new List<int> { };
 
     [SyncVar]
     int CardsPlayed = 0;
-
-
-    static public List<int> CardIds = new List<int> { };
-
-
 
     public override void OnStartClient()
     {
@@ -162,41 +157,37 @@ public class PlayerManager : NetworkBehaviour
         }
         for (int i = 0; i < 54; i++)
         {
-            Debug.Log(CardIds[i]);
+            //Debug.Log(CardIds[i]);
         }
 
-	PlayerSlot1 = GameObject.Find("PlayerSlot1");
-	PlayerSlot2 = GameObject.Find("PlayerSlot2");
-	PlayerSlot3 = GameObject.Find("PlayerSlot3");
-	PlayerSlot4 = GameObject.Find("PlayerSlot4");
-	PlayerSlot5 = GameObject.Find("PlayerSlot5");
-	EnemySlot1 = GameObject.Find("EnemySlot1");
-	EnemySlot2 = GameObject.Find("EnemySlot2");
-	EnemySlot3 = GameObject.Find("EnemySlot3");
-	EnemySlot4 = GameObject.Find("EnemySlot4");
-	EnemySlot5 = GameObject.Find("EnemySlot5");
+		PlayerSlot1 = GameObject.Find("PlayerSlot1");
+		PlayerSlot2 = GameObject.Find("PlayerSlot2");
+		PlayerSlot3 = GameObject.Find("PlayerSlot3");
+		PlayerSlot4 = GameObject.Find("PlayerSlot4");
+		PlayerSlot5 = GameObject.Find("PlayerSlot5");
+		EnemySlot1 = GameObject.Find("EnemySlot1");
+		EnemySlot2 = GameObject.Find("EnemySlot2");
+		EnemySlot3 = GameObject.Find("EnemySlot3");
+		EnemySlot4 = GameObject.Find("EnemySlot4");
+		EnemySlot5 = GameObject.Find("EnemySlot5");
 
-	//not sure we need this if individual slots can be identified
-	PlayerSockets.Add(PlayerSlot1);
-	PlayerSockets.Add(PlayerSlot2);
-	PlayerSockets.Add(PlayerSlot3);
-	PlayerSockets.Add(PlayerSlot4);
-	PlayerSockets.Add(PlayerSlot5);
-	EnemySockets.Add(EnemySlot1);
-	EnemySockets.Add(EnemySlot2);
-	EnemySockets.Add(EnemySlot3);
-	EnemySockets.Add(EnemySlot4);
-	EnemySockets.Add(EnemySlot5);
+		PlayerSockets.Add(PlayerSlot1);
+		PlayerSockets.Add(PlayerSlot2);
+		PlayerSockets.Add(PlayerSlot3);
+		PlayerSockets.Add(PlayerSlot4);
+		PlayerSockets.Add(PlayerSlot5);
+		EnemySockets.Add(EnemySlot1);
+		EnemySockets.Add(EnemySlot2);
+		EnemySockets.Add(EnemySlot3);
+		EnemySockets.Add(EnemySlot4);
+		EnemySockets.Add(EnemySlot5);
 	
-	// Reset slots to Empty state when disconnecting / reconnecting host client
-	for (int i = 0; i < PlayerSockets.Count; i++)
-	{
-		PlayerSockets[i].gameObject.tag = "EmptySlot";
-		EnemySockets[i].gameObject.tag = "EmptySlot";
-	}
-
+		// Reset slots to Empty state when disconnecting / reconnecting host client
+		for (int i = 0; i < PlayerSockets.Count; i++)
+		{
+			PlayerSockets[i].gameObject.tag = "EmptySlot";
+		}
     }
-
 
     [Server]
     public void FillList()
@@ -207,8 +198,7 @@ public class PlayerManager : NetworkBehaviour
         }
         AlreadyMadeDeck = true;
     }
-
-
+	
     public void Awake()
     {
         Name = GameManager.NameGenerator();
@@ -240,7 +230,6 @@ public class PlayerManager : NetworkBehaviour
         return card;
     }
 
-
     [Command]
     public void CmdDealCards()
     {
@@ -255,10 +244,10 @@ public class PlayerManager : NetworkBehaviour
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
 			// added PlayerArea as placeholder since no slots needed
+			// should probably overload this function instead
             RpcShowCard(Card, "Dealt Hand", PlayerArea);
             GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
     }
-
 
     public void PlayCard(GameObject Card, GameObject dropZone)
     {
@@ -267,14 +256,12 @@ public class PlayerManager : NetworkBehaviour
         Debug.Log(CardsPlayed);
     }
 
-
     [Command]
     void CmdPlayCard(GameObject Card, GameObject dropZone)
     {
         RpcShowCard(Card, "Played", dropZone);
     }
 
-	
 	// Added parameter dropzone to facilitate showing enemy cards JRV20201013
     [ClientRpc]
     void RpcShowCard(GameObject Card, string type, GameObject dropZone)
@@ -300,8 +287,22 @@ public class PlayerManager : NetworkBehaviour
 				// added tag set
 				dropZone.tag = "FullSlot";
 			}
-			// moved into if statement above
-            //Card.transform.SetParent(DropZone.transform, false);
+					
+			if (!hasAuthority)
+            {
+				for(int i = 0; i < PlayerSockets.Count; i++)
+				{
+					if(dropZone == PlayerSockets[i].gameObject)
+					{
+						Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
+						EnemySockets[i].gameObject.tag = "FullSlot";
+					}
+				}
+		
+                Card.GetComponent<FlipCard>().Flip();
+            }
+
+			/*
             if (!hasAuthority)
             {
 				if(dropZone == PlayerSlot1)
@@ -330,31 +331,9 @@ public class PlayerManager : NetworkBehaviour
 					EnemySlot5.tag = "FullSlot";
 				}
 				
-				/*
-				*****Switch doesn't appear to work with non-constants***********
-				
-				switch (dropZone)
-				{
-					case GameObject.Find("PlayerSlot1"):
-						Card.transform.SetParent(EnemySlot1.transform, false);
-						break;
-					case PlayerSlot2:
-						Card.transform.SetParent(EnemySlot2.transform, false);
-						break;
-					case PlayerSlot3:
-						Card.transform.SetParent(EnemySlot3.transform, false);
-						break;
-					case PlayerSlot4:
-						Card.transform.SetParent(EnemySlot4.transform, false);
-						break;
-					case PlayerSlot5:
-						Card.transform.SetParent(EnemySlot5.transform, false);
-						break;
-				}
-				*/
-				
                 Card.GetComponent<FlipCard>().Flip();
             }
+			*/
         }
     }
 	
