@@ -35,11 +35,11 @@ public class Battle : NetworkBehaviour
 			// Determine if BOTH sockets are full
 			if(PlayerManager.PlayerSockets[i].gameObject.tag == "FullSlot" && PlayerManager.EnemySockets[i].gameObject.tag == "FullSlot")
 			{
-				Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + " before the fight " + PlayerManager.PlayerSockets[i].gameObject.tag);
-				Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + " before the fight " + PlayerManager.EnemySockets[i].gameObject.tag);
+				//Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + " before the fight " + PlayerManager.PlayerSockets[i].gameObject.tag);
+				//Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + " before the fight " + PlayerManager.EnemySockets[i].gameObject.tag);
 				
-				Debug.Log("The Player Slots Are Full in Slots : " + i);
-				Debug.Log(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth);
+				//Debug.Log("The Player Slots Are Full in Slots : " + i);
+				//Debug.Log(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth);
 				
 				// retrieve player stats
 				int playerCardPower = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
@@ -84,14 +84,14 @@ public class Battle : NetworkBehaviour
 					PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = playerCardHealth;
 				}
 
-				Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "after the fight " + PlayerManager.PlayerSockets[i].gameObject.tag);
-				Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "after the fight " + PlayerManager.EnemySockets[i].gameObject.tag);				
+				//Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "after the fight " + PlayerManager.PlayerSockets[i].gameObject.tag);
+				//Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "after the fight " + PlayerManager.EnemySockets[i].gameObject.tag);				
 			}
 			else // probably add some code to attack the other players health
 			{
-				Debug.Log("The Player Slots Are Empty in Slots : " + i);
-				Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "When empty tag = " + PlayerManager.PlayerSockets[i].gameObject.tag);
-				Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "When empty tag = " + PlayerManager.EnemySockets[i].gameObject.tag);				
+				//Debug.Log("The Player Slots Are Empty in Slots : " + i);
+				//Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "When empty tag = " + PlayerManager.PlayerSockets[i].gameObject.tag);
+				//Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "When empty tag = " + PlayerManager.EnemySockets[i].gameObject.tag);				
 			}
 		}	
 	}	
