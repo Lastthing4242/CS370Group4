@@ -69,9 +69,8 @@ public class PlayerManager : NetworkBehaviour
     public GameObject OpponentArea;
     public GameObject PlayerLibrary;
     public GameObject OpponentLibrary;
-	//Remove because original DropZone no longer exists
-    //public GameObject DropZone;
     public string Name;
+    static public bool AlreadyMadeDeck = false;
 	
 	//probably need to find these at runtime rather than dragging prefabs
 	public GameObject PlayerSlot1;
@@ -87,17 +86,14 @@ public class PlayerManager : NetworkBehaviour
 	public List<GameObject> PlayerSockets = new List<GameObject>();
 	public List<GameObject> EnemySockets = new List<GameObject>();
 
-    [SyncVar]
-    public int CardsLeftInLibrary = 0;
+    static public int CardsLeftInLibrary = 0;
 
     [SyncVar]
     int CardsPlayed = 0;
 
-    //[SyncVar]  // Make someCooldown sync
-    //public SyncListInt CardIds = new SyncListInt();
-	
-	//Pasted from JJ code 
-	static public List<int> CardIds = new List<int> { };
+
+    static public List<int> CardIds = new List<int> { };
+
 
 
     public override void OnStartClient()
@@ -106,9 +102,6 @@ public class PlayerManager : NetworkBehaviour
 
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
-		//Removed because original DropZone no longer exists.
-        //DropZone = GameObject.Find("DropZone");
-		
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
         Card3 = GameObject.Find("Card3");
@@ -163,43 +156,58 @@ public class PlayerManager : NetworkBehaviour
         Card52 = GameObject.Find("Card52");
         Card53 = GameObject.Find("Card53");
         Card54 = GameObject.Find("Card54");
-		
-		PlayerSlot1 = GameObject.Find("PlayerSlot1");
-		PlayerSlot2 = GameObject.Find("PlayerSlot2");
-		PlayerSlot3 = GameObject.Find("PlayerSlot3");
-		PlayerSlot4 = GameObject.Find("PlayerSlot4");
-		PlayerSlot5 = GameObject.Find("PlayerSlot5");
-		EnemySlot1 = GameObject.Find("EnemySlot1");
-		EnemySlot2 = GameObject.Find("EnemySlot2");
-		EnemySlot3 = GameObject.Find("EnemySlot3");
-		EnemySlot4 = GameObject.Find("EnemySlot4");
-		EnemySlot5 = GameObject.Find("EnemySlot5");
-		
-		
+        if(AlreadyMadeDeck == false)
+        {
+            FillList();
+        }
+        for (int i = 0; i < 54; i++)
+        {
+            Debug.Log(CardIds[i]);
+        }
+
+	PlayerSlot1 = GameObject.Find("PlayerSlot1");
+	PlayerSlot2 = GameObject.Find("PlayerSlot2");
+	PlayerSlot3 = GameObject.Find("PlayerSlot3");
+	PlayerSlot4 = GameObject.Find("PlayerSlot4");
+	PlayerSlot5 = GameObject.Find("PlayerSlot5");
+	EnemySlot1 = GameObject.Find("EnemySlot1");
+	EnemySlot2 = GameObject.Find("EnemySlot2");
+	EnemySlot3 = GameObject.Find("EnemySlot3");
+	EnemySlot4 = GameObject.Find("EnemySlot4");
+	EnemySlot5 = GameObject.Find("EnemySlot5");
+
+	//not sure we need this if individual slots can be identified
+	PlayerSockets.Add(PlayerSlot1);
+	PlayerSockets.Add(PlayerSlot2);
+	PlayerSockets.Add(PlayerSlot3);
+	PlayerSockets.Add(PlayerSlot4);
+	PlayerSockets.Add(PlayerSlot5);
+	EnemySockets.Add(EnemySlot1);
+	EnemySockets.Add(EnemySlot2);
+	EnemySockets.Add(EnemySlot3);
+	EnemySockets.Add(EnemySlot4);
+	EnemySockets.Add(EnemySlot5);
+	
+	// Reset slots to Empty state when disconnecting / reconnecting host client
+	for (int i = 0; i < PlayerSockets.Count; i++)
+	{
+		PlayerSockets[i].gameObject.tag = "EmptySlot";
+		EnemySockets[i].gameObject.tag = "EmptySlot";
+	}
+
+    }
+
+
+    [Server]
+    public void FillList()
+    {
         for (int i = 1; i < 55; i++)
         {
             CardIds.Add(i);
         }
-	
-		//not sure we need this if individual slots can be identified
-		PlayerSockets.Add(PlayerSlot1);
-		PlayerSockets.Add(PlayerSlot2);
-		PlayerSockets.Add(PlayerSlot3);
-		PlayerSockets.Add(PlayerSlot4);
-		PlayerSockets.Add(PlayerSlot5);
-		EnemySockets.Add(EnemySlot1);
-		EnemySockets.Add(EnemySlot2);
-		EnemySockets.Add(EnemySlot3);
-		EnemySockets.Add(EnemySlot4);
-		EnemySockets.Add(EnemySlot5);
-		
-		// Reset slots to Empty state when disconnecting / reconnecting host client
-		for (int i = 0; i < PlayerSockets.Count; i++)
-		{
-			PlayerSockets[i].gameObject.tag = "EmptySlot";
-			EnemySockets[i].gameObject.tag = "EmptySlot";
-		}
-    }     
+        AlreadyMadeDeck = true;
+    }
+
 
     public void Awake()
     {
@@ -212,7 +220,7 @@ public class PlayerManager : NetworkBehaviour
         
     }
 
-    public void Shuffler<GameObject>()
+    public void CmdShuffler()
     {
         System.Random random = new System.Random();
         int n = CardIds.Count;
@@ -238,17 +246,12 @@ public class PlayerManager : NetworkBehaviour
     {
         if ((CardsLeftInLibrary == 0))
         {
-            Shuffler<GameObject>();
-            if (Name == "Bob")
-            {
-                CardsLeftInLibrary = GameManager.cards.Count;
-            }
-            else if (Name == "Karen")
-            {
-                CardsLeftInLibrary = GameManager.cards.Count;
-            }
+            CmdShuffler();
+            CardsLeftInLibrary = GameManager.cards.Count;
+
         }
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
+            Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
 			// added PlayerArea as placeholder since no slots needed
