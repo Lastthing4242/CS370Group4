@@ -11,6 +11,9 @@ public class PlayerManager : NetworkBehaviour
     public GameManager GameManager;
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
+	public GameObject PlayerHealth;
+	public GameObject EnemyHealth;
+	
     public GameObject Card1;
     public GameObject Card2;
     public GameObject Card3;
@@ -97,6 +100,9 @@ public class PlayerManager : NetworkBehaviour
 
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
+		PlayerHealth = GameObject.Find("PlayerHealth");
+		EnemyHealth = GameObject.Find("OpponentHealth");
+		
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
         Card3 = GameObject.Find("Card3");
@@ -159,7 +165,14 @@ public class PlayerManager : NetworkBehaviour
         {
             //Debug.Log(CardIds[i]);
         }
-
+		
+		// Set initial health to 100 for both players in HealthScript and on Health gameObjects on screen
+		// Should eventually get this value from some input?
+		PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "100";
+		PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
+		EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "100";
+		EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
+		
 		PlayerSlot1 = GameObject.Find("PlayerSlot1");
 		PlayerSlot2 = GameObject.Find("PlayerSlot2");
 		PlayerSlot3 = GameObject.Find("PlayerSlot3");
@@ -186,6 +199,7 @@ public class PlayerManager : NetworkBehaviour
 		for (int i = 0; i < PlayerSockets.Count; i++)
 		{
 			PlayerSockets[i].gameObject.tag = "EmptySlot";
+			EnemySockets[i].gameObject.tag = "EmptySlot";
 		}
     }
 
@@ -301,39 +315,6 @@ public class PlayerManager : NetworkBehaviour
 		
                 Card.GetComponent<FlipCard>().Flip();
             }
-
-			/*
-            if (!hasAuthority)
-            {
-				if(dropZone == PlayerSlot1)
-				{
-					Card.transform.SetParent(EnemySlot1.transform, false);
-					EnemySlot1.tag = "FullSlot";
-				}
-				if(dropZone == PlayerSlot2)
-				{
-					Card.transform.SetParent(EnemySlot2.transform, false);
-					EnemySlot2.tag = "FullSlot";
-				}
-				if(dropZone == PlayerSlot3)
-				{
-					Card.transform.SetParent(EnemySlot3.transform, false);
-					EnemySlot3.tag = "FullSlot";
-				}
-				if(dropZone == PlayerSlot4)
-				{
-					Card.transform.SetParent(EnemySlot4.transform, false);
-					EnemySlot4.tag = "FullSlot";
-				}
-				if(dropZone == PlayerSlot5)
-				{
-					Card.transform.SetParent(EnemySlot5.transform, false);
-					EnemySlot5.tag = "FullSlot";
-				}
-				
-                Card.GetComponent<FlipCard>().Flip();
-            }
-			*/
         }
     }
 	
@@ -378,4 +359,42 @@ public class PlayerManager : NetworkBehaviour
 	   
 		}
     }
+	
+	public void SetHealth(int newHealth, string whoHit)
+	{
+		CmdSetHealth(newHealth, whoHit);
+	}
+	
+	[Command]
+	public void CmdSetHealth(int newHealth, string whoHit)
+	{
+		RpcSetHealth(newHealth, whoHit);
+	}
+	
+	[ClientRpc]
+	public void RpcSetHealth(int newHealth, string whoHit)
+	{
+		if(hasAuthority)
+		{
+			if(whoHit == "PlayerHit")
+			{
+				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
+			}
+			if(whoHit == "EnemyHit")
+			{
+				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();
+			}
+		}
+		if(!hasAuthority)
+		{
+			if(whoHit == "PlayerHit")
+			{
+				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();			
+			}
+			if(whoHit == "EnemyHit")
+			{
+				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();	
+			}
+		}
+	}
 }

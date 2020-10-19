@@ -12,6 +12,9 @@ public class Battle : NetworkBehaviour
 	public List<GameObject> PlayerSlots = new List<GameObject>();
 	public List<GameObject> EnemySlots = new List<GameObject>();
 	
+	public int PlayerHealth;
+	public int OpponentHealth;
+	
     // Start is called before the first frame update
 	// Doesnt seem to work when called here
     void Start()
@@ -92,6 +95,25 @@ public class Battle : NetworkBehaviour
 				//Debug.Log("The Player Slots Are Empty in Slots : " + i);
 				//Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "When empty tag = " + PlayerManager.PlayerSockets[i].gameObject.tag);
 				//Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "When empty tag = " + PlayerManager.EnemySockets[i].gameObject.tag);				
+				
+				
+				// Determine if only one socket is full - Player attack
+				if(PlayerManager.PlayerSockets[i].gameObject.tag == "FullSlot" && PlayerManager.EnemySockets[i].gameObject.tag == "EmptySlot")
+				{
+					int health = PlayerManager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
+					health = health - PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
+					PlayerManager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+					PlayerManager.SetHealth(health, "EnemyHit");
+					//PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<HealthScript>().setPlayerHealth(health);
+				}
+				// Determine if only one socket is full - Player attack
+				if(PlayerManager.PlayerSockets[i].gameObject.tag == "EmptySlot" && PlayerManager.EnemySockets[i].gameObject.tag == "FullSlot")
+				{
+					int health = PlayerManager.PlayerHealth.gameObject.GetComponent<HealthScript>().getHealth();
+					health = health - PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
+					PlayerManager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+					PlayerManager.SetHealth(health, "PlayerHit");
+				}					
 			}
 		}	
 	}	
