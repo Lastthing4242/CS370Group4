@@ -251,14 +251,18 @@ public class PlayerManager : NetworkBehaviour
         {
             CmdShuffler();
             CardsLeftInLibrary = GameManager.cards.Count;
-
         }
+        do//Here's to hope.
+        {
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
+        //There was a line that prevented errors in a worst case scenario. It's gone now, because it stopped the while loop from working. It was there to prevent players from drawing from the library while all cards were in play.
+        } while (!(Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().getInDeck()));
             Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
-			// added PlayerArea as placeholder since no slots needed
-			// should probably overload this function instead
+            Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
+            // added PlayerArea as placeholder since no slots needed
+            // should probably overload this function instead
             RpcShowCard(Card, "Dealt Hand", PlayerArea);
             GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
     }
@@ -267,7 +271,7 @@ public class PlayerManager : NetworkBehaviour
     {
         CmdPlayCard(Card, dropZone);
         CardsPlayed++;
-        Debug.Log(CardsPlayed);
+        //Debug.Log(CardsPlayed);
     }
 
     [Command]
@@ -322,6 +326,13 @@ public class PlayerManager : NetworkBehaviour
 	public void DestroyCard(GameObject card, GameObject dropZone)
 	{
 		CmdDestroyCard(card, dropZone);
+        for(int i = 0; i < 54; i++)
+        {
+            if(card.GetComponent<CardStats>().getId() == GameManager.cards[i].GetComponent<CardStats>().getId())
+            {
+                GameManager.cards[i].GetComponent<CardStats>().setInDeck(true);
+            }
+        }
 	}
 	
 	//Added Cmd method for destroying card JRV20201014

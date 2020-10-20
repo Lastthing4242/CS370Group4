@@ -87,7 +87,7 @@ public class DragDrop : NetworkBehaviour
             PlayerManager = networkIdentity.GetComponent<PlayerManager>();
 			//Changed call to include dropzone
             PlayerManager.PlayCard(gameObject, dropZone);
-            PlayerManager.CmdDealCards();
+            //PlayerManager.CmdDealCards();
 			
         }
         else

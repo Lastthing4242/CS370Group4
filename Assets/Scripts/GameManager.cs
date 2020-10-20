@@ -134,60 +134,60 @@ public class GameManager : MonoBehaviour
         cards.Add(Card54);
 
 
-        CardList.Add(new CardStats(1, "two of coins", 2, 2, Card1, 'o'));//start of the 2 cards
-        CardList.Add(new CardStats(2, "two of cups", 2, 2, Card2, 'u'));
-        CardList.Add(new CardStats(3, "two of swords", 2, 2, Card3, 'w'));
-        CardList.Add(new CardStats(4, "two of clubs", 2, 2, Card4, 'l'));
-        CardList.Add(new CardStats(5, "three of coins", 3, 3, Card5, 'o'));//start of the 3 cards
-        CardList.Add(new CardStats(6, "three of cups", 3, 3, Card6, 'u'));
-        CardList.Add(new CardStats(7, "three of swords", 3, 3, Card7, 'w'));
-        CardList.Add(new CardStats(8, "three of clubs", 3, 3, Card8, 'l'));
-        CardList.Add(new CardStats(9, "four of coins", 4, 4, Card9, 'o'));//start of the 4 cards
-        CardList.Add(new CardStats(10, "four of cups", 4, 4, Card10, 'u'));
-        CardList.Add(new CardStats(11, "four of swords", 4, 4, Card11, 'w'));
-        CardList.Add(new CardStats(12, "four of clubs", 4, 4, Card12, 'l'));
-        CardList.Add(new CardStats(13, "five of coins", 5, 5, Card13, 'o'));//start of the 5 cards
-        CardList.Add(new CardStats(14, "five of cups", 5, 5, Card14, 'u'));
-        CardList.Add(new CardStats(15, "five of swords", 5, 5, Card15, 'w'));
-        CardList.Add(new CardStats(16, "five of clubs", 5, 5, Card16, 'l'));
-        CardList.Add(new CardStats(17, "six of coins", 6, 6, Card17, 'o'));//start of the 6 cards
-        CardList.Add(new CardStats(18, "six of cups", 6, 6, Card18, 'u'));
-        CardList.Add(new CardStats(19, "six of swords", 6, 6, Card19, 'w'));
-        CardList.Add(new CardStats(20, "six of clubs", 6, 6, Card20, 'l'));
-        CardList.Add(new CardStats(21, "seven of coins", 7, 7, Card21, 'o'));//start of the 7 cards
-        CardList.Add(new CardStats(22, "seven of cups", 7, 7, Card22, 'u'));
-        CardList.Add(new CardStats(23, "seven of swords", 7, 7, Card23, 'w'));
-        CardList.Add(new CardStats(24, "seven of clubs", 7, 7, Card24, 'l'));
-        CardList.Add(new CardStats(25, "eight of coins", 8, 8, Card25, 'o'));//start of the 8 cards
-        CardList.Add(new CardStats(26, "eight of cups", 8, 8, Card26, 'u'));
-        CardList.Add(new CardStats(27, "eight of swords", 8, 8, Card27, 'w'));
-        CardList.Add(new CardStats(28, "eight of clubs", 8, 8, Card28, 'l'));
-        CardList.Add(new CardStats(29, "nine of coins", 9, 9, Card29, 'o'));//start of the 9 cards
-        CardList.Add(new CardStats(30, "nine of cups", 9, 9, Card30, 'u'));
-        CardList.Add(new CardStats(31, "nine of swords", 9, 9, Card31, 'w'));
-        CardList.Add(new CardStats(32, "nine of clubs", 9, 9, Card32, 'l'));
-        CardList.Add(new CardStats(33, "ten of coins", 10, 10, Card33, 'o'));//start of the 10 cards
-        CardList.Add(new CardStats(34, "ten of cups", 10, 10, Card34, 'u'));
-        CardList.Add(new CardStats(35, "ten of swords", 10, 10, Card35, 'w'));
-        CardList.Add(new CardStats(36, "ten of clubs", 10, 10, Card36, 'l'));
-        CardList.Add(new CardStats(37, "Jack of coins", 11, 11, Card37, 'o'));//start of the J cards
-        CardList.Add(new CardStats(38, "Jack of cups", 11, 11, Card38, 'u'));
-        CardList.Add(new CardStats(39, "Jack of swords", 11, 11, Card39, 'w'));
-        CardList.Add(new CardStats(40, "Jack of clubs", 11, 11, Card40, 'l'));
-        CardList.Add(new CardStats(41, "Queen of coins", 12, 12, Card41, 'o'));//start of the Q cards
-        CardList.Add(new CardStats(42, "Queen of cups", 12, 12, Card42, 'u'));
-        CardList.Add(new CardStats(43, "Queen of swords", 12, 12, Card43, 'w'));
-        CardList.Add(new CardStats(44, "Queen of clubs", 12, 12, Card44, 'l'));
-        CardList.Add(new CardStats(45, "King of coins", 13, 13, Card45, 'o'));//start of the K cards
-        CardList.Add(new CardStats(46, "King of cups", 13, 13, Card46, 'u'));
-        CardList.Add(new CardStats(47, "King of swords", 13, 13, Card47, 'w'));
-        CardList.Add(new CardStats(48, "King of clubs", 13, 13, Card48, 'l'));
-        CardList.Add(new CardStats(49, "Ace of coins", 14, 14, Card49, 'o'));//start of the A cards
-        CardList.Add(new CardStats(50, "Ace of cups", 14, 14, Card50, 'u'));
-        CardList.Add(new CardStats(51, "Ace of swords", 14, 14, Card51, 'w'));
-        CardList.Add(new CardStats(52, "Ace of clubs", 14, 14, Card52, 'l'));
-        CardList.Add(new CardStats(53, "Jesdter of Chaos", 15, 15, Card53, 'r'));//start of the Jesters cards
-        CardList.Add(new CardStats(54, "Jester of Order", 15, 15, Card54, 'b'));
+        CardList.Add(new CardStats(1, "two of coins", 2, 2, Card1, 'o', true));//start of the 2 cards
+        CardList.Add(new CardStats(2, "two of cups", 2, 2, Card2, 'u', true));
+        CardList.Add(new CardStats(3, "two of swords", 2, 2, Card3, 'w', true));
+        CardList.Add(new CardStats(4, "two of clubs", 2, 2, Card4, 'l', true));
+        CardList.Add(new CardStats(5, "three of coins", 3, 3, Card5, 'o', true));//start of the 3 cards
+        CardList.Add(new CardStats(6, "three of cups", 3, 3, Card6, 'u', true));
+        CardList.Add(new CardStats(7, "three of swords", 3, 3, Card7, 'w', true));
+        CardList.Add(new CardStats(8, "three of clubs", 3, 3, Card8, 'l', true));
+        CardList.Add(new CardStats(9, "four of coins", 4, 4, Card9, 'o', true));//start of the 4 cards
+        CardList.Add(new CardStats(10, "four of cups", 4, 4, Card10, 'u', true));
+        CardList.Add(new CardStats(11, "four of swords", 4, 4, Card11, 'w', true));
+        CardList.Add(new CardStats(12, "four of clubs", 4, 4, Card12, 'l', true));
+        CardList.Add(new CardStats(13, "five of coins", 5, 5, Card13, 'o', true));//start of the 5 cards
+        CardList.Add(new CardStats(14, "five of cups", 5, 5, Card14, 'u', true));
+        CardList.Add(new CardStats(15, "five of swords", 5, 5, Card15, 'w', true));
+        CardList.Add(new CardStats(16, "five of clubs", 5, 5, Card16, 'l', true));
+        CardList.Add(new CardStats(17, "six of coins", 6, 6, Card17, 'o', true));//start of the 6 cards
+        CardList.Add(new CardStats(18, "six of cups", 6, 6, Card18, 'u', true));
+        CardList.Add(new CardStats(19, "six of swords", 6, 6, Card19, 'w', true));
+        CardList.Add(new CardStats(20, "six of clubs", 6, 6, Card20, 'l', true));
+        CardList.Add(new CardStats(21, "seven of coins", 7, 7, Card21, 'o', true));//start of the 7 cards
+        CardList.Add(new CardStats(22, "seven of cups", 7, 7, Card22, 'u', true));
+        CardList.Add(new CardStats(23, "seven of swords", 7, 7, Card23, 'w', true));
+        CardList.Add(new CardStats(24, "seven of clubs", 7, 7, Card24, 'l', true));
+        CardList.Add(new CardStats(25, "eight of coins", 8, 8, Card25, 'o', true));//start of the 8 cards
+        CardList.Add(new CardStats(26, "eight of cups", 8, 8, Card26, 'u', true));
+        CardList.Add(new CardStats(27, "eight of swords", 8, 8, Card27, 'w', true));
+        CardList.Add(new CardStats(28, "eight of clubs", 8, 8, Card28, 'l', true));
+        CardList.Add(new CardStats(29, "nine of coins", 9, 9, Card29, 'o', true));//start of the 9 cards
+        CardList.Add(new CardStats(30, "nine of cups", 9, 9, Card30, 'u', true));
+        CardList.Add(new CardStats(31, "nine of swords", 9, 9, Card31, 'w', true));
+        CardList.Add(new CardStats(32, "nine of clubs", 9, 9, Card32, 'l', true));
+        CardList.Add(new CardStats(33, "ten of coins", 10, 10, Card33, 'o', true));//start of the 10 cards
+        CardList.Add(new CardStats(34, "ten of cups", 10, 10, Card34, 'u', true));
+        CardList.Add(new CardStats(35, "ten of swords", 10, 10, Card35, 'w', true));
+        CardList.Add(new CardStats(36, "ten of clubs", 10, 10, Card36, 'l', true));
+        CardList.Add(new CardStats(37, "Jack of coins", 11, 11, Card37, 'o', true));//start of the J cards
+        CardList.Add(new CardStats(38, "Jack of cups", 11, 11, Card38, 'u', true));
+        CardList.Add(new CardStats(39, "Jack of swords", 11, 11, Card39, 'w', true));
+        CardList.Add(new CardStats(40, "Jack of clubs", 11, 11, Card40, 'l', true));
+        CardList.Add(new CardStats(41, "Queen of coins", 12, 12, Card41, 'o', true));//start of the Q cards
+        CardList.Add(new CardStats(42, "Queen of cups", 12, 12, Card42, 'u', true));
+        CardList.Add(new CardStats(43, "Queen of swords", 12, 12, Card43, 'w', true));
+        CardList.Add(new CardStats(44, "Queen of clubs", 12, 12, Card44, 'l', true));
+        CardList.Add(new CardStats(45, "King of coins", 13, 13, Card45, 'o', true));//start of the K cards
+        CardList.Add(new CardStats(46, "King of cups", 13, 13, Card46, 'u', true));
+        CardList.Add(new CardStats(47, "King of swords", 13, 13, Card47, 'w', true));
+        CardList.Add(new CardStats(48, "King of clubs", 13, 13, Card48, 'l', true));
+        CardList.Add(new CardStats(49, "Ace of coins", 14, 14, Card49, 'o', true));//start of the A cards
+        CardList.Add(new CardStats(50, "Ace of cups", 14, 14, Card50, 'u', true));
+        CardList.Add(new CardStats(51, "Ace of swords", 14, 14, Card51, 'w', true));
+        CardList.Add(new CardStats(52, "Ace of clubs", 14, 14, Card52, 'l', true));
+        CardList.Add(new CardStats(53, "Jesdter of Chaos", 15, 15, Card53, 'r', true));//start of the Jesters cards
+        CardList.Add(new CardStats(54, "Jester of Order", 15, 15, Card54, 'b', true));
 
         //
 
