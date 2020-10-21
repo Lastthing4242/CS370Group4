@@ -2468,12 +2468,14 @@ PrefabInstance:
     - target: {fileID: 2320853298358066935, guid: 49d1c0f96a9371142a169da917500c0f,
         type: 3}
       propertyPath: m_Text
-      value: 100
+      value: 'Health
+
+        100'
       objectReference: {fileID: 0}
     - target: {fileID: 2320853298358066935, guid: 49d1c0f96a9371142a169da917500c0f,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 50
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2320853298358066935, guid: 49d1c0f96a9371142a169da917500c0f,
         type: 3}
@@ -2736,12 +2738,14 @@ PrefabInstance:
     - target: {fileID: 2137700588235947976, guid: 83898147448f99947b9cfa4a8cff19e9,
         type: 3}
       propertyPath: m_Text
-      value: 100
+      value: 'Health
+
+        100'
       objectReference: {fileID: 0}
     - target: {fileID: 2137700588235947976, guid: 83898147448f99947b9cfa4a8cff19e9,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 50
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2137700588235947976, guid: 83898147448f99947b9cfa4a8cff19e9,
         type: 3}

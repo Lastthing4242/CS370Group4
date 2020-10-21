@@ -89,8 +89,10 @@ public class PlayerManager : NetworkBehaviour
 
 	static public bool AlreadyMadeDeck = false;
     static public int CardsLeftInLibrary = 0;
+	//static public int CardsLeftInOpponentLibrary = 0;
 	static public List<int> CardIds = new List<int> { };
 
+	
     [SyncVar]
     int CardsPlayed = 0;
 
@@ -100,6 +102,8 @@ public class PlayerManager : NetworkBehaviour
 
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
+		PlayerLibraryText = GameObject.Find("PlayerLibraryText");
+		OpponentLibraryText = GameObject.Find("OpponentLibraryText");		
 		PlayerHealth = GameObject.Find("PlayerHealth");
 		EnemyHealth = GameObject.Find("OpponentHealth");
 		
@@ -163,15 +167,22 @@ public class PlayerManager : NetworkBehaviour
         }
         for (int i = 0; i < 54; i++)
         {
+			//This line was throwing error that was terminating the rest of this method
             //Debug.Log(CardIds[i]);
         }
 		
 		// Set initial health to 100 for both players in HealthScript and on Health gameObjects on screen
 		// Should eventually get this value from some input?
-		PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "100";
+		PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
 		PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
-		EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "100";
+		EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
 		EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
+		
+		// Set initial cards left text to 27.
+		// must be done on start client to update upon re-connect.
+		// The number(27) is erroneous atm since cards appear to be comming out of single deck.
+		PlayerLibraryText.GetComponent<Text>().text = "Cards Left\n27";
+		OpponentLibraryText.GetComponent<Text>().text = "Cards Left\n27";
 		
 		PlayerSlot1 = GameObject.Find("PlayerSlot1");
 		PlayerSlot2 = GameObject.Find("PlayerSlot2");
@@ -255,7 +266,8 @@ public class PlayerManager : NetworkBehaviour
         do//Here's to hope.
         {
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
-        //There was a line that prevented errors in a worst case scenario. It's gone now, because it stopped the while loop from working. It was there to prevent players from drawing from the library while all cards were in play.
+        //There was a line that prevented errors in a worst case scenario. It's gone now, because it stopped the while loop from working.
+		//It was there to prevent players from drawing from the library while all cards were in play.
         } while (!(Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().getInDeck()));
             Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
@@ -264,8 +276,27 @@ public class PlayerManager : NetworkBehaviour
             // added PlayerArea as placeholder since no slots needed
             // should probably overload this function instead
             RpcShowCard(Card, "Dealt Hand", PlayerArea);
-            GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
+			
+			// Removing this line since GameManager cannot make Remote Procedure Calls (the way its written)
+            //GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
+			
+			//Make Rpc call instead...
+			//Don't need Name - use Authority instead.
+			RpcUpdateLibraryText(CardsLeftInLibrary);
     }
+	
+	[ClientRpc]
+	void RpcUpdateLibraryText(int CardsLeft)
+	{
+		if(hasAuthority)
+		{
+			PlayerLibraryText.GetComponent<Text>().text = "Cards Left\n" + CardsLeft;
+		}
+		if (!hasAuthority)
+		{
+			OpponentLibraryText.GetComponent<Text>().text = "Cards Left\n" + CardsLeft;
+		}
+	}
 
     public void PlayCard(GameObject Card, GameObject dropZone)
     {
@@ -389,22 +420,23 @@ public class PlayerManager : NetworkBehaviour
 		{
 			if(whoHit == "PlayerHit")
 			{
-				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
+				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
 			}
 			if(whoHit == "EnemyHit")
 			{
-				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();
+				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
 			}
 		}
 		if(!hasAuthority)
 		{
 			if(whoHit == "PlayerHit")
 			{
-				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();			
+				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;			
 			}
 			if(whoHit == "EnemyHit")
 			{
-				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();	
+				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+				//PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
 			}
 		}
 	}

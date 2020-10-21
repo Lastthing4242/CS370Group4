@@ -6,14 +6,8 @@ using Mirror;
 
 public class GameManager : MonoBehaviour
 {
-	//*****Add GameState, PlayerHealth, OpponentHealth JRV20201013
 	public string GameState = "Deal";
-	//should probably find these from a game object on screen
-	//also should probably use getter/setter methods and make private?
-	public int PlayerHealth = 100;
-	public int EnemyHealth = 100;
 	
-	// ******End of addition JRV20201013
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
     public GameObject Card1;
@@ -189,7 +183,6 @@ public class GameManager : MonoBehaviour
         CardList.Add(new CardStats(53, "Jesdter of Chaos", 15, 15, Card53, 'r', true));//start of the Jesters cards
         CardList.Add(new CardStats(54, "Jester of Order", 15, 15, Card54, 'b', true));
 
-        //
 
         Card1.GetComponent<CardStats>().EasySet(CardList[0]);
         Card2.GetComponent<CardStats>().EasySet(CardList[1]);
@@ -261,6 +254,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+	// This method will not display on each client screen without Rpc call.
+	// Added similar method to PlayerManager
+	// After checking functionality of new method in PlayerManager, lets delete this.
     public void UpdatePlayerText(int CardCount, string Name)
     {
         if (Name == "Bob")
@@ -273,8 +269,7 @@ public class GameManager : MonoBehaviour
         }
     }
 	
-	//*****Add ChangeGameState in order to increment between Deal, Play and Battle JRV20201013
-	
+	// Add ChangeGameState in order to increment between Deal, Play and Battle JRV20201013	
 	public void ChangeGameState(string changeStateRequest)
 	{
 		if (changeStateRequest == "Deal")
@@ -291,9 +286,12 @@ public class GameManager : MonoBehaviour
 		}
 	}
 	
-	// ******End of addition JRV20201013
 	
 
+	
+	// Discussed removing this method since Battle Script handles the fighting.
+	// Maybe we should keep it here as placeholder since we eventually intend to remove the Battle button.
+	// This would be a good place to call fight - maybe from the update method and we can then call Battle script.
     public void Fight(GameObject CardOne, GameObject CardTwo)
     {
         int NewHealthOne = CardOne.GetComponent<CardStats>().getHealth() - CardTwo.GetComponent<CardStats>().getPower();
