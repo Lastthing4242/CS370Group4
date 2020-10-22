@@ -56,7 +56,12 @@ public class DragDrop : NetworkBehaviour
 		{
 			isOverDropZone = true;
 			dropZone = collision.gameObject;
-		}  
+		}
+        if (collision.gameObject.tag == "FullSlot")
+        {
+            isOverDropZone = true;
+            dropZone = collision.gameObject;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)

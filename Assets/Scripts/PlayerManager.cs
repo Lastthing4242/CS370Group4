@@ -8,11 +8,13 @@ using System;
 
 public class PlayerManager : NetworkBehaviour
 {
+    public TurnOrder TurnOrder;
     public GameManager GameManager;
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
 	public GameObject PlayerHealth;
 	public GameObject EnemyHealth;
+    public bool HavePlayedCard = false;
 	
     public GameObject Card1;
     public GameObject Card2;
@@ -72,9 +74,19 @@ public class PlayerManager : NetworkBehaviour
     public GameObject OpponentArea;
     public GameObject PlayerLibrary;
     public GameObject OpponentLibrary;
+    public GameObject endTurn;
+    public Text TurnText;
+    public static float CurrentTime = 0f;//this will be the dynamic time variable
+    public Text TurnTimer;
     public string Name;
-	
-	public GameObject PlayerSlot1;
+    public static bool PlayerOneClick = false;
+    public static bool PlayerTwoClick = false;
+    public static bool CombatTimer = true;//this sets a short timer for combat
+    static float TurnTime = 10f;//this sets all of the timers for the code, chaging this number changes all the timers
+    public static int AttackPhase = 0;// this manages how many phases have been played, if it reaches two it will iniate the attack phase
+
+
+    public GameObject PlayerSlot1;
 	public GameObject PlayerSlot2;
 	public GameObject PlayerSlot3;
 	public GameObject PlayerSlot4;
@@ -100,13 +112,16 @@ public class PlayerManager : NetworkBehaviour
     {
         base.OnStartClient();
 
+        TurnText = GameObject.Find("TurnText").GetComponent<Text>();
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
 		PlayerLibraryText = GameObject.Find("PlayerLibraryText");
 		OpponentLibraryText = GameObject.Find("OpponentLibraryText");		
 		PlayerHealth = GameObject.Find("PlayerHealth");
 		EnemyHealth = GameObject.Find("OpponentHealth");
-		
+        endTurn = GameObject.Find("endTurn");
+        TurnTimer = GameObject.Find("TurnTimer").GetComponent<Text>();
+
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
         Card3 = GameObject.Find("Card3");
@@ -229,10 +244,99 @@ public class PlayerManager : NetworkBehaviour
         Name = GameManager.NameGenerator();
     }
 
+    void Update()//this runs the timer in real time
+    {
+       
+        if (PlayerTwoClick || PlayerOneClick)
+        {
+            //decreases current time and displays it
+            CurrentTime -= 1 * Time.deltaTime;
+            if (CurrentTime > 0)
+            {
+                TurnTimer.text = "Time remaining:" + CurrentTime.ToString("f0");
+            }
+
+
+            if (AttackPhase == 1 && CurrentTime <= 0f && CurrentTime >= -30f)
+            {
+                AttackPhase = 2;
+            }
+
+
+            if (AttackPhase == 2)//checks that both players have hade a turn to play then plays the combat step
+            {
+                /*faux start function inside of the update that sets the timer for combat,
+                the timer is more just for show until we have things happening in 
+                attack phase to show we do have multiple phases*/
+                if (CombatTimer)
+                {
+                    CurrentTime = TurnTime / 2f;
+                    CombatTimer = false;
+                }
+
+                CurrentTime -= 1 * Time.deltaTime;
+
+                if (TurnText.text != " Combat ocurring... ")
+                {
+                    TurnText.text = " Combat ocurring... ";
+                }
+
+                if (CurrentTime <= 0)//exits combat
+                {
+                    CombatTimer = true;//rests the combat timer for further combat
+                    AttackPhase = 0;
+                    TurnText.text = " End Turn ";
+                    TurnTimer.text = "...";
+                    CurrentTime = -100f;
+                    PlayerOneClick = false;
+                    PlayerTwoClick = false;
+                }
+
+            }
+
+        }
+    }
+
+
     [Server]
     public override void OnStartServer()
     {
         
+    }
+
+
+    [Command]//helps comminicate on click to server
+    public void CmdProgressTurn()
+    {
+        rpcRunTurn();
+    }
+
+    [ClientRpc]//don't know why but this be working like this;
+    void rpcRunTurn()
+    {
+        if (hasAuthority)
+        {
+            if (!PlayerOneClick)
+            {
+                AttackPhase++;
+                PlayerOneClick = true;
+                CurrentTime = TurnTime;
+
+            }
+        }
+
+
+        else if (!hasAuthority)
+        {
+            if (!PlayerTwoClick)
+            {
+                AttackPhase++;
+                PlayerTwoClick = true;
+                CurrentTime = TurnTime;
+
+            }
+        }
+
     }
 
     public void CmdShuffler()
@@ -335,7 +439,14 @@ public class PlayerManager : NetworkBehaviour
 				Card.transform.SetParent(dropZone.transform, false);
 				// added tag set
 				dropZone.tag = "FullSlot";
-			}
+                
+                if (dropZone.transform.childCount != 1)
+                {
+                    Destroy(dropZone.transform.GetChild(0).gameObject);
+                    dropZone.tag = "EmptySlot";
+                    dropZone.tag = "FullSlot";
+                }
+            }
 					
 			if (!hasAuthority)
             {
@@ -345,6 +456,10 @@ public class PlayerManager : NetworkBehaviour
 					{
 						Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
 						EnemySockets[i].gameObject.tag = "FullSlot";
+                        if (EnemySockets[i].transform.childCount != 1)
+                        {
+                            Destroy(EnemySockets[i].transform.GetChild(0).gameObject);
+                        }
 					}
 				}
 		
@@ -402,6 +517,7 @@ public class PlayerManager : NetworkBehaviour
 		}
     }
 	
+    //changes health
 	public void SetHealth(int newHealth, string whoHit)
 	{
 		CmdSetHealth(newHealth, whoHit);
@@ -413,6 +529,7 @@ public class PlayerManager : NetworkBehaviour
 		RpcSetHealth(newHealth, whoHit);
 	}
 	
+
 	[ClientRpc]
 	public void RpcSetHealth(int newHealth, string whoHit)
 	{

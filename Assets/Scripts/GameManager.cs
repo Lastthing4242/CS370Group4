@@ -7,7 +7,8 @@ using Mirror;
 public class GameManager : MonoBehaviour
 {
 	public string GameState = "Deal";
-	
+    public PlayerManager playermanager= new PlayerManager();
+
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
     public GameObject Card1;
@@ -253,10 +254,11 @@ public class GameManager : MonoBehaviour
             return "Karen";
         }
     }
+  
 
-	// This method will not display on each client screen without Rpc call.
-	// Added similar method to PlayerManager
-	// After checking functionality of new method in PlayerManager, lets delete this.
+    // This method will not display on each client screen without Rpc call.
+    // Added similar method to PlayerManager
+    // After checking functionality of new method in PlayerManager, lets delete this.
     public void UpdatePlayerText(int CardCount, string Name)
     {
         if (Name == "Bob")
@@ -274,11 +276,16 @@ public class GameManager : MonoBehaviour
 	{
 		if (changeStateRequest == "Deal")
 		{
-			
+            //playermanager.CmdDealCards();
+            ChangeGameState("Play");
+
 		}
-		else if (changeStateRequest == "Play")
+		else if (changeStateRequest == "Play")// hand will be locked somewhere in here
 		{
-			
+
+            
+               
+
 		}
 		else if (changeStateRequest == "Battle")
 		{

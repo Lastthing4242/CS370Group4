@@ -4,8 +4,11 @@ using System.ComponentModel;
 using UnityEngine;
 using Mirror;
 
-public class CardStats : MonoBehaviour
+public class CardStats : NetworkBehaviour
 {
+    public PlayerManager playermanager;
+
+    
     // this is where the variables are defined
     public int Id;
     public string CardName;
@@ -14,6 +17,7 @@ public class CardStats : MonoBehaviour
     public GameObject card;
     public char suit;
     public bool InDeck;
+    bool attached = false;
 
     public CardStats()//this showed up in the video I saw on how to do this, so I left it here
         {
@@ -41,7 +45,65 @@ public class CardStats : MonoBehaviour
         card = x.getCard();
         suit = x.getSuit();
         InDeck = x.InDeck;
+        
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+        playermanager = networkIdentity.GetComponent<PlayerManager>();
+      
+
+           
+                if (suit == 'w')
+                {
+                    CardPower = CardPower + 2;
+                }
+                if (suit == 'u')
+                {
+                    CardHealth = CardHealth + 2;
+                }
+                if (suit == 'l')
+                {
+                    CardHealth = CardHealth + 1;
+                    CardPower = CardPower + 1;   
+                }
+                if (suit == 'o')
+                {
+                    int health = playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
+                    health = health - 2;
+                    playermanager.SetHealth(health, "EnemyHit");
+                }
+     
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+        playermanager = networkIdentity.GetComponent<PlayerManager>();
+
+        if (suit == 'w')
+        {
+            CardPower = CardPower - 2;
+        }
+        if (suit == 'u')
+        {
+            CardHealth = CardHealth - 2;
+        }
+        if(suit == 'l')
+        {
+            CardHealth = CardHealth - 1;
+            CardPower = CardPower - 1;
+        }
+        if (suit == 'o')
+        {
+            int health = playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
+            health = health + 2;
+            playermanager.SetHealth(health, "EnemyHit");
+        }
+    }
+
+
 
     public void setHealth(int NewHealth)
     {

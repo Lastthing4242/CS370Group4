@@ -12,6 +12,7 @@ public class Battle : NetworkBehaviour
 	public List<GameObject> PlayerSlots = new List<GameObject>();
 	public List<GameObject> EnemySlots = new List<GameObject>();
 	
+
 	public int PlayerHealth;
 	public int OpponentHealth;
 	
@@ -115,6 +116,8 @@ public class Battle : NetworkBehaviour
 					PlayerManager.SetHealth(health, "PlayerHit");
 				}					
 			}
-		}	
-	}	
+		}
+        GameManager.ChangeGameState("Deal");
+
+    }	
 }
