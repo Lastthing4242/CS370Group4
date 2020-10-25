@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 1c40ca43d6f762348abb1ad00f4175b1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - GameManager: {instanceID: 0}
+  - PlayerManager: {instanceID: 0}
+  - PlayerSlot1: {fileID: 7543081097055524820, guid: 2e9100e134d7a4045879290f85313a61,
+      type: 3}
+  - PlayerSlot2: {instanceID: 0}
+  - PlayerSlot3: {instanceID: 0}
+  - PlayerSlot4: {instanceID: 0}
+  - PlayerSlot5: {instanceID: 0}
+  - EnemySlot1: {instanceID: 0}
+  - EnemySlot2: {instanceID: 0}
+  - EnemySlot3: {instanceID: 0}
+  - EnemySlot4: {instanceID: 0}
+  - EnemySlot5: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

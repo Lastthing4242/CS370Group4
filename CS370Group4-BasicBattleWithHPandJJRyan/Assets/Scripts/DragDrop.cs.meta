@@ -1,0 +1,33 @@
+fileFormatVersion: 2
+guid: ff7f6e0add01bf649a9401fdc9ef6485
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Canvas: {instanceID: 0}
+  - PlayerManager: {instanceID: 0}
+  - PlayerSlot1: {fileID: 7543081097055524820, guid: 2e9100e134d7a4045879290f85313a61,
+      type: 3}
+  - PlayerSlot2: {fileID: 1099650455523260183, guid: 5acae07b5fc6f734da541da9a22b9f50,
+      type: 3}
+  - PlayerSlot3: {fileID: 3632333781167908280, guid: beb1e8bfd9b50fd468f11158a45b396d,
+      type: 3}
+  - PlayerSlot4: {fileID: 5113174823986287066, guid: e67d075f91408de45b3337b1c63d0fa2,
+      type: 3}
+  - PlayerSlot5: {fileID: 7768964284990502202, guid: 1cf11dd8122d41f43b76e7a2cf2ab805,
+      type: 3}
+  - EnemySlot1: {fileID: 897827094405951196, guid: 3cd61b135afede34e832889710db5dad,
+      type: 3}
+  - EnemySlot2: {fileID: 376441263119771496, guid: a75b0300bfe7c534cb7174ea397a8514,
+      type: 3}
+  - EnemySlot3: {fileID: 3632333781167908280, guid: beb1e8bfd9b50fd468f11158a45b396d,
+      type: 3}
+  - EnemySlot4: {fileID: 5113174823986287066, guid: e67d075f91408de45b3337b1c63d0fa2,
+      type: 3}
+  - EnemySlot5: {fileID: 7768964284990502202, guid: 1cf11dd8122d41f43b76e7a2cf2ab805,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
