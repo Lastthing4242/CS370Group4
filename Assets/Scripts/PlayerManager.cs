@@ -16,6 +16,8 @@ public class PlayerManager : NetworkBehaviour
 	public GameObject EnemyHealth;
     public bool HavePlayedCard = false;
 	
+	public GameObject CardHealth;
+	
     public GameObject Card1;
     public GameObject Card2;
     public GameObject Card3;
@@ -121,6 +123,8 @@ public class PlayerManager : NetworkBehaviour
 		EnemyHealth = GameObject.Find("OpponentHealth");
         endTurn = GameObject.Find("endTurn");
         TurnTimer = GameObject.Find("TurnTimer").GetComponent<Text>();
+		
+		//CardHealth = GameObject.Find("CardHealth");
 
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
@@ -376,6 +380,14 @@ public class PlayerManager : NetworkBehaviour
             Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
+			
+			//Add to create cardHealth on card
+			// Still broken
+			GameObject CH = Instantiate(CardHealth, new Vector2(0, 0), Quaternion.identity);
+			//NetworkServer.Spawn(CH, connectionToClient);
+			CH.transform.SetParent(Card.transform, false);
+			//Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
+			
             Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
             // added PlayerArea as placeholder since no slots needed
             // should probably overload this function instead

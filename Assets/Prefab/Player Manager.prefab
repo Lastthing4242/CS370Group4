@@ -81,11 +81,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  TurnOrder: {fileID: 0}
   GameManager: {fileID: 241725971434708233, guid: cee41a843d48a5d49891f6eae7dbfb45,
     type: 3}
   PlayerLibraryText: {fileID: 8258060454263446545, guid: 74b113b88bd54d54c938218d4da3c2a2,
     type: 3}
   OpponentLibraryText: {fileID: 427097054259169886, guid: b14e10e230a4e2949b847f1a0097506b,
+    type: 3}
+  PlayerHealth: {fileID: 0}
+  EnemyHealth: {fileID: 0}
+  HavePlayedCard: 0
+  CardHealth: {fileID: 1740228089004060632, guid: 51c2e721f0fd5b14d9910d4af60b6a97,
     type: 3}
   Card1: {fileID: 5092288969668424877, guid: cde4133584bcc1444bbfa7e1668c6d52, type: 3}
   Card2: {fileID: 3530235822937794886, guid: c944f77ab46639e44a30a9d429397658, type: 3}
@@ -149,6 +155,9 @@ MonoBehaviour:
     type: 3}
   OpponentLibrary: {fileID: 7678118345141126428, guid: 31cd3293b7b1d9f4badb450f22a40d27,
     type: 3}
+  endTurn: {fileID: 0}
+  TurnText: {fileID: 0}
+  TurnTimer: {fileID: 0}
   Name: 
   PlayerSlot1: {fileID: 0}
   PlayerSlot2: {fileID: 0}
@@ -162,4 +171,3 @@ MonoBehaviour:
   EnemySlot5: {fileID: 0}
   PlayerSockets: []
   EnemySockets: []
-  CardsLeftInLibrary: 0
