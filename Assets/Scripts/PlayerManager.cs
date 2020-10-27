@@ -244,7 +244,7 @@ public class PlayerManager : NetworkBehaviour
         Name = GameManager.NameGenerator();
     }
 
-    void Update()//this runs the timer in real time
+    void Update()//this runs the timer in real time and controls card effects
     {
        
         if (PlayerTwoClick || PlayerOneClick)
@@ -276,9 +276,9 @@ public class PlayerManager : NetworkBehaviour
 
                 CurrentTime -= 1 * Time.deltaTime;
 
-                if (TurnText.text != " Combat ocurring... ")
+                if (TurnText.text != "ETB Triggers")
                 {
-                    TurnText.text = " Combat ocurring... ";
+                    TurnText.text = "ETB Triggers";
                 }
 
                 if (CurrentTime <= 0)//exits combat

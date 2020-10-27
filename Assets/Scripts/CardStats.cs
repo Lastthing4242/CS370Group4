@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 
 public class CardStats : NetworkBehaviour
@@ -17,7 +18,9 @@ public class CardStats : NetworkBehaviour
     public GameObject card;
     public char suit;
     public bool InDeck;
-    bool attached = false;
+    public bool triggered = false;// checks to see if the card has triggered its ability
+    public bool enemyCard = false;
+    public bool playerCard = false;
 
     public CardStats()//this showed up in the video I saw on how to do this, so I left it here
         {
@@ -46,62 +49,67 @@ public class CardStats : NetworkBehaviour
         suit = x.getSuit();
         InDeck = x.InDeck;
         
+        
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+   void Update()
     {
-        NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-        playermanager = networkIdentity.GetComponent<PlayerManager>();
-      
+        if (card.transform.IsChildOf(GameObject.Find("PlayerArea").transform) && !playerCard)
+        {
+            Debug.Log("im a player card my id is" + Id);
+            playerCard = true;
+        }
+        else if (card.transform.IsChildOf(GameObject.Find("OpponentArea").transform) && !enemyCard)
+        {
+            Debug.Log("im a enemy card my id is" + Id);
+            enemyCard = true;
+        }
+        if (triggered == false && GameObject.Find("TurnText").GetComponent<Text>().text == "ETB Triggers")//this triggers all of the abilities currently
+        {
+            Debug.Log("im using my ability my id is" + Id);
+            NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+            playermanager = networkIdentity.GetComponent<PlayerManager>();
 
-           
-                if (suit == 'w')
+            if (suit == 'o')
+            {
+                if (enemyCard)
                 {
-                    CardPower = CardPower + 2;
+                    int health = playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().getHealth();
+                    health = health - 2;
+                    playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+                    playermanager.SetHealth(health, "PlayerHit");
+                    triggered = true;
                 }
-                if (suit == 'u')
-                {
-                    CardHealth = CardHealth + 2;
-                }
-                if (suit == 'l')
-                {
-                    CardHealth = CardHealth + 1;
-                    CardPower = CardPower + 1;   
-                }
-                if (suit == 'o')
+                else if (playerCard)
                 {
                     int health = playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
                     health = health - 2;
+                    playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
                     playermanager.SetHealth(health, "EnemyHit");
+                    triggered = true;
                 }
-     
-    }
+            }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-        playermanager = networkIdentity.GetComponent<PlayerManager>();
-
-        if (suit == 'w')
-        {
-            CardPower = CardPower - 2;
+            else if (suit == 'u')
+            {             
+                CardHealth = CardHealth + 2;
+                triggered = true;
+            }
+            else if (suit == 'w')
+            {
+                CardPower = CardPower + 2;
+                triggered = true;
+                
+            }
+            else if (suit == 'l')
+            {
+                CardHealth++;
+                CardPower++;
+                triggered = true;
+            }
         }
-        if (suit == 'u')
-        {
-            CardHealth = CardHealth - 2;
-        }
-        if(suit == 'l')
-        {
-            CardHealth = CardHealth - 1;
-            CardPower = CardPower - 1;
-        }
-        if (suit == 'o')
-        {
-            int health = playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
-            health = health + 2;
-            playermanager.SetHealth(health, "EnemyHit");
-        }
-    }
+     }
+    
 
 
 
