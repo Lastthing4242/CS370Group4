@@ -4,6 +4,9 @@ using System.ComponentModel;
 using UnityEngine;
 using Mirror;
 
+using UnityEngine.UI;
+using System;
+
 public class CardStats : NetworkBehaviour
 {
     public PlayerManager playermanager;
@@ -17,7 +20,19 @@ public class CardStats : NetworkBehaviour
     public GameObject card;
     public char suit;
     public bool InDeck;
-    bool attached = false;
+	
+	public GameObject OnCardHealth;
+	public GameObject OnCardAttack;
+	public Sprite AttackImage;
+	public Sprite FullHealth;
+	public Sprite HalfHealth;
+	public Sprite QuarterHealth;
+	public Sprite ThreeQuarterHealth;
+	
+	
+	bool attached = false;
+	int fullHealth;
+	
 
     public CardStats()//this showed up in the video I saw on how to do this, so I left it here
         {
@@ -34,6 +49,9 @@ public class CardStats : NetworkBehaviour
         card = Card;
         suit = Suit;
         InDeck = inDeck;
+		
+		//Assign FullHealth for % calculation
+		fullHealth = health;
     }
 
     public void EasySet(CardStats x)//this doesn't help here, but helps log all the cards in general
@@ -45,6 +63,9 @@ public class CardStats : NetworkBehaviour
         card = x.getCard();
         suit = x.getSuit();
         InDeck = x.InDeck;
+		
+		//Assign FullHealth for % calculation
+		fullHealth = CardHealth;
         
     }
 
@@ -102,9 +123,54 @@ public class CardStats : NetworkBehaviour
             playermanager.SetHealth(health, "EnemyHit");
         }
     }
-
-
-
+	
+	// There's got to be a better way to set this, but I can't figuer it out without setting on each prefab (being lazy)
+	// It doesn't seem like the easySet() and CardStats() methods are doing anything??
+	// Is everything set on the prefabs themselves and not here??
+	public void SetFullHealth(GameObject card)
+	{
+		card.gameObject.GetComponent<CardStats>().fullHealth = CardHealth;
+	}
+	
+	//sets the OnCardStats to above variables
+	// Call this method, passing the card you want updated anytime changes are made to card stats (i.e. attacked, enhanced, ect)
+	public void SetOnCardStats(GameObject card)
+	{
+		card.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + CardHealth;
+		card.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + CardPower;
+		
+		int percentHealth = 100 * (CardHealth / fullHealth);
+		while(true)
+		{
+			if(percentHealth > 75)
+			{
+				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
+				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = FullHealth;
+				break;
+			}
+			if(percentHealth > 50)
+			{
+				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
+				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = ThreeQuarterHealth;
+				break;
+			}
+			if(percentHealth > 25)
+			{
+				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
+				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = HalfHealth;
+				break;
+			}
+			if(percentHealth > 0)
+			{
+				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
+				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = QuarterHealth;
+				break;
+			}
+		}
+	}
+	
+	
+	// Just wondering why we have getter methods for public variables??
     public void setHealth(int NewHealth)
     {
         CardHealth = NewHealth;

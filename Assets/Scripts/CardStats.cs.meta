@@ -3,7 +3,16 @@ guid: 22743deae72fecf4db523702567627b1
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - playermanager: {instanceID: 0}
+  - card: {instanceID: 0}
+  - OnCardHealth: {instanceID: 0}
+  - OnCardAttack: {instanceID: 0}
+  - AttackImage: {instanceID: 0}
+  - FullHealth: {instanceID: 0}
+  - HalfHealth: {instanceID: 0}
+  - QuarterHealth: {instanceID: 0}
+  - ThreeQuarterHealth: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

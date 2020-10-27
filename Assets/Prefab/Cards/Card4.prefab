@@ -10,7 +10,17 @@ PrefabInstance:
     - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
         type: 3}
       propertyPath: Id
-      value: 0
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
+        type: 3}
+      propertyPath: CardName
+      value: two of clubs
+      objectReference: {fileID: 0}
+    - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
+        type: 3}
+      propertyPath: suit
+      value: 108
       objectReference: {fileID: 0}
     - target: {fileID: 3215691978385841974, guid: e08912b35d69b824ea5126904ff9b01b,
         type: 3}

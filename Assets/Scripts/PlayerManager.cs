@@ -17,6 +17,7 @@ public class PlayerManager : NetworkBehaviour
     public bool HavePlayedCard = false;
 	
 	public GameObject CardHealth;
+	public GameObject CardAttack;
 	
     public GameObject Card1;
     public GameObject Card2;
@@ -123,8 +124,6 @@ public class PlayerManager : NetworkBehaviour
 		EnemyHealth = GameObject.Find("OpponentHealth");
         endTurn = GameObject.Find("endTurn");
         TurnTimer = GameObject.Find("TurnTimer").GetComponent<Text>();
-		
-		//CardHealth = GameObject.Find("CardHealth");
 
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
@@ -380,15 +379,18 @@ public class PlayerManager : NetworkBehaviour
             Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
+			Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
 			
-			//Add to create cardHealth on card
-			// Still broken
-			GameObject CH = Instantiate(CardHealth, new Vector2(0, 0), Quaternion.identity);
-			//NetworkServer.Spawn(CH, connectionToClient);
+			//Add to create cardHealth and cardAttack on card
+			GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
 			CH.transform.SetParent(Card.transform, false);
-			//Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
+			GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
+			CA.transform.SetParent(Card.transform, false);
 			
-            Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
+			// Call for initial set of card stats on card.
+			Card.gameObject.GetComponent<CardStats>().SetFullHealth(Card);
+			Card.gameObject.GetComponent<CardStats>().SetOnCardStats(Card);
+			
             // added PlayerArea as placeholder since no slots needed
             // should probably overload this function instead
             RpcShowCard(Card, "Dealt Hand", PlayerArea);
