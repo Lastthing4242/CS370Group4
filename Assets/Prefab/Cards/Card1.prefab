@@ -182,8 +182,17 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   Canvas: {fileID: 0}
-  DropZone: {fileID: 0}
   PlayerManager: {fileID: 0}
+  PlayerSlot1: {fileID: 0}
+  PlayerSlot2: {fileID: 0}
+  PlayerSlot3: {fileID: 0}
+  PlayerSlot4: {fileID: 0}
+  PlayerSlot5: {fileID: 0}
+  EnemySlot1: {fileID: 0}
+  EnemySlot2: {fileID: 0}
+  EnemySlot3: {fileID: 0}
+  EnemySlot4: {fileID: 0}
+  EnemySlot5: {fileID: 0}
 --- !u!61 &-7400996448157818188
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -307,8 +316,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22743deae72fecf4db523702567627b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Id: 0
-  CardName: 
-  CardHealth: 0
-  CardPower: 0
-  card: {fileID: 0}
+  syncMode: 0
+  syncInterval: 0.1
+  playermanager: {fileID: 0}
+  Id: 1
+  CardName: two of coins
+  CardHealth: 2
+  CardPower: 2
+  card: {fileID: 5092288969668424877}
+  suit: 111
+  InDeck: 1
+  OnCardHealth: {fileID: 0}
+  OnCardAttack: {fileID: 0}
+  AttackImage: {fileID: 21300000, guid: 71c57efa13f0d84429187f22764750f4, type: 3}
+  FullHealth: {fileID: 21300000, guid: e725036b7e8e38e468195c75098e4d38, type: 3}
+  HalfHealth: {fileID: 21300000, guid: a24e79bc2891e2f48bbdf8cbce8ac735, type: 3}
+  QuarterHealth: {fileID: 21300000, guid: ba3112706ed642e47a08e9db0a40510a, type: 3}
+  ThreeQuarterHealth: {fileID: 21300000, guid: 14fa9984d4d237f439e23f3db7c33737, type: 3}

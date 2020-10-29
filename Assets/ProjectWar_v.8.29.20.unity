@@ -732,6 +732,10 @@ MonoBehaviour:
   - {fileID: 2529529801975439079, guid: 83898147448f99947b9cfa4a8cff19e9, type: 3}
   - {fileID: 701156241008102443, guid: 71b8b45ec8e9dd64d88dbb436e9e2e00, type: 3}
   - {fileID: 8985297112871181782, guid: 3fe241f7416ccdb449f1009f2c183fa6, type: 3}
+  - {fileID: 5058403574208228501, guid: 168be5ae2cbb00d46a728f667ab49138, type: 3}
+  - {fileID: 1220213470860845179, guid: 1e45e5e3378531349888a37b45d047c1, type: 3}
+  - {fileID: 1740228089004060632, guid: 51c2e721f0fd5b14d9910d4af60b6a97, type: 3}
+  - {fileID: 6086996860282851212, guid: 4329e8ac2cec1e44ca2ca68965bc12bb, type: 3}
 --- !u!224 &1148976942 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6907996564690161880, guid: 1768f2de1f68be34286a18248d0d27f5,
