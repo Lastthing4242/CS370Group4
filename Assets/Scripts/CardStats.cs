@@ -87,7 +87,7 @@ public class CardStats : NetworkBehaviour
                 if (suit == 'l')
                 {
                     CardHealth = CardHealth + 1;
-                    CardPower = CardPower + 1;   
+                    CardPower = CardPower + 1;
                 }
                 if (suit == 'o')
                 {
@@ -136,33 +136,39 @@ public class CardStats : NetworkBehaviour
 	// Call this method, passing the card you want updated anytime changes are made to card stats (i.e. attacked, enhanced, ect)
 	public void SetOnCardStats(GameObject card)
 	{
+		
 		card.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + CardHealth;
 		card.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + CardPower;
+		//gameObject.GetComponent<Text>().text = "" + CardHealth;
+		//gameObject.GetComponent<Text>().text = "" + CardPower;
 		
-		int percentHealth = 100 * (CardHealth / fullHealth);
+		
+		float pH = (float)CardHealth / (float)fullHealth;
+		int percentHealth = (int)(100 * pH);
+		Debug.Log("CARD HEALTH = " + CardHealth);
+		Debug.Log("FULL HEALTH = " + fullHealth);
+		Debug.Log("FLOAT pH = " + pH);
+		Debug.Log("PERCENT HEALTH = " + percentHealth);
+		
 		while(true)
 		{
 			if(percentHealth > 75)
 			{
-				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
 				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = FullHealth;
 				break;
 			}
 			if(percentHealth > 50)
 			{
-				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
 				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = ThreeQuarterHealth;
 				break;
 			}
 			if(percentHealth > 25)
 			{
-				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
 				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = HalfHealth;
 				break;
 			}
-			if(percentHealth > 0)
+			if(percentHealth >= 0)
 			{
-				Debug.Log("HHHHHHHHEEEEEEEEYYYYYYYYYYY: " + percentHealth);
 				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = QuarterHealth;
 				break;
 			}
@@ -170,7 +176,7 @@ public class CardStats : NetworkBehaviour
 	}
 	
 	
-	// Just wondering why we have getter methods for public variables??
+	// Just wondering why we have setter/getter methods for public variables??
     public void setHealth(int NewHealth)
     {
         CardHealth = NewHealth;
