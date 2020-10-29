@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
@@ -531,30 +531,54 @@ public class PlayerManager : NetworkBehaviour
 	
 
 	[ClientRpc]
-	public void RpcSetHealth(int newHealth, string whoHit)
-	{
-		if(hasAuthority)
-		{
-			if(whoHit == "PlayerHit")
-			{
-				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
-			}
-			if(whoHit == "EnemyHit")
-			{
-				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-			}
-		}
-		if(!hasAuthority)
-		{
-			if(whoHit == "PlayerHit")
-			{
-				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;			
-			}
-			if(whoHit == "EnemyHit")
-			{
-				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-				//PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
-			}
-		}
-	}
+    public void RpcSetHealth(int newHealth, string whoHit)
+    {
+        if (newHealth < 0)
+        {
+            newHealth = 0;
+        }
+        if (hasAuthority)
+        {
+            if (whoHit == "PlayerHit")
+            {
+                if (newHealth == 0)
+                {
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                }
+                else
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+            }
+            if (whoHit == "EnemyHit")
+            {
+                if (newHealth == 0)
+                {
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                }
+                else
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+            }
+        }
+        if (!hasAuthority)
+        {
+            if (whoHit == "PlayerHit")
+            {
+                if (newHealth == 0)
+                {
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                }
+                else
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+            }
+            if (whoHit == "EnemyHit")
+            {
+                if (newHealth == 0)
+                {
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                }
+                else
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+                //PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
+            }
+        }
+    }
 }
