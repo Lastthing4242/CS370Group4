@@ -10,7 +10,17 @@ PrefabInstance:
     - target: {fileID: -1436222757480040202, guid: c944f77ab46639e44a30a9d429397658,
         type: 3}
       propertyPath: Id
-      value: 0
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -1436222757480040202, guid: c944f77ab46639e44a30a9d429397658,
+        type: 3}
+      propertyPath: CardName
+      value: two of swords
+      objectReference: {fileID: 0}
+    - target: {fileID: -1436222757480040202, guid: c944f77ab46639e44a30a9d429397658,
+        type: 3}
+      propertyPath: suit
+      value: 119
       objectReference: {fileID: 0}
     - target: {fileID: 3530235822937794886, guid: c944f77ab46639e44a30a9d429397658,
         type: 3}

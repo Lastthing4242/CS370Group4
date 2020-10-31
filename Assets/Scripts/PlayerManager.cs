@@ -16,6 +16,9 @@ public class PlayerManager : NetworkBehaviour
 	public GameObject EnemyHealth;
     public bool HavePlayedCard = false;
 	
+	public GameObject CardHealth;
+	public GameObject CardAttack;
+	
     public GameObject Card1;
     public GameObject Card2;
     public GameObject Card3;
@@ -244,7 +247,7 @@ public class PlayerManager : NetworkBehaviour
         Name = GameManager.NameGenerator();
     }
 
-    void Update()//this runs the timer in real time and controls card effects
+    void Update()//this runs the timer in real time
     {
        
         if (PlayerTwoClick || PlayerOneClick)
@@ -295,6 +298,19 @@ public class PlayerManager : NetworkBehaviour
             }
 
         }
+		/*
+		for(int i = 0; i < PlayerSockets.Count; i++)
+		{
+			if(PlayerSockets[i].gameObject.tag == "FullSlot")
+			{
+				PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(PlayerSockets[i].transform.GetChild(0).gameObject);
+			}
+			if(EnemySockets[i].gameObject.tag == "FullSlot")
+			{
+				EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(EnemySockets[i].transform.GetChild(0).gameObject);
+			}
+		}
+		*/
     }
 
 
@@ -376,7 +392,10 @@ public class PlayerManager : NetworkBehaviour
             Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
-            Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
+			Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
+			
+			// REMOVED ONCARDSTATS() call
+			
             // added PlayerArea as placeholder since no slots needed
             // should probably overload this function instead
             RpcShowCard(Card, "Dealt Hand", PlayerArea);
@@ -424,6 +443,16 @@ public class PlayerManager : NetworkBehaviour
             if (hasAuthority)
             {
                 Card.transform.SetParent(PlayerArea.transform, false);
+				
+				//Add to create cardHealth and cardAttack on card
+				GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
+				CH.transform.SetParent(Card.transform, false);
+				GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
+				CA.transform.SetParent(Card.transform, false);
+				
+				// Call for initial set of card stats on card.
+				Card.gameObject.GetComponent<CardStats>().SetFullHealth(Card);
+				Card.gameObject.GetComponent<CardStats>().SetOnCardStats(Card);
             }
             else
             {
@@ -455,6 +484,17 @@ public class PlayerManager : NetworkBehaviour
 					if(dropZone == PlayerSockets[i].gameObject)
 					{
 						Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
+						
+						//Add to create cardHealth and cardAttack on card
+						GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
+						CH.transform.SetParent(Card.transform, false);
+						GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
+						CA.transform.SetParent(Card.transform, false);
+						
+						// Call for initial set of card stats on card.
+						Card.gameObject.GetComponent<CardStats>().SetFullHealth(Card);
+						Card.gameObject.GetComponent<CardStats>().SetOnCardStats(Card);
+				
 						EnemySockets[i].gameObject.tag = "FullSlot";
                         if (EnemySockets[i].transform.childCount != 1)
                         {
@@ -552,9 +592,86 @@ public class PlayerManager : NetworkBehaviour
 			}
 			if(whoHit == "EnemyHit")
 			{
-				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-				//PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
+				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
 			}
 		}
+	}
+	
+	
+	public void SetCardHealth(string who, int cardIndex, int health)
+	{
+		CmdSetCardHealth(who, cardIndex, health);
+	}
+	
+		[Command]
+	void CmdSetCardHealth(string who, int cardIndex, int health)
+	{
+		RpcSetCardHealth(who, cardIndex, health);
+	}
+	
+	[ClientRpc]
+	void RpcSetCardHealth(string who, int cardIndex, int health)
+	{
+		if(hasAuthority)
+		{
+			if(who == "Player")
+			{
+				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+			}
+			if(who == "Enemy")
+			{
+				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+			}
+		}
+		if(!hasAuthority)
+		{
+			if(who == "Player")
+			{
+				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+			}
+			if(who == "Enemy")
+			{
+				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+			}
+		}
+		
+	}
+	
+	
+	
+	
+	
+	// Updates OnCardStats
+	public void SetOCS(GameObject card)
+	{
+		Debug.Log("GOT THIS FAR 1");
+		CmdSetOCS(card);
+	}
+	
+	[Command]
+	void CmdSetOCS(GameObject card)
+	{
+		Debug.Log("GOT THIS FAR 2");
+		RpcSetOCS(card);
+	}
+	
+	[ClientRpc]
+	void RpcSetOCS(GameObject card)
+	{
+		/*
+		if(hasAuthority)
+		{
+			Debug.Log("GOT THIS FAR 3");
+			card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
+		}
+		if(!hasAuthority)
+		{
+			Debug.Log("GOT THIS FAR 4");
+			card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
+		}
+			*/
+		
+		Debug.Log("GOT THIS FAR 5");
+		card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
 	}
 }

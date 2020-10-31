@@ -45,7 +45,7 @@ public class Battle : NetworkBehaviour
 				//Debug.Log("The Player Slots Are Full in Slots : " + i);
 				//Debug.Log(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth);
 				
-				// retrieve player stats
+				// retrieve player stats as local variables
 				int playerCardPower = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 				int enemyCardPower = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 				int playerCardHealth = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
@@ -56,7 +56,7 @@ public class Battle : NetworkBehaviour
 				Debug.Log("Slot " + i + " enemyCardPower " + enemyCardPower + " before fight");
 				Debug.Log("Slot " + i + " enemyCardHealth " + enemyCardHealth + " before fight");
 				
-				// reduce each cards life along side the others attack (temp variables) until at least one is dead 
+				// reduce each cards life along side the others attack (local variables) until at least one is dead 
 				while(playerCardHealth > 0 && enemyCardHealth > 0)
 				{
 					if(playerCardPower > 0)
@@ -77,21 +77,35 @@ public class Battle : NetworkBehaviour
 				Debug.Log("Slot " + i + " enemyCardHealth " + enemyCardHealth + " after fight");
 				
 				// Determine which or if both cards died and remove those cards, and modify the other cards life appropriately
-				if(playerCardHealth == 0)
+				if(playerCardHealth == 0 && enemyCardHealth != 0)
 				{
 					PlayerManager.DestroyCard(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject, PlayerManager.PlayerSockets[i].gameObject);
-					PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = enemyCardHealth;
+					// I think this needs to move to Rpc
+					//PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = enemyCardHealth;
+					//CmdSetCardHealth("Enemy", i, enemyCardHealth);
+					PlayerManager.SetCardHealth("Enemy", i, enemyCardHealth);
+					PlayerManager.SetOCS(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject);
 				}
-				if(enemyCardHealth == 0)
+				if(enemyCardHealth == 0 && playerCardHealth != 0)
 				{
 					PlayerManager.DestroyCard(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject, PlayerManager.EnemySockets[i].gameObject);
-					PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = playerCardHealth;
+					// I think this needs to move to Rpc
+					//PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = playerCardHealth;
+					//CmdSetCardHealth("Player", i, playerCardHealth);
+					PlayerManager.SetCardHealth("Player", i, playerCardHealth);
+					PlayerManager.SetOCS(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject);
+				}
+				// Add this to handle both cards dying.  Think not having this was causing bugs with single conditionals above (enemyCardHealth == 0)
+				if(enemyCardHealth == 0 && playerCardHealth == 0)
+				{
+					PlayerManager.DestroyCard(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject, PlayerManager.PlayerSockets[i].gameObject);
+					PlayerManager.DestroyCard(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject, PlayerManager.EnemySockets[i].gameObject);
 				}
 
 				//Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "after the fight " + PlayerManager.PlayerSockets[i].gameObject.tag);
 				//Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "after the fight " + PlayerManager.EnemySockets[i].gameObject.tag);				
 			}
-			else // probably add some code to attack the other players health
+			else // attack the other players health
 			{
 				//Debug.Log("The Player Slots Are Empty in Slots : " + i);
 				//Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "When empty tag = " + PlayerManager.PlayerSockets[i].gameObject.tag);
@@ -103,6 +117,7 @@ public class Battle : NetworkBehaviour
 				{
 					int health = PlayerManager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
 					health = health - PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
+					// I think this needs to move to Rpc
 					PlayerManager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
 					PlayerManager.SetHealth(health, "EnemyHit");
 					//PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<HealthScript>().setPlayerHealth(health);
@@ -112,12 +127,35 @@ public class Battle : NetworkBehaviour
 				{
 					int health = PlayerManager.PlayerHealth.gameObject.GetComponent<HealthScript>().getHealth();
 					health = health - PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
+					// I think this needs to move to Rpc
 					PlayerManager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
 					PlayerManager.SetHealth(health, "PlayerHit");
 				}					
 			}
 		}
         GameManager.ChangeGameState("Deal");
-
-    }	
+    }
+	
+	// Moved to PlayerManager
+	/*
+	// Added networking methods to apply changes accross all players
+	[Command]
+	public void CmdSetCardHealth(string who, int cardIndex, int health)
+	{
+		RpcSetCardHealth(who, cardIndex, health);
+	}
+	
+	[ClientRpc]
+	public void RpcSetCardHealth(string who, int cardIndex, int health)
+	{
+		if(who == "Player")
+		{
+			PlayerManager.PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+		}
+		if(who == "Enemy")
+		{
+			PlayerManager.EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+		}
+	}
+	*/
 }
