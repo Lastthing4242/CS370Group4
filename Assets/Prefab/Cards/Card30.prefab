@@ -12,26 +12,11 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 2524843180605570483, guid: f2f9056a7d7bc10469992428ad1bd70e,
-        type: 3}
-      propertyPath: Id
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2524843180605570483, guid: f2f9056a7d7bc10469992428ad1bd70e,
-        type: 3}
-      propertyPath: CardName
-      value: nine of cups
-      objectReference: {fileID: 0}
-    - target: {fileID: 2524843180605570483, guid: f2f9056a7d7bc10469992428ad1bd70e,
-        type: 3}
-      propertyPath: suit
-      value: 117
-      objectReference: {fileID: 0}
     - target: {fileID: 8091286469532521844, guid: f2f9056a7d7bc10469992428ad1bd70e,
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 952cb79d33fd5c047ae869ff454ad58d,
+      objectReference: {fileID: 21300000, guid: 35ac11f5566a8a3448326843ef4302ca,
         type: 3}
     - target: {fileID: 8432067267686361713, guid: f2f9056a7d7bc10469992428ad1bd70e,
         type: 3}

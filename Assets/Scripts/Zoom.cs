@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Zoom : MonoBehaviour
 {
-   /* public GameManager GameManager;
+    public GameManager GameManager;
     public CardStats CardStats;
     public GameObject Canvas;
     public bool foundCard = false;
@@ -50,6 +50,6 @@ public class Zoom : MonoBehaviour
     public void offHover()
     {
         Destroy(bigCard);
-    }*/
+    }
 
 }

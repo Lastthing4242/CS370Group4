@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -83,31 +84,32 @@ public class TurnOrder : NetworkBehaviour
                 /*faux start function inside of the update that sets the timer for combat,
                 the timer is more just for show until we have things happening in 
                 attack phase to show we do have multiple phases*/
-            /*    if (CombatTimer)
-                {
-                    CurrentTime = TurnTime / 2f;
-                    CombatTimer = false;
-                }
-
-                CurrentTime -= 1 * Time.deltaTime;
-
-                if (TurnText.text != " Combat ocurring... ")
-                {
-                    TurnText.text = " Combat ocurring... ";
-                }
-
-                if (CurrentTime <= 0)//exits combat
-                {
-                    CombatTimer = true;//rests the combat timer for further combat
-                    AttackPhase = 0;
-                    TurnText.text = " End Turn ";
-                    CurrentTime = -100f;
-                    PlayerOneClick = false;
-                    PlayerTwoClick = false;
-                }
-
-            }
-
+    /*    if (CombatTimer)
+        {
+            CurrentTime = TurnTime / 2f;
+            CombatTimer = false;
         }
-    }     */
+
+        CurrentTime -= 1 * Time.deltaTime;
+
+        if (TurnText.text != " Combat ocurring... ")
+        {
+            TurnText.text = " Combat ocurring... ";
+        }
+
+        if (CurrentTime <= 0)//exits combat
+        {
+            CombatTimer = true;//rests the combat timer for further combat
+            AttackPhase = 0;
+            TurnText.text = " End Turn ";
+            CurrentTime = -100f;
+            PlayerOneClick = false;
+            PlayerTwoClick = false;
+        }
+
+    }
+
 }
+}     */
+}
+

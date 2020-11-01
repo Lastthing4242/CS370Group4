@@ -3,20 +3,7 @@ guid: 22743deae72fecf4db523702567627b1
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - playermanager: {instanceID: 0}
-  - card: {instanceID: 0}
-  - PlayerArea: {fileID: 296357406099996634, guid: 03bc64fe53dd93d47a88359c0b757d85,
-      type: 3}
-  - OpponentArea: {fileID: 8429725167997141740, guid: 040d862e591eeb3449e2283a1618af72,
-      type: 3}
-  - OnCardHealth: {instanceID: 0}
-  - OnCardAttack: {instanceID: 0}
-  - AttackImage: {instanceID: 0}
-  - FullHealth: {instanceID: 0}
-  - HalfHealth: {instanceID: 0}
-  - QuarterHealth: {instanceID: 0}
-  - ThreeQuarterHealth: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

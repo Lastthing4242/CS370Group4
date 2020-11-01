@@ -9,7 +9,6 @@ public class DragDrop : NetworkBehaviour
     //public GameObject DropZone;
     public PlayerManager PlayerManager;
 	
-	//Probably dont need
 	public GameObject PlayerSlot1;
 	public GameObject PlayerSlot2;
 	public GameObject PlayerSlot3;
@@ -20,7 +19,6 @@ public class DragDrop : NetworkBehaviour
 	public GameObject EnemySlot3;
 	public GameObject EnemySlot4;
 	public GameObject EnemySlot5;
-	// until here
 
     private bool isDragging = false;
     private bool isOverDropZone = false;
@@ -49,19 +47,13 @@ public class DragDrop : NetworkBehaviour
         }
     }
 
-	// Added conditional on tag of slot
     private void OnCollisionEnter2D(Collision2D collision)
     {
-		if(collision.gameObject.tag == "EmptySlot")
+		if(collision.gameObject.tag == "EmptyPlayerSlot")
 		{
 			isOverDropZone = true;
 			dropZone = collision.gameObject;
-		}
-        if (collision.gameObject.tag == "FullSlot")
-        {
-            isOverDropZone = true;
-            dropZone = collision.gameObject;
-        }
+		}  
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -85,14 +77,13 @@ public class DragDrop : NetworkBehaviour
         if (isOverDropZone)
         {
             transform.SetParent(dropZone.transform, false);
-			// move to PlayerManager RpCShowCard()
-			//dropZone.tag = "FullSlot";
+			dropZone.tag = "FullPlayerSlot";
             isDraggable = false;
             NetworkIdentity networkIdentity = NetworkClient.connection.identity;
             PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-			//Changed call to include dropzone
+			//need to find player slot number in place of 0
             PlayerManager.PlayCard(gameObject, dropZone);
-            //PlayerManager.CmdDealCards();
+            PlayerManager.CmdDealCards();
 			
         }
         else

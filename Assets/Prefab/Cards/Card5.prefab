@@ -10,27 +10,7 @@ PrefabInstance:
     - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
         type: 3}
       propertyPath: Id
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
-        type: 3}
-      propertyPath: CardName
-      value: three of coins
-      objectReference: {fileID: 0}
-    - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
-        type: 3}
-      propertyPath: CardHealth
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
-        type: 3}
-      propertyPath: CardPower
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 823019682445438166, guid: e08912b35d69b824ea5126904ff9b01b,
-        type: 3}
-      propertyPath: suit
-      value: 111
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3215691978385841974, guid: e08912b35d69b824ea5126904ff9b01b,
         type: 3}
