@@ -84,7 +84,9 @@ public class Battle : NetworkBehaviour
 					//PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = enemyCardHealth;
 					//CmdSetCardHealth("Enemy", i, enemyCardHealth);
 					PlayerManager.SetCardHealth("Enemy", i, enemyCardHealth);
-					PlayerManager.SetOCS(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject);
+					// Can probably remove method + call and include actions in SetCardeHealth() call above - get card from index
+					// Moved to setter method in CardStats.
+					//PlayerManager.SetOCS(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject);
 				}
 				if(enemyCardHealth == 0 && playerCardHealth != 0)
 				{
@@ -93,7 +95,9 @@ public class Battle : NetworkBehaviour
 					//PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = playerCardHealth;
 					//CmdSetCardHealth("Player", i, playerCardHealth);
 					PlayerManager.SetCardHealth("Player", i, playerCardHealth);
-					PlayerManager.SetOCS(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject);
+					// Can probably remove method + call and include actions in SetCardeHealth() call above - get card from index
+					// Moved to setter method in CardStats.
+					//PlayerManager.SetOCS(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject);
 				}
 				// Add this to handle both cards dying.  Think not having this was causing bugs with single conditionals above (enemyCardHealth == 0)
 				if(enemyCardHealth == 0 && playerCardHealth == 0)
@@ -107,10 +111,6 @@ public class Battle : NetworkBehaviour
 			}
 			else // attack the other players health
 			{
-				//Debug.Log("The Player Slots Are Empty in Slots : " + i);
-				//Debug.Log("Child count for Player Slots " + i + "  " + PlayerManager.PlayerSockets[i].transform.childCount + "When empty tag = " + PlayerManager.PlayerSockets[i].gameObject.tag);
-				//Debug.Log("Child count for Enemy Slots " + i + "  " + PlayerManager.EnemySockets[i].transform.childCount + "When empty tag = " + PlayerManager.EnemySockets[i].gameObject.tag);				
-				
 				
 				// Determine if only one socket is full - Player attack
 				if(PlayerManager.PlayerSockets[i].gameObject.tag == "FullSlot" && PlayerManager.EnemySockets[i].gameObject.tag == "EmptySlot")
@@ -118,7 +118,8 @@ public class Battle : NetworkBehaviour
 					int health = PlayerManager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
 					health = health - PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 					// I think this needs to move to Rpc
-					PlayerManager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+					// Moved
+					//PlayerManager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
 					PlayerManager.SetHealth(health, "EnemyHit");
 					//PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<HealthScript>().setPlayerHealth(health);
 				}
@@ -128,7 +129,8 @@ public class Battle : NetworkBehaviour
 					int health = PlayerManager.PlayerHealth.gameObject.GetComponent<HealthScript>().getHealth();
 					health = health - PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 					// I think this needs to move to Rpc
-					PlayerManager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+					// Moved
+					// PlayerManager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
 					PlayerManager.SetHealth(health, "PlayerHit");
 				}					
 			}
