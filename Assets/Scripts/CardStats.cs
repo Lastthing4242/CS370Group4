@@ -123,17 +123,17 @@ public class CardStats : NetworkBehaviour
      }
     
 
-// There's got to be a better way to set this, but I can't figuer it out without setting on each prefab (being lazy)
+	// There's got to be a better way to set this, but I can't figuer it out without setting on each prefab (being lazy)
 	// It doesn't seem like the easySet() and CardStats() methods are doing anything??
 	// Is everything set on the prefabs themselves and not here??
-	public void SetFullHealth(GameObject card)
+	public void SetFullHealth()
 	{
 		card.gameObject.GetComponent<CardStats>().fullHealth = CardHealth;
 	}
 	
 	//sets the OnCardStats to above variables
-	// Call this method, passing the card you want updated anytime changes are made to card stats (i.e. attacked, enhanced, ect)
-	public void SetOnCardStats(GameObject card)
+	// Call this method, anytime changes are made to card stats (i.e. attacked, enhanced, ect)
+	public void SetOnCardStats()
 	{
 		
 		card.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + CardHealth;
@@ -176,9 +176,12 @@ public class CardStats : NetworkBehaviour
 	
 	
 	// Just wondering why we have setter/getter methods for public variables??
+	
+	// Include call to update OnCardStats here
     public void setHealth(int NewHealth)
     {
         CardHealth = NewHealth;
+		SetOnCardStats();	
     }
 
     public void setInDeck(bool StateChanger)

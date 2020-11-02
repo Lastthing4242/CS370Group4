@@ -451,8 +451,8 @@ public class PlayerManager : NetworkBehaviour
 				CA.transform.SetParent(Card.transform, false);
 				
 				// Call for initial set of card stats on card.
-				Card.gameObject.GetComponent<CardStats>().SetFullHealth(Card);
-				Card.gameObject.GetComponent<CardStats>().SetOnCardStats(Card);
+				Card.gameObject.GetComponent<CardStats>().SetFullHealth();
+				Card.gameObject.GetComponent<CardStats>().SetOnCardStats();
             }
             else
             {
@@ -492,8 +492,8 @@ public class PlayerManager : NetworkBehaviour
 						CA.transform.SetParent(Card.transform, false);
 						
 						// Call for initial set of card stats on card.
-						Card.gameObject.GetComponent<CardStats>().SetFullHealth(Card);
-						Card.gameObject.GetComponent<CardStats>().SetOnCardStats(Card);
+						Card.gameObject.GetComponent<CardStats>().SetFullHealth();
+						Card.gameObject.GetComponent<CardStats>().SetOnCardStats();
 				
 						EnemySockets[i].gameObject.tag = "FullSlot";
                         if (EnemySockets[i].transform.childCount != 1)
@@ -577,21 +577,25 @@ public class PlayerManager : NetworkBehaviour
 		{
 			if(whoHit == "PlayerHit")
 			{
+				PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
 				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
 			}
 			if(whoHit == "EnemyHit")
 			{
-				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+				EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
+				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;		
 			}
 		}
 		if(!hasAuthority)
 		{
 			if(whoHit == "PlayerHit")
 			{
+				EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
 				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;			
 			}
 			if(whoHit == "EnemyHit")
 			{
+				PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
 				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
 			}
 		}
@@ -616,31 +620,32 @@ public class PlayerManager : NetworkBehaviour
 		{
 			if(who == "Player")
 			{
-				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
 			}
 			if(who == "Enemy")
 			{
-				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+				// Changed set dirrectly to setter method call with update SetOnCardStats() call included
+				//EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(card);
+				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);				
 			}
 		}
 		if(!hasAuthority)
 		{
 			if(who == "Player")
 			{
-				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);			
 			}
 			if(who == "Enemy")
-			{
-				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth = health;
+			{			
+				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);			
 			}
-		}
-		
+		}		
 	}
 	
 	
 	
 	
-	
+	/*
 	// Updates OnCardStats
 	public void SetOCS(GameObject card)
 	{
@@ -669,9 +674,10 @@ public class PlayerManager : NetworkBehaviour
 			Debug.Log("GOT THIS FAR 4");
 			card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
 		}
-			*/
+			
 		
 		Debug.Log("GOT THIS FAR 5");
 		card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
 	}
+	*/
 }
