@@ -37,9 +37,36 @@ public class Battle : NetworkBehaviour
 				int enemyCardPower = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 				int playerCardHealth = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
 				int enemyCardHealth = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
-				
+				int playerCardId = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+				int enemyCardId = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+
+				if(playerCardId >= 5 || playerCardId <= 8)//this is the 3 card's ability to strike first, checking the player's side first.
+                {
+					if(enemyCardId >=5 || enemyCardId <= 8)
+                    {
+						break;
+                    }
+					else
+                    {
+						enemyCardHealth = enemyCardHealth - playerCardPower;
+						playerCardPower = 0;
+                    }
+                }
+				if (enemyCardId >= 5 || enemyCardId <= 8)//this is the 3 card's ability to strike first, now checking the enemy's side.
+				{
+					if (playerCardId >= 5 || playerCardId <= 8)
+					{
+						break;
+					}
+					else
+					{
+						playerCardHealth = playerCardHealth - enemyCardPower;
+						enemyCardPower = 0;
+					}
+				}
+
 				// reduce each cards life along side the others attack (local variables) until at least one is dead 
-				while(playerCardHealth > 0 && enemyCardHealth > 0)
+				while (playerCardHealth > 0 && enemyCardHealth > 0)
 				{
 					if(playerCardPower > 0)
 					{
