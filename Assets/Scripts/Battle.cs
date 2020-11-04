@@ -64,35 +64,47 @@ public class Battle : NetworkBehaviour
 						enemyCardPower = 0;
 					}
 				}
+				if (playerCardId >= 17 && playerCardId <= 20)//This is the 6's ability to deal and recieve 2 less damage
+				{
+					playerCardPower = playerCardPower - 2;
+					enemyCardPower = enemyCardPower - 2;
+				}
+				if (enemyCardId >= 17 && enemyCardId <= 20)//This is the 6's ability to deal and recieve 2 less damage
+				{
+					playerCardPower = playerCardPower - 2;
+					enemyCardPower = enemyCardPower - 2;
+				}
+				int PCBattlePower = playerCardPower;//these are here to not mess with the actual powers of the cards
+				int ECBattlePower = enemyCardPower;//they can be used instead of card health to determine when to end combat
 
 				// reduce each cards life along side the others attack (local variables) until at least one is dead 
-				while (playerCardHealth > 0 && enemyCardHealth > 0)
+				while (PCBattlePower  > 0 && ECBattlePower  > 0)
 				{
-					if(playerCardPower > 0)
+					if(PCBattlePower  > 0)
 					{
-						playerCardPower--;
+						PCBattlePower --;
 						enemyCardHealth--;
 					}
-					if(enemyCardPower > 0)
+					if(ECBattlePower  > 0)
 					{
-						enemyCardPower--;
+						ECBattlePower --;
 						playerCardHealth--;
 					}
 				}
 				
 				// Determine which or if both cards died and remove those cards, and modify the other cards life appropriately
-				if(playerCardHealth == 0 && enemyCardHealth != 0)
+				if(playerCardHealth <= 0 && enemyCardHealth > 0)
 				{
 					PlayerManager.DestroyCard(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject, PlayerManager.PlayerSockets[i].gameObject);
 					PlayerManager.SetCardHealth("Enemy", i, enemyCardHealth);
 				}
-				if(enemyCardHealth == 0 && playerCardHealth != 0)
+				if(enemyCardHealth <= 0 && playerCardHealth > 0)
 				{
 					PlayerManager.DestroyCard(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject, PlayerManager.EnemySockets[i].gameObject);
 					PlayerManager.SetCardHealth("Player", i, playerCardHealth);
 				}
 				// Add this to handle both cards dying.  Think not having this was causing bugs with single conditionals above (enemyCardHealth == 0)
-				if(enemyCardHealth == 0 && playerCardHealth == 0)
+				if(enemyCardHealth <= 0 && playerCardHealth <= 0)
 				{
 					PlayerManager.DestroyCard(PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject, PlayerManager.PlayerSockets[i].gameObject);
 					PlayerManager.DestroyCard(PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject, PlayerManager.EnemySockets[i].gameObject);
