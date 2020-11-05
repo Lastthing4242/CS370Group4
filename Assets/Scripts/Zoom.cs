@@ -50,6 +50,6 @@ public class Zoom : MonoBehaviour
     public void offHover()
     {
         Destroy(bigCard);
-    }*/
-
+    }
+*/
 }

@@ -73,7 +73,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cdfc38da2d6efc6429e75b68d4a89d76, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 82c1849a0b9e1b24c9f42f6dd6597088, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -109,6 +109,7 @@ MonoBehaviour:
   EnemySlot3: {fileID: 0}
   EnemySlot4: {fileID: 0}
   EnemySlot5: {fileID: 0}
+  isDraggable: 1
 --- !u!114 &8060082614357444510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,10 +253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2558c9e4cb447f41bba259e3c3ab556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameManager: {fileID: 0}
-  CardStats: {fileID: 0}
-  Canvas: {fileID: 0}
-  foundCard: 0
 --- !u!114 &5465709519906769686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +323,9 @@ MonoBehaviour:
   card: {fileID: 3530235822937794886}
   suit: 117
   InDeck: 1
+  triggered: 0
+  enemyCard: 0
+  playerCard: 0
   OnCardHealth: {fileID: 0}
   OnCardAttack: {fileID: 0}
   AttackImage: {fileID: 21300000, guid: 71c57efa13f0d84429187f22764750f4, type: 3}
