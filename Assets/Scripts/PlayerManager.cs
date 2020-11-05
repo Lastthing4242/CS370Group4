@@ -299,9 +299,23 @@ public class PlayerManager : NetworkBehaviour
                         Debug.Log("Hit the loop");
                         if (EnemySockets[i].transform.childCount !=0)
                         {
-                            
-                                EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<FlipCard>().Flip();
-                            
+							GameObject Card = EnemySockets[i].transform.GetChild(0).gameObject;
+							
+							// Flip and add OnCardStats only if card back is showing (i.e. first round on board);
+							if(Card.GetComponent<Image>().sprite == Card.GetComponent<FlipCard>().CardRear)
+							{
+								Card.GetComponent<FlipCard>().Flip();
+								
+								//Add to create cardHealth and cardAttack on card
+								GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
+								CH.transform.SetParent(Card.transform, false);
+								GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
+								CA.transform.SetParent(Card.transform, false);
+								
+								// Call for initial set of card stats on card.
+								Card.gameObject.GetComponent<CardStats>().SetFullHealth();
+								Card.gameObject.GetComponent<CardStats>().SetOnCardStats(); 
+							}  
                         }
                     }
                     battle.Fight();// makes the fight script activate in player manager
@@ -315,23 +329,8 @@ public class PlayerManager : NetworkBehaviour
                     CardPlayed = false;//makes sure the player can play a card
                     DealCards();//draws each player a card
                 }
-
             }
-
         }
-		/*
-		for(int i = 0; i < PlayerSockets.Count; i++)
-		{
-			if(PlayerSockets[i].gameObject.tag == "FullSlot")
-			{
-				PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(PlayerSockets[i].transform.GetChild(0).gameObject);
-			}
-			if(EnemySockets[i].gameObject.tag == "FullSlot")
-			{
-				EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(EnemySockets[i].transform.GetChild(0).gameObject);
-			}
-		}
-		*/
     }
 
    void DealCards()
@@ -553,15 +552,8 @@ public class PlayerManager : NetworkBehaviour
 					{
 						Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
 						
-						//Add to create cardHealth and cardAttack on card
-						GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
-						CH.transform.SetParent(Card.transform, false);
-						GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
-						CA.transform.SetParent(Card.transform, false);
-						
-						// Call for initial set of card stats on card.
-						Card.gameObject.GetComponent<CardStats>().SetFullHealth();
-						Card.gameObject.GetComponent<CardStats>().SetOnCardStats();
+						// Removed call to add OnCardStats
+						// Moved to card flipper loop in Update() method
 				
 						EnemySockets[i].gameObject.tag = "FullSlot";
                         if (EnemySockets[i].transform.childCount != 1)
