@@ -9,6 +9,7 @@ using System;
 public class PlayerManager : NetworkBehaviour
 {
     public TurnOrder TurnOrder;
+    public Battle battle;
     public GameManager GameManager;
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
@@ -18,7 +19,8 @@ public class PlayerManager : NetworkBehaviour
 	
 	public GameObject CardHealth;
 	public GameObject CardAttack;
-	
+    public bool CardPlayed = false;
+
     public GameObject Card1;
     public GameObject Card2;
     public GameObject Card3;
@@ -87,6 +89,10 @@ public class PlayerManager : NetworkBehaviour
     public static bool CombatTimer = true;//this sets a short timer for combat
     static float TurnTime = 10f;//this sets all of the timers for the code, chaging this number changes all the timers
     public static int AttackPhase = 0;// this manages how many phases have been played, if it reaches two it will iniate the attack phase
+    public static int gameStarting = 0;//when this hits 2 the game can start
+    public static bool readyp1 = false;//player one has clicked start turn button
+    public static bool readyp2 = false;//player two has clicked start turn button
+    public GameObject NA;
 
 
     public GameObject PlayerSlot1;
@@ -115,6 +121,8 @@ public class PlayerManager : NetworkBehaviour
     {
         base.OnStartClient();
 
+        NA = GameObject.Find("NA");
+        battle = NA.GetComponent<Battle>();
         TurnText = GameObject.Find("TurnText").GetComponent<Text>();
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
@@ -286,13 +294,26 @@ public class PlayerManager : NetworkBehaviour
 
                 if (CurrentTime <= 0)//exits combat
                 {
+                   /* for (int i = 0; i < 5; i++)//flips the cards so they can fight it out
+                    {
+                        Debug.Log("Hit the loop");
+                        if (EnemySockets[i+1].transform.childCount !=0)
+                        {
+                            
+                                EnemySockets[i+1].transform.GetChild(0).gameObject.GetComponent<FlipCard>().Flip();
+                            
+                        }
+                    }*/
+                    battle.Fight();// makes the fight script activate in player manager
                     CombatTimer = true;//rests the combat timer for further combat
-                    AttackPhase = 0;
-                    TurnText.text = " End Turn ";
+                    AttackPhase = 0;//sets up for next attack phase
+                    TurnText.text = " End Turn ";//changes button text back
                     TurnTimer.text = "...";
                     CurrentTime = -100f;
                     PlayerOneClick = false;
                     PlayerTwoClick = false;
+                    CardPlayed = false;//makes sure the player can play a card
+                    DealCards();//draws each player a card
                 }
 
             }
@@ -313,6 +334,10 @@ public class PlayerManager : NetworkBehaviour
 		*/
     }
 
+   void DealCards()
+    {
+        CmdDealCards();
+    }
 
     [Server]
     public override void OnStartServer()
@@ -320,6 +345,37 @@ public class PlayerManager : NetworkBehaviour
         
     }
 
+    [Command]//helps comminicate on click to server
+    public void CmdStartGame()
+    {
+        rpcStartGame();
+    }
+
+    [ClientRpc]//don't know why but this be working like this;
+    void rpcStartGame()
+    {
+
+        if (hasAuthority)
+        {
+            if (!readyp1)
+            {
+                gameStarting++;
+                readyp1 = true;
+                Debug.Log("Player one has pushed the button");
+            }
+        }
+
+        else if (!hasAuthority)
+        {
+            if (!readyp2)
+            {
+                gameStarting++;
+                readyp2 = true;
+                Debug.Log("Player two has pushed the button");
+            }
+        }
+
+    }
 
     [Command]//helps comminicate on click to server
     public void CmdProgressTurn()
@@ -423,9 +479,20 @@ public class PlayerManager : NetworkBehaviour
 
     public void PlayCard(GameObject Card, GameObject dropZone)
     {
-        CmdPlayCard(Card, dropZone);
-        CardsPlayed++;
-        //Debug.Log(CardsPlayed);
+        if (CardPlayed == false)
+        {
+            CardPlayed = true;
+            CmdPlayCard(Card, dropZone);
+            CardsPlayed++;
+
+            //Debug.Log(CardsPlayed);
+        }
+        else
+        {
+            Card.gameObject.GetComponent<DragDrop>().isDraggable = true;
+            Card.transform.SetParent(PlayerArea.transform, false);
+
+        }
     }
 
     [Command]
@@ -475,6 +542,7 @@ public class PlayerManager : NetworkBehaviour
                     dropZone.tag = "EmptySlot";
                     dropZone.tag = "FullSlot";
                 }
+                CardPlayed = true;
             }
 					
 			if (!hasAuthority)
@@ -501,9 +569,10 @@ public class PlayerManager : NetworkBehaviour
                             Destroy(EnemySockets[i].transform.GetChild(0).gameObject);
                         }
 					}
-				}
+                    CardPlayed = true;
+                }
 		
-                Card.GetComponent<FlipCard>().Flip();
+                //Card.GetComponent<FlipCard>().Flip();
             }
         }
     }
