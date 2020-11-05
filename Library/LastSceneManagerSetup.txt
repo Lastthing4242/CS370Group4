@@ -1,5 +1,0 @@
-sceneSetups:
-- path: Assets/ProjectWar_v.8.29.20.unity
-  isLoaded: 1
-  isActive: 1
-  isSubScene: 0
