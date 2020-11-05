@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using Mirror;
 using System;
-
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -571,38 +571,63 @@ public class PlayerManager : NetworkBehaviour
 	
 
 	[ClientRpc]
-	public void RpcSetHealth(int newHealth, string whoHit)
-	{
-		if(hasAuthority)
-		{
-			if(whoHit == "PlayerHit")
-			{
-				PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
-				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
-			}
-			if(whoHit == "EnemyHit")
-			{
-				EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
-				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;		
-			}
-		}
-		if(!hasAuthority)
-		{
-			if(whoHit == "PlayerHit")
-			{
-				EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
-				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;			
-			}
-			if(whoHit == "EnemyHit")
-			{
-				PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
-				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
-			}
-		}
-	}
-	
-	
-	public void SetCardHealth(string who, int cardIndex, int health)
+    public void RpcSetHealth(int newHealth, string whoHit)
+    {
+        if (newHealth < 0)
+        {
+            newHealth = 0;
+        }
+        if (hasAuthority)
+        {
+            if (whoHit == "PlayerHit")
+            {
+                if (newHealth == 0)
+                {
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                    SceneManager.LoadScene("loseScreen");
+                }
+                else
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+            }
+            if (whoHit == "EnemyHit")
+            {
+                if (newHealth == 0)
+                {
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                    SceneManager.LoadScene("winScreen");
+                }
+                else
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+            }
+        }
+        if (!hasAuthority)
+        {
+            if (whoHit == "PlayerHit")
+            {
+                if (newHealth == 0)
+                {
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                    SceneManager.LoadScene("winScreen");
+                }
+                else
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+            }
+            if (whoHit == "EnemyHit")
+            {
+                if (newHealth == 0)
+                {
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                    SceneManager.LoadScene("loseScreen");
+                }
+                else
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+                //PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
+            }
+        }
+    }
+
+
+    public void SetCardHealth(string who, int cardIndex, int health)
 	{
 		CmdSetCardHealth(who, cardIndex, health);
 	}
