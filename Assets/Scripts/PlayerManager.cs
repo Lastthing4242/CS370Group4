@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
@@ -8,12 +8,17 @@ using System;
 
 public class PlayerManager : NetworkBehaviour
 {
-    
+    public TurnOrder TurnOrder;
     public GameManager GameManager;
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
-
-
+	public GameObject PlayerHealth;
+	public GameObject EnemyHealth;
+    public bool HavePlayedCard = false;
+	
+	public GameObject CardHealth;
+	public GameObject CardAttack;
+	
     public GameObject Card1;
     public GameObject Card2;
     public GameObject Card3;
@@ -72,12 +77,19 @@ public class PlayerManager : NetworkBehaviour
     public GameObject OpponentArea;
     public GameObject PlayerLibrary;
     public GameObject OpponentLibrary;
-	//Remove because original DropZone no longer exists
-    //public GameObject DropZone;
+    public GameObject endTurn;
+    public Text TurnText;
+    public static float CurrentTime = 0f;//this will be the dynamic time variable
+    public Text TurnTimer;
     public string Name;
-	
-	//probably need to find these at runtime rather than dragging prefabs
-	public GameObject PlayerSlot1;
+    public static bool PlayerOneClick = false;
+    public static bool PlayerTwoClick = false;
+    public static bool CombatTimer = true;//this sets a short timer for combat
+    static float TurnTime = 10f;//this sets all of the timers for the code, chaging this number changes all the timers
+    public static int AttackPhase = 0;// this manages how many phases have been played, if it reaches two it will iniate the attack phase
+
+
+    public GameObject PlayerSlot1;
 	public GameObject PlayerSlot2;
 	public GameObject PlayerSlot3;
 	public GameObject PlayerSlot4;
@@ -90,27 +102,29 @@ public class PlayerManager : NetworkBehaviour
 	public List<GameObject> PlayerSockets = new List<GameObject>();
 	public List<GameObject> EnemySockets = new List<GameObject>();
 
-    [SyncVar]
-    public int CardsLeftInLibrary = 0;
+	static public bool AlreadyMadeDeck = false;
+    static public int CardsLeftInLibrary = 0;
+	//static public int CardsLeftInOpponentLibrary = 0;
+	static public List<int> CardIds = new List<int> { };
 
+	
     [SyncVar]
     int CardsPlayed = 0;
-
-    [SyncVar]  // Make someCooldown sync
-    public SyncListInt CardIds = new SyncListInt();
-
-
-
 
     public override void OnStartClient()
     {
         base.OnStartClient();
 
+        TurnText = GameObject.Find("TurnText").GetComponent<Text>();
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
-		//Removed because original DropZone no longer exists.
-        //DropZone = GameObject.Find("DropZone");
-		
+		PlayerLibraryText = GameObject.Find("PlayerLibraryText");
+		OpponentLibraryText = GameObject.Find("OpponentLibraryText");		
+		PlayerHealth = GameObject.Find("PlayerHealth");
+		EnemyHealth = GameObject.Find("OpponentHealth");
+        endTurn = GameObject.Find("endTurn");
+        TurnTimer = GameObject.Find("TurnTimer").GetComponent<Text>();
+
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
         Card3 = GameObject.Find("Card3");
@@ -165,6 +179,28 @@ public class PlayerManager : NetworkBehaviour
         Card52 = GameObject.Find("Card52");
         Card53 = GameObject.Find("Card53");
         Card54 = GameObject.Find("Card54");
+        if(AlreadyMadeDeck == false)
+        {
+            FillList();
+        }
+        for (int i = 0; i < 54; i++)
+        {
+			//This line was throwing error that was terminating the rest of this method
+            //Debug.Log(CardIds[i]);
+        }
+		
+		// Set initial health to 100 for both players in HealthScript and on Health gameObjects on screen
+		// Should eventually get this value from some input?
+		PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
+		PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
+		EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
+		EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
+		
+		// Set initial cards left text to 27.
+		// must be done on start client to update upon re-connect.
+		// The number(27) is erroneous atm since cards appear to be comming out of single deck.
+		PlayerLibraryText.GetComponent<Text>().text = "Cards Left\n27";
+		OpponentLibraryText.GetComponent<Text>().text = "Cards Left\n27";
 		
 		PlayerSlot1 = GameObject.Find("PlayerSlot1");
 		PlayerSlot2 = GameObject.Find("PlayerSlot2");
@@ -176,14 +212,7 @@ public class PlayerManager : NetworkBehaviour
 		EnemySlot3 = GameObject.Find("EnemySlot3");
 		EnemySlot4 = GameObject.Find("EnemySlot4");
 		EnemySlot5 = GameObject.Find("EnemySlot5");
-		
-		
-        for (int i = 1; i < 55; i++)
-        {
-            CardIds.Add(i);
-        }
-	
-		//not sure we need this if individual slots can be identified
+
 		PlayerSockets.Add(PlayerSlot1);
 		PlayerSockets.Add(PlayerSlot2);
 		PlayerSockets.Add(PlayerSlot3);
@@ -194,12 +223,96 @@ public class PlayerManager : NetworkBehaviour
 		EnemySockets.Add(EnemySlot3);
 		EnemySockets.Add(EnemySlot4);
 		EnemySockets.Add(EnemySlot5);
-    }     
+	
+		// Reset slots to Empty state when disconnecting / reconnecting host client
+		for (int i = 0; i < PlayerSockets.Count; i++)
+		{
+			PlayerSockets[i].gameObject.tag = "EmptySlot";
+			EnemySockets[i].gameObject.tag = "EmptySlot";
+		}
+    }
 
+    [Server]
+    public void FillList()
+    {
+        for (int i = 1; i < 55; i++)
+        {
+            CardIds.Add(i);
+        }
+        AlreadyMadeDeck = true;
+    }
+	
     public void Awake()
     {
         Name = GameManager.NameGenerator();
     }
+
+    void Update()//this runs the timer in real time and controls card effects
+    {
+       
+        if (PlayerTwoClick || PlayerOneClick)
+        {
+            //decreases current time and displays it
+            CurrentTime -= 1 * Time.deltaTime;
+            if (CurrentTime > 0)
+            {
+                TurnTimer.text = "Time remaining:" + CurrentTime.ToString("f0");
+            }
+
+
+            if (AttackPhase == 1 && CurrentTime <= 0f && CurrentTime >= -30f)
+            {
+                AttackPhase = 2;
+            }
+
+
+            if (AttackPhase == 2)//checks that both players have hade a turn to play then plays the combat step
+            {
+                /*faux start function inside of the update that sets the timer for combat,
+                the timer is more just for show until we have things happening in 
+                attack phase to show we do have multiple phases*/
+                if (CombatTimer)
+                {
+                    CurrentTime = TurnTime / 2f;
+                    CombatTimer = false;
+                }
+
+                CurrentTime -= 1 * Time.deltaTime;
+
+                if (TurnText.text != "ETB Triggers")
+                {
+                    TurnText.text = "ETB Triggers";
+                }
+
+                if (CurrentTime <= 0)//exits combat
+                {
+                    CombatTimer = true;//rests the combat timer for further combat
+                    AttackPhase = 0;
+                    TurnText.text = " End Turn ";
+                    TurnTimer.text = "...";
+                    CurrentTime = -100f;
+                    PlayerOneClick = false;
+                    PlayerTwoClick = false;
+                }
+
+            }
+
+        }
+		/*
+		for(int i = 0; i < PlayerSockets.Count; i++)
+		{
+			if(PlayerSockets[i].gameObject.tag == "FullSlot")
+			{
+				PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(PlayerSockets[i].transform.GetChild(0).gameObject);
+			}
+			if(EnemySockets[i].gameObject.tag == "FullSlot")
+			{
+				EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(EnemySockets[i].transform.GetChild(0).gameObject);
+			}
+		}
+		*/
+    }
+
 
     [Server]
     public override void OnStartServer()
@@ -207,7 +320,42 @@ public class PlayerManager : NetworkBehaviour
         
     }
 
-    public void Shuffler<GameObject>()
+
+    [Command]//helps comminicate on click to server
+    public void CmdProgressTurn()
+    {
+        rpcRunTurn();
+    }
+
+    [ClientRpc]//don't know why but this be working like this;
+    void rpcRunTurn()
+    {
+        if (hasAuthority)
+        {
+            if (!PlayerOneClick)
+            {
+                AttackPhase++;
+                PlayerOneClick = true;
+                CurrentTime = TurnTime;
+
+            }
+        }
+
+
+        else if (!hasAuthority)
+        {
+            if (!PlayerTwoClick)
+            {
+                AttackPhase++;
+                PlayerTwoClick = true;
+                CurrentTime = TurnTime;
+
+            }
+        }
+
+    }
+
+    public void CmdShuffler()
     {
         System.Random random = new System.Random();
         int n = CardIds.Count;
@@ -227,38 +375,58 @@ public class PlayerManager : NetworkBehaviour
         return card;
     }
 
-
     [Command]
     public void CmdDealCards()
     {
         if ((CardsLeftInLibrary == 0))
         {
-            Shuffler<GameObject>();
-            if (Name == "Bob")
-            {
-                CardsLeftInLibrary = GameManager.cards.Count;
-            }
-            else if (Name == "Karen")
-            {
-                CardsLeftInLibrary = GameManager.cards.Count;
-            }
+            CmdShuffler();
+            CardsLeftInLibrary = GameManager.cards.Count;
         }
+        do//Here's to hope.
+        {
             CardsLeftInLibrary = CardsLeftInLibrary - 1;
+        //There was a line that prevented errors in a worst case scenario. It's gone now, because it stopped the while loop from working.
+		//It was there to prevent players from drawing from the library while all cards were in play.
+        } while (!(Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().getInDeck()));
+            Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
-			// added PlayerArea as placeholder since no slots needed
+			Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
+			
+			// REMOVED ONCARDSTATS() call
+			
+            // added PlayerArea as placeholder since no slots needed
+            // should probably overload this function instead
             RpcShowCard(Card, "Dealt Hand", PlayerArea);
-            GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
+			
+			// Removing this line since GameManager cannot make Remote Procedure Calls (the way its written)
+            //GameManager.UpdatePlayerText(CardsLeftInLibrary, Name);
+			
+			//Make Rpc call instead...
+			//Don't need Name - use Authority instead.
+			RpcUpdateLibraryText(CardsLeftInLibrary);
     }
-
+	
+	[ClientRpc]
+	void RpcUpdateLibraryText(int CardsLeft)
+	{
+		if(hasAuthority)
+		{
+			PlayerLibraryText.GetComponent<Text>().text = "Cards Left\n" + CardsLeft;
+		}
+		if (!hasAuthority)
+		{
+			OpponentLibraryText.GetComponent<Text>().text = "Cards Left\n" + CardsLeft;
+		}
+	}
 
     public void PlayCard(GameObject Card, GameObject dropZone)
     {
         CmdPlayCard(Card, dropZone);
         CardsPlayed++;
-        Debug.Log(CardsPlayed);
+        //Debug.Log(CardsPlayed);
     }
-
 
     [Command]
     void CmdPlayCard(GameObject Card, GameObject dropZone)
@@ -266,7 +434,7 @@ public class PlayerManager : NetworkBehaviour
         RpcShowCard(Card, "Played", dropZone);
     }
 
-
+	// Added parameter dropzone to facilitate showing enemy cards JRV20201013
     [ClientRpc]
     void RpcShowCard(GameObject Card, string type, GameObject dropZone)
     {
@@ -275,6 +443,16 @@ public class PlayerManager : NetworkBehaviour
             if (hasAuthority)
             {
                 Card.transform.SetParent(PlayerArea.transform, false);
+				
+				//Add to create cardHealth and cardAttack on card
+				GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
+				CH.transform.SetParent(Card.transform, false);
+				GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
+				CA.transform.SetParent(Card.transform, false);
+				
+				// Call for initial set of card stats on card.
+				Card.gameObject.GetComponent<CardStats>().SetFullHealth();
+				Card.gameObject.GetComponent<CardStats>().SetOnCardStats();
             }
             else
             {
@@ -288,61 +466,96 @@ public class PlayerManager : NetworkBehaviour
 			{
 				Debug.Log("slotNumber = " + dropZone + "PlayerSockets num = " + PlayerSockets.Count);
 				Card.transform.SetParent(dropZone.transform, false);
-			}
-			// moved into if statement above
-            //Card.transform.SetParent(DropZone.transform, false);
-            if (!hasAuthority)
+				// added tag set
+				dropZone.tag = "FullSlot";
+                
+                if (dropZone.transform.childCount != 1)
+                {
+                    Destroy(dropZone.transform.GetChild(0).gameObject);
+                    dropZone.tag = "EmptySlot";
+                    dropZone.tag = "FullSlot";
+                }
+            }
+					
+			if (!hasAuthority)
             {
-				if(dropZone == PlayerSlot1)
+				for(int i = 0; i < PlayerSockets.Count; i++)
 				{
-					Card.transform.SetParent(EnemySlot1.transform, false);
-				}
-				if(dropZone == PlayerSlot2)
-				{
-					Card.transform.SetParent(EnemySlot2.transform, false);
-				}
-				if(dropZone == PlayerSlot3)
-				{
-					Card.transform.SetParent(EnemySlot3.transform, false);
-				}
-				if(dropZone == PlayerSlot4)
-				{
-					Card.transform.SetParent(EnemySlot4.transform, false);
-				}
-				if(dropZone == PlayerSlot5)
-				{
-					Card.transform.SetParent(EnemySlot5.transform, false);
-				}
+					if(dropZone == PlayerSockets[i].gameObject)
+					{
+						Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
+						
+						//Add to create cardHealth and cardAttack on card
+						GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
+						CH.transform.SetParent(Card.transform, false);
+						GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
+						CA.transform.SetParent(Card.transform, false);
+						
+						// Call for initial set of card stats on card.
+						Card.gameObject.GetComponent<CardStats>().SetFullHealth();
+						Card.gameObject.GetComponent<CardStats>().SetOnCardStats();
 				
-				/*
-				*****Switch doesn't appear to work with non-constants***********
-				
-				switch (dropZone)
-				{
-					case GameObject.Find("PlayerSlot1"):
-						Card.transform.SetParent(EnemySlot1.transform, false);
-						break;
-					case PlayerSlot2:
-						Card.transform.SetParent(EnemySlot2.transform, false);
-						break;
-					case PlayerSlot3:
-						Card.transform.SetParent(EnemySlot3.transform, false);
-						break;
-					case PlayerSlot4:
-						Card.transform.SetParent(EnemySlot4.transform, false);
-						break;
-					case PlayerSlot5:
-						Card.transform.SetParent(EnemySlot5.transform, false);
-						break;
+						EnemySockets[i].gameObject.tag = "FullSlot";
+                        if (EnemySockets[i].transform.childCount != 1)
+                        {
+                            Destroy(EnemySockets[i].transform.GetChild(0).gameObject);
+                        }
+					}
 				}
-				*/
-				
+		
                 Card.GetComponent<FlipCard>().Flip();
             }
         }
     }
-<<<<<<< HEAD
-=======
+	
+	//Added public method for destroying card JRV20201014
+	public void DestroyCard(GameObject card, GameObject dropZone)
+	{
+		CmdDestroyCard(card, dropZone);
+        for(int i = 0; i < 54; i++)
+        {
+            if(card.GetComponent<CardStats>().getId() == GameManager.cards[i].GetComponent<CardStats>().getId())
+            {
+                GameManager.cards[i].GetComponent<CardStats>().setInDeck(true);
+            }
+        }
+	}
+	
+	//Added Cmd method for destroying card JRV20201014
+	[Command]
+	public void CmdDestroyCard(GameObject card, GameObject dropZone)
+	{
+		RpcDestroyCard(card, dropZone);
+	}
+	
+	// Added Rpc method for destroying card JRV20201014
+	// Maybe we don't want to do this and insetad move card to graveyard??
+	// Fixed by checking for authority and clearing the corrected slots JRV20201016
+	[ClientRpc]
+    void RpcDestroyCard(GameObject card, GameObject dropZone)
+    {
+		GameObject.Destroy(card.gameObject);
+	   
+		if(hasAuthority)
+		{
+		   dropZone.tag = "EmptySlot";
+		}
+		if (!hasAuthority)
+		{
+			for(int i = 0; i < PlayerSockets.Count; i++)
+			{
+				if(dropZone == PlayerSockets[i].gameObject)
+				{
+					EnemySockets[i].gameObject.tag = "EmptySlot";
+				}
+				if(dropZone == EnemySockets[i].gameObject)
+				{
+					PlayerSockets[i].gameObject.tag = "EmptySlot";
+				}					
+			}
+	   
+		}
+    }
 	
     //changes health
 	public void SetHealth(int newHealth, string whoHit)
@@ -358,55 +571,113 @@ public class PlayerManager : NetworkBehaviour
 	
 
 	[ClientRpc]
-    public void RpcSetHealth(int newHealth, string whoHit)
-    {
-        if (newHealth < 0)
-        {
-            newHealth = 0;
-        }
-        if (hasAuthority)
-        {
-            if (whoHit == "PlayerHit")
-            {
-                if (newHealth == 0)
-                {
-                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
-                }
-                else
-                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-            }
-            if (whoHit == "EnemyHit")
-            {
-                if (newHealth == 0)
-                {
-                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
-                }
-                else
-                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-            }
-        }
-        if (!hasAuthority)
-        {
-            if (whoHit == "PlayerHit")
-            {
-                if (newHealth == 0)
-                {
-                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
-                }
-                else
-                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-            }
-            if (whoHit == "EnemyHit")
-            {
-                if (newHealth == 0)
-                {
-                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
-                }
-                else
-                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-                //PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
-            }
-        }
-    }
->>>>>>> dcdc8ac29d0d36a52eabf3a060d9fee2d8557d41
+	public void RpcSetHealth(int newHealth, string whoHit)
+	{
+		if(hasAuthority)
+		{
+			if(whoHit == "PlayerHit")
+			{
+				PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
+				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
+			}
+			if(whoHit == "EnemyHit")
+			{
+				EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
+				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;		
+			}
+		}
+		if(!hasAuthority)
+		{
+			if(whoHit == "PlayerHit")
+			{
+				EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
+				EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;			
+			}
+			if(whoHit == "EnemyHit")
+			{
+				PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
+				PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;				
+			}
+		}
+	}
+	
+	
+	public void SetCardHealth(string who, int cardIndex, int health)
+	{
+		CmdSetCardHealth(who, cardIndex, health);
+	}
+	
+		[Command]
+	void CmdSetCardHealth(string who, int cardIndex, int health)
+	{
+		RpcSetCardHealth(who, cardIndex, health);
+	}
+	
+	[ClientRpc]
+	void RpcSetCardHealth(string who, int cardIndex, int health)
+	{
+		if(hasAuthority)
+		{
+			if(who == "Player")
+			{
+				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+			}
+			if(who == "Enemy")
+			{
+				// Changed set dirrectly to setter method call with update SetOnCardStats() call included
+				//EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(card);
+				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);				
+			}
+		}
+		if(!hasAuthority)
+		{
+			if(who == "Player")
+			{
+				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);			
+			}
+			if(who == "Enemy")
+			{			
+				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);			
+			}
+		}		
+	}
+	
+	
+	
+	
+	/*
+	// Updates OnCardStats
+	public void SetOCS(GameObject card)
+	{
+		Debug.Log("GOT THIS FAR 1");
+		CmdSetOCS(card);
+	}
+	
+	[Command]
+	void CmdSetOCS(GameObject card)
+	{
+		Debug.Log("GOT THIS FAR 2");
+		RpcSetOCS(card);
+	}
+	
+	[ClientRpc]
+	void RpcSetOCS(GameObject card)
+	{
+		/*
+		if(hasAuthority)
+		{
+			Debug.Log("GOT THIS FAR 3");
+			card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
+		}
+		if(!hasAuthority)
+		{
+			Debug.Log("GOT THIS FAR 4");
+			card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
+		}
+			
+		
+		Debug.Log("GOT THIS FAR 5");
+		card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
+	}
+	*/
 }
