@@ -12,6 +12,21 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3127142237393900271, guid: 1b51a38a388a33a419558353a8f2796a,
+        type: 3}
+      propertyPath: Id
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3127142237393900271, guid: 1b51a38a388a33a419558353a8f2796a,
+        type: 3}
+      propertyPath: CardName
+      value: five of swords
+      objectReference: {fileID: 0}
+    - target: {fileID: 3127142237393900271, guid: 1b51a38a388a33a419558353a8f2796a,
+        type: 3}
+      propertyPath: suit
+      value: 119
+      objectReference: {fileID: 0}
     - target: {fileID: 8352191398808917261, guid: 1b51a38a388a33a419558353a8f2796a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -132,7 +147,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 73cfee8bd21ccc44da44a8ec14df9634,
+      objectReference: {fileID: 21300000, guid: f4babc9c742a7c346b2554588bfd3151,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b51a38a388a33a419558353a8f2796a, type: 3}

@@ -11,7 +11,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 45078b53ff8ede243b08a204ea5e6e34,
+      objectReference: {fileID: 21300000, guid: a6c0dc3dc4e6958448ee4923bf364f5f,
         type: 3}
     - target: {fileID: 3771109598378277954, guid: af18afcec991ed44383c8412d8fc02d3,
         type: 3}
@@ -133,6 +133,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AssetId
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428020600439952517, guid: af18afcec991ed44383c8412d8fc02d3,
+        type: 3}
+      propertyPath: Id
+      value: 39
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428020600439952517, guid: af18afcec991ed44383c8412d8fc02d3,
+        type: 3}
+      propertyPath: CardName
+      value: Jack of swords
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428020600439952517, guid: af18afcec991ed44383c8412d8fc02d3,
+        type: 3}
+      propertyPath: suit
+      value: 119
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af18afcec991ed44383c8412d8fc02d3, type: 3}

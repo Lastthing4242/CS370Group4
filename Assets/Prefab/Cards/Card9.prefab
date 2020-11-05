@@ -17,7 +17,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: d85da05e9ec18fb4d9615eb9b84a119c,
+      objectReference: {fileID: 21300000, guid: 5c17b38e3b8e9f84daef7cef5f840aa6,
         type: 3}
     - target: {fileID: 2920394066807886707, guid: 9ee273b10060b404884c5880a7153dd6,
         type: 3}
@@ -137,7 +137,27 @@ PrefabInstance:
     - target: {fileID: 8073393336193504401, guid: 9ee273b10060b404884c5880a7153dd6,
         type: 3}
       propertyPath: Id
-      value: 0
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8073393336193504401, guid: 9ee273b10060b404884c5880a7153dd6,
+        type: 3}
+      propertyPath: CardName
+      value: four of coins
+      objectReference: {fileID: 0}
+    - target: {fileID: 8073393336193504401, guid: 9ee273b10060b404884c5880a7153dd6,
+        type: 3}
+      propertyPath: CardHealth
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8073393336193504401, guid: 9ee273b10060b404884c5880a7153dd6,
+        type: 3}
+      propertyPath: CardPower
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8073393336193504401, guid: 9ee273b10060b404884c5880a7153dd6,
+        type: 3}
+      propertyPath: suit
+      value: 111
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ee273b10060b404884c5880a7153dd6, type: 3}

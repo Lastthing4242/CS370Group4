@@ -11,7 +11,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 8d1a33d51314cd641abd35a6a6cf7cf7,
+      objectReference: {fileID: 21300000, guid: 463974269d3745344a9cc4751f6a617f,
         type: 3}
     - target: {fileID: 3783236961650611916, guid: 54d043ace28e426419b5ad3ddfbd4e0b,
         type: 3}
@@ -152,7 +152,17 @@ PrefabInstance:
     - target: {fileID: 7476200414329110027, guid: 54d043ace28e426419b5ad3ddfbd4e0b,
         type: 3}
       propertyPath: Id
-      value: 0
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7476200414329110027, guid: 54d043ace28e426419b5ad3ddfbd4e0b,
+        type: 3}
+      propertyPath: CardName
+      value: three of swords
+      objectReference: {fileID: 0}
+    - target: {fileID: 7476200414329110027, guid: 54d043ace28e426419b5ad3ddfbd4e0b,
+        type: 3}
+      propertyPath: suit
+      value: 119
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54d043ace28e426419b5ad3ddfbd4e0b, type: 3}

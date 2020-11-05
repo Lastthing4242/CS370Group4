@@ -10,7 +10,17 @@ PrefabInstance:
     - target: {fileID: 1027014365478368244, guid: b7649bd9014c6984db55fcf84efcac94,
         type: 3}
       propertyPath: Id
-      value: 0
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1027014365478368244, guid: b7649bd9014c6984db55fcf84efcac94,
+        type: 3}
+      propertyPath: CardName
+      value: three of cups
+      objectReference: {fileID: 0}
+    - target: {fileID: 1027014365478368244, guid: b7649bd9014c6984db55fcf84efcac94,
+        type: 3}
+      propertyPath: suit
+      value: 117
       objectReference: {fileID: 0}
     - target: {fileID: 2993533401708740628, guid: b7649bd9014c6984db55fcf84efcac94,
         type: 3}
@@ -131,7 +141,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: d2d11399eaa8eac459ab462235b0c9bb,
+      objectReference: {fileID: 21300000, guid: 3e3598c5e27df0c41b4711c182a7e444,
         type: 3}
     - target: {fileID: 6701564386830015283, guid: b7649bd9014c6984db55fcf84efcac94,
         type: 3}

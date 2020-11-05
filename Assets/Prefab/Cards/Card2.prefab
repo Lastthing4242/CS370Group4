@@ -299,8 +299,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 878ccff22a0e61c408dc7a701c1d4499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardFace: {fileID: 21300000, guid: cdfc38da2d6efc6429e75b68d4a89d76, type: 3}
-  CardRear: {fileID: 21300000, guid: cb746999def2eeb48aae83bb78c272b2, type: 3}
+  CardFace: {fileID: 21300000, guid: 82c1849a0b9e1b24c9f42f6dd6597088, type: 3}
+  CardRear: {fileID: 21300000, guid: 5916efd012aebc340974dc618730c725, type: 3}
 --- !u!114 &-1436222757480040202
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 02ba3ae00eb18d847ba67686e3cf432d,
+      objectReference: {fileID: 21300000, guid: 1b2fd98170f3e0346b418ccceb2a0f58,
         type: 3}
     - target: {fileID: 2643323938455576200, guid: 42da07777d173d74faf35e92cbcf1fbd,
         type: 3}
@@ -133,6 +133,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AssetId
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642113357593753167, guid: 42da07777d173d74faf35e92cbcf1fbd,
+        type: 3}
+      propertyPath: Id
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642113357593753167, guid: 42da07777d173d74faf35e92cbcf1fbd,
+        type: 3}
+      propertyPath: CardName
+      value: nine of clubs
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642113357593753167, guid: 42da07777d173d74faf35e92cbcf1fbd,
+        type: 3}
+      propertyPath: suit
+      value: 108
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42da07777d173d74faf35e92cbcf1fbd, type: 3}

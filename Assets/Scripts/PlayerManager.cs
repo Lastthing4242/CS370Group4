@@ -294,16 +294,16 @@ public class PlayerManager : NetworkBehaviour
 
                 if (CurrentTime <= 0)//exits combat
                 {
-                   /* for (int i = 0; i < 5; i++)//flips the cards so they can fight it out
+                    for (int i = 0; i < EnemySockets.Count; i++)//flips the cards so they can fight it out
                     {
                         Debug.Log("Hit the loop");
-                        if (EnemySockets[i+1].transform.childCount !=0)
+                        if (EnemySockets[i].transform.childCount !=0)
                         {
                             
-                                EnemySockets[i+1].transform.GetChild(0).gameObject.GetComponent<FlipCard>().Flip();
+                                EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<FlipCard>().Flip();
                             
                         }
-                    }*/
+                    }
                     battle.Fight();// makes the fight script activate in player manager
                     CombatTimer = true;//rests the combat timer for further combat
                     AttackPhase = 0;//sets up for next attack phase

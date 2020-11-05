@@ -121,7 +121,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 2c86d6a0e48df3c458fbe7752325bff8,
+      objectReference: {fileID: 21300000, guid: 2031c9c383e8e3a4c82b54b82160bdc6,
         type: 3}
     - target: {fileID: 2091033741100987830, guid: 37fdfcf3806f4954dae37a4b1c6b9201,
         type: 3}
@@ -129,6 +129,31 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 2031c9c383e8e3a4c82b54b82160bdc6,
         type: 3}
+    - target: {fileID: 5639867146009369969, guid: 37fdfcf3806f4954dae37a4b1c6b9201,
+        type: 3}
+      propertyPath: Id
+      value: 33
+      objectReference: {fileID: 0}
+    - target: {fileID: 5639867146009369969, guid: 37fdfcf3806f4954dae37a4b1c6b9201,
+        type: 3}
+      propertyPath: CardName
+      value: ten of coins
+      objectReference: {fileID: 0}
+    - target: {fileID: 5639867146009369969, guid: 37fdfcf3806f4954dae37a4b1c6b9201,
+        type: 3}
+      propertyPath: CardHealth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5639867146009369969, guid: 37fdfcf3806f4954dae37a4b1c6b9201,
+        type: 3}
+      propertyPath: CardPower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5639867146009369969, guid: 37fdfcf3806f4954dae37a4b1c6b9201,
+        type: 3}
+      propertyPath: suit
+      value: 111
+      objectReference: {fileID: 0}
     - target: {fileID: 7606385787421765265, guid: 37fdfcf3806f4954dae37a4b1c6b9201,
         type: 3}
       propertyPath: m_AssetId

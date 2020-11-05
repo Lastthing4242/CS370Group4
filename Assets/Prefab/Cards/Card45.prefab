@@ -7,6 +7,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1600147545951117429, guid: e7bc8063e99d98e4786233dd6d8486c6,
+        type: 3}
+      propertyPath: Id
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1600147545951117429, guid: e7bc8063e99d98e4786233dd6d8486c6,
+        type: 3}
+      propertyPath: CardName
+      value: King of coins
+      objectReference: {fileID: 0}
+    - target: {fileID: 1600147545951117429, guid: e7bc8063e99d98e4786233dd6d8486c6,
+        type: 3}
+      propertyPath: CardHealth
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1600147545951117429, guid: e7bc8063e99d98e4786233dd6d8486c6,
+        type: 3}
+      propertyPath: CardPower
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1600147545951117429, guid: e7bc8063e99d98e4786233dd6d8486c6,
+        type: 3}
+      propertyPath: suit
+      value: 111
+      objectReference: {fileID: 0}
     - target: {fileID: 3602676757866697621, guid: e7bc8063e99d98e4786233dd6d8486c6,
         type: 3}
       propertyPath: m_AssetId
@@ -16,7 +41,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 4d0022caf8b6ee242a6c894b51a5356a,
+      objectReference: {fileID: 21300000, guid: e22bc6bb32aa8164c87f916bced11290,
         type: 3}
     - target: {fileID: 5004854769983408306, guid: e7bc8063e99d98e4786233dd6d8486c6,
         type: 3}

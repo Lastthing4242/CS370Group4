@@ -121,7 +121,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 2fe9b1aca2d5d1f4b9fd5d1aee3a63dc,
+      objectReference: {fileID: 21300000, guid: 81481bfc44d2bd94799a5fec885cc11c,
         type: 3}
     - target: {fileID: 1012181927614024557, guid: ffac1e12e0239444498379063ce9543f,
         type: 3}
@@ -129,6 +129,31 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 81481bfc44d2bd94799a5fec885cc11c,
         type: 3}
+    - target: {fileID: 6722734375960044458, guid: ffac1e12e0239444498379063ce9543f,
+        type: 3}
+      propertyPath: Id
+      value: 53
+      objectReference: {fileID: 0}
+    - target: {fileID: 6722734375960044458, guid: ffac1e12e0239444498379063ce9543f,
+        type: 3}
+      propertyPath: CardName
+      value: Jesdter of Chaos
+      objectReference: {fileID: 0}
+    - target: {fileID: 6722734375960044458, guid: ffac1e12e0239444498379063ce9543f,
+        type: 3}
+      propertyPath: CardHealth
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6722734375960044458, guid: ffac1e12e0239444498379063ce9543f,
+        type: 3}
+      propertyPath: CardPower
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6722734375960044458, guid: ffac1e12e0239444498379063ce9543f,
+        type: 3}
+      propertyPath: suit
+      value: 114
+      objectReference: {fileID: 0}
     - target: {fileID: 8827171339660267594, guid: ffac1e12e0239444498379063ce9543f,
         type: 3}
       propertyPath: m_AssetId

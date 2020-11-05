@@ -12,6 +12,21 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2346956027209813301, guid: 7114b240beb1bb746a3ca52bef9b4beb,
+        type: 3}
+      propertyPath: Id
+      value: 44
+      objectReference: {fileID: 0}
+    - target: {fileID: 2346956027209813301, guid: 7114b240beb1bb746a3ca52bef9b4beb,
+        type: 3}
+      propertyPath: CardName
+      value: Queen of clubs
+      objectReference: {fileID: 0}
+    - target: {fileID: 2346956027209813301, guid: 7114b240beb1bb746a3ca52bef9b4beb,
+        type: 3}
+      propertyPath: suit
+      value: 108
+      objectReference: {fileID: 0}
     - target: {fileID: 8345765220667057650, guid: 7114b240beb1bb746a3ca52bef9b4beb,
         type: 3}
       propertyPath: m_Sprite
@@ -22,7 +37,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 48f1448069daa2748aaa0f54c5df23a6,
+      objectReference: {fileID: 21300000, guid: d8a1304ba8f065f48b1079c3255f02c4,
         type: 3}
     - target: {fileID: 8655696978696620759, guid: 7114b240beb1bb746a3ca52bef9b4beb,
         type: 3}

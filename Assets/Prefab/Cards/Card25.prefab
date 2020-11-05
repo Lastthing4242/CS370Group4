@@ -127,8 +127,33 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 8d8eba637dc545d448f2273702e730d9,
+      objectReference: {fileID: 21300000, guid: f1c2cb52cb7efc74f8f88544ce4f55f1,
         type: 3}
+    - target: {fileID: 6424417645687846904, guid: 8f3ab87910b6978449e57354022e8860,
+        type: 3}
+      propertyPath: Id
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424417645687846904, guid: 8f3ab87910b6978449e57354022e8860,
+        type: 3}
+      propertyPath: CardName
+      value: eight of coins
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424417645687846904, guid: 8f3ab87910b6978449e57354022e8860,
+        type: 3}
+      propertyPath: CardHealth
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424417645687846904, guid: 8f3ab87910b6978449e57354022e8860,
+        type: 3}
+      propertyPath: CardPower
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424417645687846904, guid: 8f3ab87910b6978449e57354022e8860,
+        type: 3}
+      propertyPath: suit
+      value: 111
+      objectReference: {fileID: 0}
     - target: {fileID: 9143300192528483352, guid: 8f3ab87910b6978449e57354022e8860,
         type: 3}
       propertyPath: m_AssetId

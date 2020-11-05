@@ -127,8 +127,23 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 5d2fdbf8c7e0c134a8169eeeb2eea7f4,
+      objectReference: {fileID: 21300000, guid: 3b6f761c4f23cac4da8a16be6ed6bdb8,
         type: 3}
+    - target: {fileID: 6626743329616166854, guid: dc63cf4868a52a1429d15033ab404028,
+        type: 3}
+      propertyPath: Id
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 6626743329616166854, guid: dc63cf4868a52a1429d15033ab404028,
+        type: 3}
+      propertyPath: CardName
+      value: seven of swords
+      objectReference: {fileID: 0}
+    - target: {fileID: 6626743329616166854, guid: dc63cf4868a52a1429d15033ab404028,
+        type: 3}
+      propertyPath: suit
+      value: 119
+      objectReference: {fileID: 0}
     - target: {fileID: 8952436058325748774, guid: dc63cf4868a52a1429d15033ab404028,
         type: 3}
       propertyPath: m_AssetId

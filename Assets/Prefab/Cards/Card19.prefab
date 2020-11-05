@@ -12,6 +12,21 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4500033802330114982, guid: fd8c0ecded1a650478abcebdaa45dcda,
+        type: 3}
+      propertyPath: Id
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500033802330114982, guid: fd8c0ecded1a650478abcebdaa45dcda,
+        type: 3}
+      propertyPath: CardName
+      value: six of swords
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500033802330114982, guid: fd8c0ecded1a650478abcebdaa45dcda,
+        type: 3}
+      propertyPath: suit
+      value: 119
+      objectReference: {fileID: 0}
     - target: {fileID: 7106465956416854550, guid: fd8c0ecded1a650478abcebdaa45dcda,
         type: 3}
       propertyPath: m_Name
@@ -126,7 +141,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CardFace
       value: 
-      objectReference: {fileID: 21300000, guid: 86efe62c790890d408459ddf030dbcc6,
+      objectReference: {fileID: 21300000, guid: 949ca221d5baf7b4ebcc258356bf11b9,
         type: 3}
     - target: {fileID: 7868731606876676961, guid: fd8c0ecded1a650478abcebdaa45dcda,
         type: 3}
