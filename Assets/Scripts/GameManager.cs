@@ -157,10 +157,10 @@ public class GameManager : MonoBehaviour
         CardList.Add(new CardStats(26, "eight of cups", 8, 8, Card26, 'u', true));
         CardList.Add(new CardStats(27, "eight of swords", 8, 8, Card27, 'w', true));
         CardList.Add(new CardStats(28, "eight of clubs", 8, 8, Card28, 'l', true));
-        CardList.Add(new CardStats(29, "nine of coins", 9, 9, Card29, 'o', true));//start of the 9 cards
-        CardList.Add(new CardStats(30, "nine of cups", 9, 9, Card30, 'u', true));
-        CardList.Add(new CardStats(31, "nine of swords", 9, 9, Card31, 'w', true));
-        CardList.Add(new CardStats(32, "nine of clubs", 9, 9, Card32, 'l', true));
+        CardList.Add(new CardStats(29, "nine of coins", 9, 3, Card29, 'o', true));//start of the 9 cards
+        CardList.Add(new CardStats(30, "nine of cups", 9, 3, Card30, 'u', true));
+        CardList.Add(new CardStats(31, "nine of swords", 9, 3, Card31, 'w', true));
+        CardList.Add(new CardStats(32, "nine of clubs", 9, 3, Card32, 'l', true));
         CardList.Add(new CardStats(33, "ten of coins", 10, 10, Card33, 'o', true));//start of the 10 cards
         CardList.Add(new CardStats(34, "ten of cups", 10, 10, Card34, 'u', true));
         CardList.Add(new CardStats(35, "ten of swords", 10, 10, Card35, 'w', true));

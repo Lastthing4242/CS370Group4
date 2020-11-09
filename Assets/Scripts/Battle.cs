@@ -77,7 +77,14 @@ public class Battle : NetworkBehaviour
 					PCBattlePower  = PCBattlePower  - 2;
 					ECBattlePower  = PCBattlePower  - 2;
 				}
-				
+				if (playerCardId >= 29 && playerCardId <= 32)//This is the 9's ability to deal and recieve 1 less damage, the power nerf is done by directly changing the stat
+				{
+					ECBattlePower--;
+				}
+				if (enemyCardId >= 29 && enemyCardId <= 32)//This is the 9's ability to deal and recieve 1 less damage, the power nerf is done by directly changing the stat
+				{
+					PCBattlePower--;
+				}
 
 				// reduce each cards life along side the others attack (local variables) until at least one is dead 
 				while (PCBattlePower  > 0 && ECBattlePower  > 0)
@@ -93,7 +100,16 @@ public class Battle : NetworkBehaviour
 						playerCardHealth--;
 					}
 				}
-				
+				if (PCBattlePower > 0)
+                {
+					PCBattlePower = 0;
+					enemyCardHealth = enemyCardHealth - PCBattlePower;
+                }
+				if (ECBattlePower > 0)
+                {
+					ECBattlePower = 0;
+					playerCardHealth = playerCardHealth - ECBattlePower;
+                }
 				// Determine which or if both cards died and remove those cards, and modify the other cards life appropriately
 				if(playerCardHealth <= 0 && enemyCardHealth > 0)
 				{
