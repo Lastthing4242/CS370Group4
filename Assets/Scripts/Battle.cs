@@ -37,9 +37,86 @@ public class Battle : NetworkBehaviour
 				int enemyCardPower = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 				int playerCardHealth = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
 				int enemyCardHealth = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
+				int playerCardId = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+				int enemyCardId = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+
+				int PCBattlePower = playerCardPower;//these are here to not mess with the actual powers of the cards
+				int ECBattlePower = enemyCardPower;//they can be used instead of card health to determine when to end combat
+
+				if (playerCardId >= 5 && playerCardId <= 8)//this is the 3 card's ability to strike first, checking the player's side first.
+                {
+					if(enemyCardId >=5 && enemyCardId <= 8)
+                    {
+						break;
+                    }
+					else
+                    {
+						enemyCardHealth = enemyCardHealth - PCBattlePower ;
+						PCBattlePower  = 0;
+                    }
+                }
+				if (enemyCardId >= 5 && enemyCardId <= 8)//this is the 3 card's ability to strike first, now checking the enemy's side.
+				{
+					if (playerCardId >= 5 && playerCardId <= 8)
+					{
+						break;
+					}
+					else
+					{
+						playerCardHealth = playerCardHealth - ECBattlePower ;
+						ECBattlePower  = 0;
+					}
+				}
 				
-				// reduce each cards life along side the others attack (local variables) until at least one is dead 
-				while(playerCardHealth > 0 && enemyCardHealth > 0)
+				// This is the 5 cards ability to enhance attack power by 1 for each friendly face card
+				if(playerCardId >= 13 && playerCardId <= 16) // for player cards
+				{
+					for(int j = 0; j < PlayerManager.PlayerSockets.Count; j++)
+					{
+						if(PlayerManager.PlayerSockets[j].gameObject.tag == "FullSlot")
+						{
+							int otherCard = PlayerManager.PlayerSockets[j].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+							if(otherCard >= 37 && otherCard <= 48)
+							{
+								PCBattlePower++;
+							}
+						}
+					}
+				}
+				if(playerCardId >= 13 && playerCardId <= 16) // for opponent cards
+				{
+					for(int j = 0; j < PlayerManager.EnemySockets.Count; j++)
+					{
+						if(PlayerManager.EnemySockets[j].gameObject.tag == "FullSlot")
+						{
+							int otherCard = PlayerManager.EnemySockets[j].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+							if(otherCard >= 37 && otherCard <= 48)
+							{
+								ECBattlePower++;
+							}
+						}
+					}
+				}
+				
+				if (playerCardId >= 17 && playerCardId <= 20)//This is the 6's ability to deal and recieve 2 less damage
+				{
+					PCBattlePower  = PCBattlePower  - 2;
+					ECBattlePower  = ECBattlePower  - 2;
+				}
+				if (enemyCardId >= 17 && enemyCardId <= 20)//This is the 6's ability to deal and recieve 2 less damage
+				{
+					PCBattlePower  = PCBattlePower  - 2;
+					ECBattlePower  = PCBattlePower  - 2;
+				}
+				
+				
+				
+				
+				
+				// reduce each cards life along side the others attack (local variables) until at least one is dead
+				// commented out for following battle exchange, but will probably come in handy (implementation of 7 cards).
+				/*
+				while (playerCardHealth > 0 && enemyCardHealth > 0)
 				{
 					if(playerCardPower > 0)
 					{
@@ -52,7 +129,27 @@ public class Battle : NetworkBehaviour
 						playerCardHealth--;
 					}
 				}
+				*/
 				
+				
+				
+				// Alternate battle exchange - (I thing more in line with what was intended)
+				{
+					playerCardHealth -= enemyCardPower;
+					if(playerCardHealth < 0) playerCardHealth = 0;
+					
+					enemyCardHealth -= playerCardPower;
+					if(enemyCardHealth < 0) enemyCardHealth = 0;
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				// After Battle
 				// Determine which or if both cards died and remove those cards, and modify the other cards life appropriately
 				if(playerCardHealth == 0 && enemyCardHealth != 0)
 				{
