@@ -120,6 +120,9 @@ public class CardStats : NetworkBehaviour
                 triggered = true;
             }
         }
+		
+		// causes this to run constantly and throw exceptions for face down cards
+		//SetOnCardStats();
      }
     
 
