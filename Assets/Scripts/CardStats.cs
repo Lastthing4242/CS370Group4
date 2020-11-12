@@ -17,6 +17,8 @@ public class CardStats : NetworkBehaviour
     public int CardHealth;
     public int CardPower;
     public GameObject card;
+    public GameObject PlayerArea;
+    public GameObject OpponentArea;
     public char suit;
     public bool InDeck;
     public bool triggered = false;// checks to see if the card has triggered its ability
@@ -64,63 +66,67 @@ public class CardStats : NetworkBehaviour
         
     }
 
-   void Update()
+    void Update()
     {
-        if (card.transform.IsChildOf(GameObject.Find("PlayerArea").transform) && !playerCard)
+        if (card != null)
         {
-            Debug.Log("im a player card my id is" + Id);
-            playerCard = true;
-        }
-        else if (card.transform.IsChildOf(GameObject.Find("OpponentArea").transform) && !enemyCard)
-        {
-            Debug.Log("im a enemy card my id is" + Id);
-            enemyCard = true;
-        }
-        if (triggered == false && GameObject.Find("TurnText").GetComponent<Text>().text == "ETB Triggers")//this triggers all of the abilities currently
-        {
-            Debug.Log("im using my ability my id is" + Id);
-            NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-            playermanager = networkIdentity.GetComponent<PlayerManager>();
-
-            if (suit == 'o')
+            if (card.gameObject.transform.parent == PlayerArea.transform && !playerCard)
             {
-                if (enemyCard)
+                Debug.Log("im a player card my id is" + Id);
+                playerCard = true;
+            }
+            else if (card.gameObject.transform.parent == OpponentArea.transform && !enemyCard)
+            {
+                Debug.Log("im a enemy card my id is" + Id);
+                enemyCard = true;
+            }
+            if (triggered == false && GameObject.Find("TurnText").GetComponent<Text>().text == "ETB Triggers")//this triggers all of the abilities currently
+            {
+                Debug.Log("im using my ability my id is" + Id);
+                NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+                playermanager = networkIdentity.GetComponent<PlayerManager>();
+
+                if (suit == 'o')
                 {
-                    int health = playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().getHealth();
-                    health = health - 2;
-                    playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
-                    playermanager.SetHealth(health, "PlayerHit");
+                    if (enemyCard)
+                    {
+                        int health = playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().getHealth();
+                        health = health - 2;
+                        playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+                        playermanager.SetHealth(health, "PlayerHit");
+                        triggered = true;
+                    }
+                    else if (playerCard)
+                    {
+                        int health = playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
+                        health = health - 2;
+                        playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+                        playermanager.SetHealth(health, "EnemyHit");
+                        triggered = true;
+                    }
+                }
+
+                else if (suit == 'u')
+                {
+                    CardHealth = CardHealth + 2;
                     triggered = true;
                 }
-                else if (playerCard)
+                else if (suit == 'w')
                 {
-                    int health = playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
-                    health = health - 2;
-                    playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
-                    playermanager.SetHealth(health, "EnemyHit");
+                    CardPower = CardPower + 2;
+                    triggered = true;
+
+                }
+                else if (suit == 'l')
+                {
+                    CardHealth++;
+                    CardPower++;
                     triggered = true;
                 }
             }
-
-            else if (suit == 'u')
-            {             
-                CardHealth = CardHealth + 2;
-                triggered = true;
-            }
-            else if (suit == 'w')
-            {
-                CardPower = CardPower + 2;
-                triggered = true;
-                
-            }
-            else if (suit == 'l')
-            {
-                CardHealth++;
-                CardPower++;
-                triggered = true;
-            }
+            SetOnCardStats();
         }
-     }
+    }
     
 
 	// There's got to be a better way to set this, but I can't figuer it out without setting on each prefab (being lazy)

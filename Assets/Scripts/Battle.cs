@@ -40,8 +40,8 @@ public class Battle : NetworkBehaviour
 				int playerCardId = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
 				int enemyCardId = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
 
-				//int PCBattlePower = playerCardPower;//these are here to not mess with the actual powers of the cards
-				//int ECBattlePower = enemyCardPower;//they can be used instead of card health to determine when to end combat
+				int PCBattlePower = playerCardPower;//these are here to not mess with the actual powers of the cards
+				int ECBattlePower = enemyCardPower;//they can be used instead of card health to determine when to end combat
 
 				if (playerCardId >= 5 && playerCardId <= 8)//this is the 3 card's ability to strike first, checking the player's side first.
                 {
@@ -51,8 +51,8 @@ public class Battle : NetworkBehaviour
                     }
 					else
                     {
-						enemyCardHealth = enemyCardHealth - playerCardPower  ;
-						playerCardPower   = 0;
+						enemyCardHealth = enemyCardHealth - PCBattlePower ;
+						PCBattlePower  = 0;
                     }
                 }
 				if (enemyCardId >= 5 && enemyCardId <= 8)//this is the 3 card's ability to strike first, now checking the enemy's side.
@@ -63,59 +63,53 @@ public class Battle : NetworkBehaviour
 					}
 					else
 					{
-						playerCardHealth = playerCardHealth - enemyCardPower  ;
-						enemyCardPower   = 0;
+						playerCardHealth = playerCardHealth - ECBattlePower ;
+						ECBattlePower  = 0;
 					}
 				}
 				if (playerCardId >= 17 && playerCardId <= 20)//This is the 6's ability to deal and recieve 2 less damage
 				{
-					playerCardPower  = playerCardPower  - 2;
-					enemyCardPower  = enemyCardPower  - 2;
+					PCBattlePower  = PCBattlePower  - 2;
+					ECBattlePower  = ECBattlePower  - 2;
 				}
 				if (enemyCardId >= 17 && enemyCardId <= 20)//This is the 6's ability to deal and recieve 2 less damage
 				{
-					playerCardPower  = playerCardPower - 2;
-					enemyCardPower  = enemyCardPower  - 2;
+					PCBattlePower  = PCBattlePower  - 2;
+					ECBattlePower  = PCBattlePower  - 2;
 				}
 				if (playerCardId >= 29 && playerCardId <= 32)//This is the 9's ability to deal and recieve 1 less damage, the power nerf is done by directly changing the stat
 				{
-					enemyCardPower--;
+					ECBattlePower--;
 				}
 				if (enemyCardId >= 29 && enemyCardId <= 32)//This is the 9's ability to deal and recieve 1 less damage, the power nerf is done by directly changing the stat
 				{
-					playerCardPower--;
+					PCBattlePower--;
 				}
 
 				// reduce each cards life along side the others attack (local variables) until at least one is dead 
-				while (playerCardPower > 0 && enemyCardPower > 0)
+				while (PCBattlePower  > 0 && ECBattlePower  > 0)
 				{
-					if(playerCardPower  > 0)
+					if(PCBattlePower  > 0)
 					{
-						playerCardPower --;
+						PCBattlePower --;
 						enemyCardHealth--;
 					}
-					if(enemyCardPower  > 0)
+					if(ECBattlePower  > 0)
 					{
-						enemyCardPower --;
+						ECBattlePower --;
 						playerCardHealth--;
 					}
 				}
-				if (playerCardPower > 0)
+				if (PCBattlePower > 0)
                 {
-					if (playerCardHealth > 0)
-					{
-						enemyCardHealth = enemyCardHealth - playerCardPower;
-						playerCardPower = 0;
-					}
-				}
-				if (enemyCardPower > 0)
+					PCBattlePower = 0;
+					enemyCardHealth = enemyCardHealth - PCBattlePower;
+                }
+				if (ECBattlePower > 0)
                 {
-					if (enemyCardHealth > 0)
-					{
-						playerCardHealth = playerCardHealth - enemyCardPower;
-						enemyCardPower = 0;
-					}
-				}
+					ECBattlePower = 0;
+					playerCardHealth = playerCardHealth - ECBattlePower;
+                }
 				// Determine which or if both cards died and remove those cards, and modify the other cards life appropriately
 				if(playerCardHealth <= 0 && enemyCardHealth > 0)
 				{

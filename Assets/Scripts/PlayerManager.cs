@@ -9,16 +9,19 @@ using System;
 public class PlayerManager : NetworkBehaviour
 {
     public TurnOrder TurnOrder;
+    public Battle battle;
     public GameManager GameManager;
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
 	public GameObject PlayerHealth;
 	public GameObject EnemyHealth;
-    public bool HavePlayedCard = false;
-	
-	public GameObject CardHealth;
+    
+
+    public GameObject CardHealth;
 	public GameObject CardAttack;
-	
+    static public bool CardPlayedp1 = false;
+    static public bool CardPlayedp2 = false;
+
     public GameObject Card1;
     public GameObject Card2;
     public GameObject Card3;
@@ -87,7 +90,10 @@ public class PlayerManager : NetworkBehaviour
     public static bool CombatTimer = true;//this sets a short timer for combat
     static float TurnTime = 10f;//this sets all of the timers for the code, chaging this number changes all the timers
     public static int AttackPhase = 0;// this manages how many phases have been played, if it reaches two it will iniate the attack phase
-
+    public static int gameStarting = 0;//when this hits 2 the game can start
+    public static bool readyp1 = false;//player one has clicked start turn button
+    public static bool readyp2 = false;//player two has clicked start turn button
+    public GameObject NA;
 
     public GameObject PlayerSlot1;
 	public GameObject PlayerSlot2;
@@ -115,6 +121,8 @@ public class PlayerManager : NetworkBehaviour
     {
         base.OnStartClient();
 
+        NA = GameObject.Find("NA");
+        battle = NA.GetComponent<Battle>();
         TurnText = GameObject.Find("TurnText").GetComponent<Text>();
         PlayerArea = GameObject.Find("PlayerArea");
         OpponentArea = GameObject.Find("OpponentArea");
@@ -286,6 +294,7 @@ public class PlayerManager : NetworkBehaviour
 
                 if (CurrentTime <= 0)//exits combat
                 {
+                    battle.Fight();// makes the fight script activate in player manager
                     CombatTimer = true;//rests the combat timer for further combat
                     AttackPhase = 0;
                     TurnText.text = " End Turn ";
@@ -293,12 +302,32 @@ public class PlayerManager : NetworkBehaviour
                     CurrentTime = -100f;
                     PlayerOneClick = false;
                     PlayerTwoClick = false;
+                    CardPlayedp1 = true;
+                    CardPlayedp2 = true;
+                    if (hasAuthority)//this method makes you draw at the end of the turn
+                    {
+                        if (CardPlayedp1)
+                        {
+                            CardPlayedp1 = false;//makes sure the player can play a card
+                            CmdDealCards();//draws each player a card
+                        }
+
+                    }
+                    else if (!hasAuthority)
+                    {
+                        if (CardPlayedp2)
+                        {
+                            CardPlayedp2 = false;//makes sure the player can play a card
+                            CmdDealCards();//draws each player a card
+                        }
+
+                    }
                 }
 
             }
-
+           
         }
-		/*
+        /*
 		for(int i = 0; i < PlayerSockets.Count; i++)
 		{
 			if(PlayerSockets[i].gameObject.tag == "FullSlot")
@@ -311,6 +340,33 @@ public class PlayerManager : NetworkBehaviour
 			}
 		}
 		*/
+        if (gameStarting >= 2 && gameStarting<100)
+        {
+            if (hasAuthority)//this method makes you draw at the end of the turn
+            {
+                if (readyp1)
+                {
+                    readyp1 = false;//makes sure the player can play a card
+                    CmdDealCards();//draws each player a card
+                    CmdDealCards();//draws each player a card
+                    CmdDealCards();//draws each player a card
+                    gameStarting = gameStarting + 60;
+                }
+
+            }
+            else if (!hasAuthority)
+            {
+                if (readyp2)
+                {
+                    readyp2 = false;//makes sure the player can play a card
+                    CmdDealCards();//draws each player a card
+                    CmdDealCards();//draws each player a card
+                    CmdDealCards();//draws each player a card
+                    gameStarting = gameStarting + 60;
+                }
+
+            }
+        }
     }
 
 
@@ -320,6 +376,42 @@ public class PlayerManager : NetworkBehaviour
         
     }
 
+    void DealCards()
+    {
+        CmdDealCards();
+    }
+
+    [Command]//helps comminicate on click to server
+    public void CmdStartGame()
+    {
+        rpcStartGame();
+    }
+
+    [ClientRpc]//don't know why but this be working like this;
+    void rpcStartGame()
+    {
+
+        if (hasAuthority)
+        {
+            if (!readyp1)
+            {
+                gameStarting++;
+                readyp1 = true;
+                Debug.Log("Player one has pushed the button");
+            }
+        }
+
+        else if (!hasAuthority)
+        {
+            if (!readyp2)
+            {
+                gameStarting++;
+                readyp2 = true;
+                Debug.Log("Player two has pushed the button");
+            }
+        }
+
+    }
 
     [Command]//helps comminicate on click to server
     public void CmdProgressTurn()
@@ -423,8 +515,29 @@ public class PlayerManager : NetworkBehaviour
 
     public void PlayCard(GameObject Card, GameObject dropZone)
     {
-        CmdPlayCard(Card, dropZone);
-        CardsPlayed++;
+        if (hasAuthority && CardPlayedp1 == false)
+        {
+            CardPlayedp1 = true;
+            CmdPlayCard(Card, dropZone);
+            CardsPlayed++;
+
+            //Debug.Log(CardsPlayed);
+        }
+        else if(!hasAuthority && CardPlayedp2 == false)
+        {
+            CardPlayedp2 = true;
+            CmdPlayCard(Card, dropZone);
+            CardsPlayed++;
+
+            //Debug.Log(CardsPlayed);
+        }
+        else
+        {
+            Card.gameObject.GetComponent<DragDrop>().isDraggable = true;
+            Card.transform.SetParent(PlayerArea.transform, false);
+
+        }
+
         //Debug.Log(CardsPlayed);
     }
 
@@ -459,6 +572,7 @@ public class PlayerManager : NetworkBehaviour
                 Card.transform.SetParent(OpponentArea.transform, false);
                 Card.GetComponent<FlipCard>().Flip();
             }
+            
         }
         else if (type == "Played")
         {
@@ -475,6 +589,7 @@ public class PlayerManager : NetworkBehaviour
                     dropZone.tag = "EmptySlot";
                     dropZone.tag = "FullSlot";
                 }
+                CardPlayedp1 = true;
             }
 					
 			if (!hasAuthority)
@@ -502,7 +617,7 @@ public class PlayerManager : NetworkBehaviour
                         }
 					}
 				}
-		
+                CardPlayedp2 = true;
                 Card.GetComponent<FlipCard>().Flip();
             }
         }

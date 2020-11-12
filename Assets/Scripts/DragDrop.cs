@@ -24,7 +24,7 @@ public class DragDrop : NetworkBehaviour
 
     private bool isDragging = false;
     private bool isOverDropZone = false;
-    private bool isDraggable = true;
+    public bool isDraggable = true;
     private GameObject dropZone;
     private GameObject StartParent;
     private Vector2 startPosition;

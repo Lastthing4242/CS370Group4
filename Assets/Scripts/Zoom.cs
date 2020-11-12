@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Zoom : MonoBehaviour
-{
+{/*
     public GameManager GameManager;
     public CardStats CardStats;
     public GameObject Canvas;
@@ -50,6 +50,6 @@ public class Zoom : MonoBehaviour
     public void offHover()
     {
         Destroy(bigCard);
-    }
+    }*/
 
 }
