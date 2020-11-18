@@ -6,6 +6,7 @@ using Mirror;
 
 public class GameManager : MonoBehaviour
 {
+	
 	public string GameState = "Deal";
     public PlayerManager playermanager= new PlayerManager();
 
@@ -308,4 +309,5 @@ public class GameManager : MonoBehaviour
 
     }
 
+	
 }

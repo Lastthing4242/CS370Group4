@@ -16,16 +16,16 @@ public class HealthScript : NetworkBehaviour
     private int Health = 100;
 	private int InitialHealth = 100;
 	
-	public override void OnStartClient()
-    {
-        base.OnStartClient();
-		
-		NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-		PlayerManager = networkIdentity.GetComponent<PlayerManager>();	
-	}
-	
 	public void setHealthTone()
 	{
+		/*
+		if(PlayerManager == null)
+		{
+			NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+			PlayerManager = networkIdentity.GetComponent<PlayerManager>();	
+		}
+		*/
+		
 		float percent = (float)Health / (float)InitialHealth;
 		float R = (float)(170 - percent * 120) / 255;
 		float G = (float)(30 + percent * 120) / 255;

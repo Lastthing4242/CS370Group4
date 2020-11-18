@@ -253,7 +253,7 @@ public class PlayerManager : NetworkBehaviour
 	
     public void Awake()
     {
-        Name = GameManager.NameGenerator();
+		Name = GameManager.NameGenerator();
     }
 
     void Update()//this runs the timer in real time and controls card effects
@@ -265,7 +265,8 @@ public class PlayerManager : NetworkBehaviour
             CurrentTime -= 1 * Time.deltaTime;
             if (CurrentTime > 0)
             {
-                TurnTimer.text = "Time remaining:" + CurrentTime.ToString("f0");
+                //TurnTimer.text = "Time remaining:" + CurrentTime.ToString("f0");
+				TurnText.text = "" + CurrentTime.ToString("f0");
             }
 
 
@@ -600,8 +601,11 @@ public class PlayerManager : NetworkBehaviour
 	[ClientRpc]
     void RpcDestroyCard(GameObject card, GameObject dropZone)
     {
-		GameObject.Destroy(card.gameObject);
-	   
+		if(card != null)
+		{
+			GameObject.Destroy(card.gameObject);
+		}
+		
 		if(hasAuthority)
 		{
 		   dropZone.tag = "EmptySlot";
@@ -707,28 +711,41 @@ public class PlayerManager : NetworkBehaviour
 	[ClientRpc]
 	void RpcSetCardHealth(string who, int cardIndex, int health)
 	{
+		// check who called, then who was hit.
+		// double check that card is present to avoid exceptions thrown.
+		// Changed set dirrectly to setter method call with update SetOnCardStats() call included in cardStats().
 		if(hasAuthority)
 		{
 			if(who == "Player")
 			{
-				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+				if(PlayerSockets[cardIndex].transform.childCount != 0)
+				{
+					PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+				}
 			}
 			if(who == "Enemy")
 			{
-				// Changed set dirrectly to setter method call with update SetOnCardStats() call included
-				//EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().SetOnCardStats(card);
-				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);				
+				if(EnemySockets[cardIndex].transform.childCount != 0)
+				{
+					EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+				}			
 			}
 		}
 		if(!hasAuthority)
 		{
 			if(who == "Player")
 			{
-				EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);			
+				if(EnemySockets[cardIndex].transform.childCount != 0)
+				{
+					EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+				}					
 			}
 			if(who == "Enemy")
-			{			
-				PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);			
+			{		
+				if(PlayerSockets[cardIndex].transform.childCount != 0)
+				{
+					PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+				}					
 			}
 		}		
 	}

@@ -33,7 +33,6 @@ public class CardStats : NetworkBehaviour
 	public Sprite ThreeQuarterHealth;
 	public Sprite EmptyHealth;
 	
-	
 	bool attached = false;
 	int fullHealth;
 	
@@ -76,8 +75,11 @@ public class CardStats : NetworkBehaviour
 
    void Update()
     {
-		NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-        playermanager = networkIdentity.GetComponent<PlayerManager>();
+		if(playermanager == null)
+		{
+			NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+			playermanager = networkIdentity.GetComponent<PlayerManager>();
+		}			
 		
         if (card.transform.IsChildOf(GameObject.Find("PlayerArea").transform) && !playerCard)
         {
@@ -137,7 +139,7 @@ public class CardStats : NetworkBehaviour
 		// -------------------------------------5 CARD ABILITY---------------------------------------------------------
 		// This is the 5 cards ability to enhance attack power by 1 for each friendly face card
 		//  These variables need to be used during battle - they are not currently now
-		if(Id >= 13 && Id <= 16) // for player cards
+		if(Id >= 13 && Id <= 16)
 		{
 			int boost = 0;
 			if(playerCard)
