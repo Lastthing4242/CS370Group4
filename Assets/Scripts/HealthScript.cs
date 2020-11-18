@@ -31,11 +31,6 @@ public class HealthScript : NetworkBehaviour
 		float G = (float)(30 + percent * 120) / 255;
 		float B = (float)(30 + percent * 25) / 255;
 		gameObject.GetComponent<Image>().color = new Color(R,G,B, 255);
-		Debug.Log("Color " + R + "," + G + "," + B);
-		//gameObject.color = new Color(50, 150, 55);
-		//gameObject.color = new Color(170, 30, 30);
-		//(120, -120, -25)
-		//gameObject.Color = new Color(R,G,B);
 	}
 	
 	public void setHealth(int newHealth)

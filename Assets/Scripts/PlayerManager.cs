@@ -297,7 +297,7 @@ public class PlayerManager : NetworkBehaviour
                 {
                     for (int i = 0; i < EnemySockets.Count; i++)//flips the cards so they can fight it out
                     {
-                        Debug.Log("Hit the loop");
+                        //Debug.Log("Hit the loop");
                         if (EnemySockets[i].transform.childCount !=0)
                         {
 							GameObject Card = EnemySockets[i].transform.GetChild(0).gameObject;
@@ -328,6 +328,7 @@ public class PlayerManager : NetworkBehaviour
                     PlayerOneClick = false;
                     PlayerTwoClick = false;
                     CardPlayed = false;//makes sure the player can play a card
+					Debug.Log("CardPlayed set to " + CardPlayed);
                     DealCards();//draws each player a card
                 }
             }
@@ -479,16 +480,19 @@ public class PlayerManager : NetworkBehaviour
 
     public void PlayCard(GameObject Card, GameObject dropZone)
     {
+		Debug.Log("ARE WE GETTING HERE?");
+		Debug.Log("Why is CardPlayed " + CardPlayed);
         if (CardPlayed == false)
         {
             CardPlayed = true;
             CmdPlayCard(Card, dropZone);
             CardsPlayed++;
 
-            //Debug.Log(CardsPlayed);
+            Debug.Log("CARDSPLAYED" + CardPlayed);
         }
         else
         {
+			Debug.Log("NOTCARDSPLAYED?????????");
             Card.gameObject.GetComponent<DragDrop>().isDraggable = true;
             Card.transform.SetParent(PlayerArea.transform, false);
 
@@ -531,7 +535,7 @@ public class PlayerManager : NetworkBehaviour
         {
 			if(hasAuthority)
 			{
-				Debug.Log("slotNumber = " + dropZone + "PlayerSockets num = " + PlayerSockets.Count);
+				//Debug.Log("slotNumber = " + dropZone + "PlayerSockets num = " + PlayerSockets.Count);
 				Card.transform.SetParent(dropZone.transform, false);
 				// added tag set
 				dropZone.tag = "FullSlot";
