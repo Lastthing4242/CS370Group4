@@ -17,6 +17,7 @@ public class PlayerManager : NetworkBehaviour
 	public GameObject PlayerHealth;
 	public GameObject EnemyHealth;
     public bool HavePlayedCard = false;
+	public PlayerManager playerManager;
 	
 	public GameObject CardHealth;
 	public GameObject CardAttack;
@@ -82,6 +83,8 @@ public class PlayerManager : NetworkBehaviour
     public GameObject OpponentLibrary;
     public GameObject endTurn;
     public Text TurnText;
+	
+	
     public static float CurrentTime = 0f;//this will be the dynamic time variable
     public Text TurnTimer;
     public string Name;
@@ -94,7 +97,13 @@ public class PlayerManager : NetworkBehaviour
     public static bool readyp1 = false;//player one has clicked start turn button
     public static bool readyp2 = false;//player two has clicked start turn button
     public GameObject NA;
-
+	
+	
+	public bool played = false;
+	
+	//[SyncVar]
+	static string gameState = "Playing";
+	
 
     public GameObject PlayerSlot1;
 	public GameObject PlayerSlot2;
@@ -258,9 +267,20 @@ public class PlayerManager : NetworkBehaviour
 
     void Update()//this runs the timer in real time and controls card effects
     {
+		/*
+		if(GameManager.gameState == "Reset" && played == true)
+		{
+			played = false;
+			GameManager.ChangeGameState();
+		}
+		*/
+		
        
+	   /*
         if (PlayerTwoClick || PlayerOneClick)
         {
+			Debug.Log("PlayerOneClick : " + PlayerOneClick);
+			Debug.Log("PlayerTwoClick : " + PlayerTwoClick);
             //decreases current time and displays it
             CurrentTime -= 1 * Time.deltaTime;
             if (CurrentTime > 0)
@@ -278,9 +298,9 @@ public class PlayerManager : NetworkBehaviour
 
             if (AttackPhase == 2)//checks that both players have hade a turn to play then plays the combat step
             {
-                /*faux start function inside of the update that sets the timer for combat,
-                the timer is more just for show until we have things happening in 
-                attack phase to show we do have multiple phases*/
+                //faux start function inside of the update that sets the timer for combat,
+                //the timer is more just for show until we have things happening in 
+                //attack phase to show we do have multiple phases
                 if (CombatTimer)
                 {
                     CurrentTime = TurnTime / 2f;
@@ -330,10 +350,13 @@ public class PlayerManager : NetworkBehaviour
                     PlayerTwoClick = false;
                     CardPlayed = false;//makes sure the player can play a card
 					Debug.Log("CardPlayed set to " + CardPlayed);
+					assignAuthorityObj.GetComponent<NetworkIdentity>().AssignClientAuthority(this.GetComponent<NetworkIdentity>().connectionToClient);
                     DealCards();//draws each player a card
+					assignAuthorityObj.GetComponent<NetworkIdentity>().RemoveClientAuthority(this.GetComponent<NetworkIdentity>().connectionToClient);
                 }
             }
         }
+		*/
     }
 
    void DealCards()
@@ -378,12 +401,136 @@ public class PlayerManager : NetworkBehaviour
         }
 
     }
+	
+	
+	//  New Game control methods---------------------------------------------------------------------------START
+	
+	public void ProgressTurn()
+	{
+		if(TurnText.text == "End Turn" && played)
+		{
+			TurnText.text = "Pressed";
+			
+			if(gameState == "Battle")
+			{
+				Debug.Log("Inside if(gameState == Battle)");
+				CmdProgressTurn();
+				battle.Fight();		
+				CmdResetPlayed();
 
-    [Command]//helps comminicate on click to server
+				CmdChangeGameState();
+			}
+			else
+			{
+				Debug.Log("Inside if(gameState == Battle)    ELSE");
+				CmdChangeGameState();
+			}
+		}	
+	}
+	
+	[Command]
+	void CmdChangeGameState()
+	{
+		Debug.Log("Inside CmdChangeGameState()");
+		if(gameState == "Playing")
+		{
+			Debug.Log("if(gameState == Playing)");
+			//gameState = "Battle";
+			RpcChangeGameState("Battle");
+		}
+		else if(gameState == "Battle")
+		{
+			Debug.Log("if(gameState == Battle)");
+			//gameState = "Playing";
+			RpcChangeGameState("Playing");
+		}
+	}
+	
+	[ClientRpc]
+	void RpcChangeGameState(string newState)
+	{
+		gameState = newState;
+	}
+
+    [Command]
     public void CmdProgressTurn()
     {
-        rpcRunTurn();
+		Debug.Log("CmdProgressTurn()");
+		RpcFlipAndShow();
     }
+	
+	[ClientRpc]
+	void RpcFlipAndShow()
+	{
+		Debug.Log("RpcFlipAndShow()");
+		for (int i = 0; i < EnemySockets.Count; i++)//flips the cards so they can fight it out
+		{
+			//Debug.Log("Hit the loop");
+			if (EnemySockets[i].transform.childCount !=0)
+			{
+				GameObject Card = EnemySockets[i].transform.GetChild(0).gameObject;
+				
+				// Flip and add OnCardStats only if card back is showing (i.e. first round on board);
+				if(Card.GetComponent<Image>().sprite == Card.GetComponent<FlipCard>().CardRear)
+				{
+					Card.GetComponent<FlipCard>().Flip();
+					
+					//Add to create cardHealth and cardAttack on card
+					GameObject CH = Instantiate(CardHealth, new Vector2(-30, -60), Quaternion.identity);
+					CH.transform.SetParent(Card.transform, false);
+					GameObject CA = Instantiate(CardAttack, new Vector2(30, 60), Quaternion.identity);
+					CA.transform.SetParent(Card.transform, false);
+					
+					// Call for initial set of card stats on card.
+					Card.gameObject.GetComponent<CardStats>().SetFullHealth();
+					Card.gameObject.GetComponent<CardStats>().SetOnCardStats(); 
+				}  
+			}
+		}
+	}
+	
+	[Command]
+	void CmdResetPlayed()
+	{
+		Debug.Log("CmdResetPlayed()");
+		RpcResetPlayed();
+	}
+	
+	[ClientRpc]
+	void RpcResetPlayed()
+	{
+		Debug.Log("RpcResetPlayed()");
+		NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+        playerManager = networkIdentity.GetComponent<PlayerManager>();
+		playerManager.played = false;
+		TurnText.text = "End Turn";
+		playerManager.DealCards();	
+	}
+		
+	// Modified conditional variable to played
+	 public void PlayCard(GameObject Card, GameObject dropZone)
+    {
+		Debug.Log("ARE WE GETTING HERE?");
+		Debug.Log("Why is played " + played);
+        if (played == false)
+        {
+            //played = true;
+            CmdPlayCard(Card, dropZone);
+            //CardsPlayed++;
+			played = true;
+
+            Debug.Log("PLAYED" + played);
+        }
+        else
+        {
+			Debug.Log("COULDNT PLAY CARD");
+            Card.gameObject.GetComponent<DragDrop>().isDraggable = true;
+            Card.transform.SetParent(PlayerArea.transform, false);
+        }
+    }
+	
+	
+	//  New Game control methods----------------------------------------------------------------------------END
 
     [ClientRpc]//don't know why but this be working like this;
     void rpcRunTurn()
@@ -479,6 +626,7 @@ public class PlayerManager : NetworkBehaviour
 		}
 	}
 
+	/*
     public void PlayCard(GameObject Card, GameObject dropZone)
     {
 		Debug.Log("ARE WE GETTING HERE?");
@@ -499,6 +647,9 @@ public class PlayerManager : NetworkBehaviour
 
         }
     }
+	*/
+	
+
 
     [Command]
     void CmdPlayCard(GameObject Card, GameObject dropZone)
@@ -541,13 +692,18 @@ public class PlayerManager : NetworkBehaviour
 				// added tag set
 				dropZone.tag = "FullSlot";
                 
+				
+				// What is the point of this??
+				
                 if (dropZone.transform.childCount != 1)
                 {
                     Destroy(dropZone.transform.GetChild(0).gameObject);
                     dropZone.tag = "EmptySlot";
                     dropZone.tag = "FullSlot";
                 }
-                CardPlayed = true;
+				
+				//played = true;
+                //CardPlayed = true;
             }
 					
 			if (!hasAuthority)
@@ -561,13 +717,16 @@ public class PlayerManager : NetworkBehaviour
 						// Removed call to add OnCardStats
 						// Moved to card flipper loop in Update() method
 				
+						// What is the point of this??
+						
 						EnemySockets[i].gameObject.tag = "FullSlot";
                         if (EnemySockets[i].transform.childCount != 1)
                         {
                             Destroy(EnemySockets[i].transform.GetChild(0).gameObject);
                         }
+						
 					}
-                    CardPlayed = true;
+                    //CardPlayed = true;
                 }
 		
                 //Card.GetComponent<FlipCard>().Flip();

@@ -213,6 +213,6 @@ public class Battle : NetworkBehaviour
 				}					
 			}
 		}
-        GameManager.ChangeGameState("Deal");
+        //GameManager.ChangeGameState();
     }
 }
