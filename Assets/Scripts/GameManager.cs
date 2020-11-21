@@ -6,7 +6,10 @@ using Mirror;
 
 public class GameManager : MonoBehaviour
 {
-	public string GameState = "Deal";
+	
+	public string gameState = "Playing";
+	public int playersPlayed = 0;
+	public int playersReset = 0;
     public PlayerManager playermanager= new PlayerManager();
 
     public GameObject PlayerLibraryText;
@@ -271,25 +274,42 @@ public class GameManager : MonoBehaviour
         }
     }
 	
-	// Add ChangeGameState in order to increment between Deal, Play and Battle JRV20201013	
-	public void ChangeGameState(string changeStateRequest)
+	// Add ChangeGameState in order to increment between Playing and Battle JRV20201013	
+	//public void ChangeGameState(string changeStateRequest)
+	// changed to no parameters
+	public void ChangeGameState()
 	{
-		if (changeStateRequest == "Deal")
+		if (gameState == "Playing")
 		{
             //playermanager.CmdDealCards();
-            ChangeGameState("Play");
-
+			if(playersPlayed == 1)
+			{
+				playersPlayed = 0;
+				gameState = "Battle";
+				
+			}
+			if(playersPlayed == 0)
+			{
+				playersPlayed = 1;
+				gameState = "Battle";
+			}				
 		}
-		else if (changeStateRequest == "Play")// hand will be locked somewhere in here
+		else if (gameState == "Battle")
 		{
-
-            
-               
-
+			//playersPlayed = 0;
+			gameState = "Playing";
 		}
-		else if (changeStateRequest == "Battle")
+		else if(gameState == "Reset")
 		{
-			
+			if(playersReset == 1)
+			{
+				playersReset = 0;
+				gameState = "Playing";
+			}
+			if(playersReset == 0)
+			{
+				playersReset = 1;
+			}
 		}
 	}
 	
@@ -308,4 +328,5 @@ public class GameManager : MonoBehaviour
 
     }
 
+	
 }

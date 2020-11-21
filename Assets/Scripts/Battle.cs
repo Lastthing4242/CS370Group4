@@ -23,9 +23,15 @@ public class Battle : NetworkBehaviour
 	public void Fight()
 	{	
 		// declare here or error occurs.
-		GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-		NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-		PlayerManager = networkIdentity.GetComponent<PlayerManager>();
+		if(PlayerManager == null)
+		{
+			GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+			NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+			PlayerManager = networkIdentity.GetComponent<PlayerManager>();
+		}
+		//GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		//NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+		//PlayerManager = networkIdentity.GetComponent<PlayerManager>();
 		
 		for (int i = 0; i < PlayerManager.PlayerSockets.Count; i++)
 		{
@@ -37,6 +43,9 @@ public class Battle : NetworkBehaviour
 				int enemyCardPower = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 				int playerCardHealth = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
 				int enemyCardHealth = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardHealth;
+				
+				/*
+				
 				int playerCardId = PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
 				int enemyCardId = PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
 
@@ -107,7 +116,6 @@ public class Battle : NetworkBehaviour
 				
 				
 				// ---------------------------------------6 CARD ABILITY--------------------------------------------------
-				//  These variables need to be used during battle - they are not currently now
 				if (playerCardId >= 17 && playerCardId <= 20)//This is the 6's ability to deal and recieve 2 less damage
 				{
 					playerCardPower  = playerCardPower  - 2;
@@ -205,6 +213,6 @@ public class Battle : NetworkBehaviour
 				}					
 			}
 		}
-        GameManager.ChangeGameState("Deal");
+        //GameManager.ChangeGameState();
     }
 }

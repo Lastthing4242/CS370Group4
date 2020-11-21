@@ -333,3 +333,4 @@ MonoBehaviour:
   HalfHealth: {fileID: 21300000, guid: a24e79bc2891e2f48bbdf8cbce8ac735, type: 3}
   QuarterHealth: {fileID: 21300000, guid: ba3112706ed642e47a08e9db0a40510a, type: 3}
   ThreeQuarterHealth: {fileID: 21300000, guid: 14fa9984d4d237f439e23f3db7c33737, type: 3}
+  EmptyHealth: {fileID: 21300000, guid: 452881fdd222b2346b4d02218df8592f, type: 3}

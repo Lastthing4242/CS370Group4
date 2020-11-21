@@ -27,7 +27,9 @@ public class TurnOrder : NetworkBehaviour
     {
         NetworkIdentity networkIdentity = NetworkClient.connection.identity;
         PlayerManager = networkIdentity.GetComponent<PlayerManager>();
-        PlayerManager.CmdProgressTurn();
+        //PlayerManager.CmdProgressTurn();
+		// Changed to ProgressTurn();
+		PlayerManager.ProgressTurn();
     }
 
     /*

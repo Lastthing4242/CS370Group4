@@ -25,15 +25,24 @@ public class CardStats : NetworkBehaviour
 
 	public GameObject OnCardHealth;
 	public GameObject OnCardAttack;
+	
 	public Sprite AttackImage;
 	public Sprite FullHealth;
 	public Sprite HalfHealth;
 	public Sprite QuarterHealth;
 	public Sprite ThreeQuarterHealth;
-	
+	public Sprite EmptyHealth;
 	
 	bool attached = false;
 	int fullHealth;
+	
+	// Add variables to hold current enhancements
+	int healthBoost = 0;
+	int powerBoost = 0;
+	
+	// Add variables to hold current totals
+	int currentHealth;
+	int currentPower;
 
     public CardStats()//this showed up in the video I saw on how to do this, so I left it here
         {
@@ -66,6 +75,12 @@ public class CardStats : NetworkBehaviour
 
    void Update()
     {
+		if(playermanager == null)
+		{
+			NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+			playermanager = networkIdentity.GetComponent<PlayerManager>();
+		}			
+		
         if (card.transform.IsChildOf(GameObject.Find("PlayerArea").transform) && !playerCard)
         {
             Debug.Log("im a player card my id is" + Id);
@@ -79,8 +94,8 @@ public class CardStats : NetworkBehaviour
         if (triggered == false && GameObject.Find("TurnText").GetComponent<Text>().text == "ETB Triggers")//this triggers all of the abilities currently
         {
             Debug.Log("im using my ability my id is" + Id);
-            NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-            playermanager = networkIdentity.GetComponent<PlayerManager>();
+            //NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+            //playermanager = networkIdentity.GetComponent<PlayerManager>();
 
             if (suit == 'o')
             {
@@ -88,7 +103,7 @@ public class CardStats : NetworkBehaviour
                 {
                     int health = playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().getHealth();
                     health = health - 2;
-                    playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+                    //playermanager.PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
                     playermanager.SetHealth(health, "PlayerHit");
                     triggered = true;
                 }
@@ -96,7 +111,7 @@ public class CardStats : NetworkBehaviour
                 {
                     int health = playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().getHealth();
                     health = health - 2;
-                    playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
+                    //playermanager.EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(health);
                     playermanager.SetHealth(health, "EnemyHit");
                     triggered = true;
                 }
@@ -121,8 +136,51 @@ public class CardStats : NetworkBehaviour
             }
         }
 		
-		// causes this to run constantly and throw exceptions for face down cards
-		//SetOnCardStats();
+		// -------------------------------------5 CARD ABILITY---------------------------------------------------------
+		// This is the 5 cards ability to enhance attack power by 1 for each friendly face card
+		//  These variables need to be used during battle - they are not currently now
+		if(Id >= 13 && Id <= 16)
+		{
+			int boost = 0;
+			if(playerCard)
+			{
+				for(int j = 0; j < playermanager.PlayerSockets.Count; j++)
+				{
+					if(playermanager.PlayerSockets[j].gameObject.tag == "FullSlot")
+					{
+						int otherCard = playermanager.PlayerSockets[j].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+						if(otherCard >= 37 && otherCard <= 48)
+						{
+							boost++;
+						}
+					}
+				}
+			}
+			if(enemyCard)
+			{
+				for(int j = 0; j < playermanager.EnemySockets.Count; j++)
+				{
+					if(playermanager.EnemySockets[j].gameObject.tag == "FullSlot")
+					{
+						int otherCard = playermanager.EnemySockets[j].transform.GetChild(0).gameObject.GetComponent<CardStats>().Id;
+						if(otherCard >= 37 && otherCard <= 48)
+						{
+							boost++;
+						}
+					}
+				}
+			}
+			
+			
+			// Set the boost value
+			// this must be the cumulative boost for all enhancements
+			healthBoost = boost;
+		}
+		
+		if(card.transform.childCount != 0)
+		{
+			SetOnCardStats();
+		}
      }
     
 
@@ -131,7 +189,10 @@ public class CardStats : NetworkBehaviour
 	// Is everything set on the prefabs themselves and not here??
 	public void SetFullHealth()
 	{
-		card.gameObject.GetComponent<CardStats>().fullHealth = CardHealth;
+		//card.gameObject.GetComponent<CardStats>().fullHealth = CardHealth;
+		fullHealth = CardHealth;
+		//currentHealth = CardHealth;
+		//currentPower = CardPower;
 	}
 	
 	//sets the OnCardStats to above variables
@@ -139,18 +200,11 @@ public class CardStats : NetworkBehaviour
 	public void SetOnCardStats()
 	{
 		
-		card.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + CardHealth;
-		card.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + CardPower;
-		//gameObject.GetComponent<Text>().text = "" + CardHealth;
-		//gameObject.GetComponent<Text>().text = "" + CardPower;
+		card.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + (CardHealth + healthBoost);
+		card.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + (CardPower + powerBoost);
 		
-		
-		float pH = (float)CardHealth / (float)fullHealth;
+		float pH = (float)(CardHealth + healthBoost) / (float)fullHealth;
 		int percentHealth = (int)(100 * pH);
-		Debug.Log("CARD HEALTH = " + CardHealth);
-		Debug.Log("FULL HEALTH = " + fullHealth);
-		Debug.Log("FLOAT pH = " + pH);
-		Debug.Log("PERCENT HEALTH = " + percentHealth);
 		
 		while(true)
 		{
@@ -169,9 +223,15 @@ public class CardStats : NetworkBehaviour
 				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = HalfHealth;
 				break;
 			}
-			if(percentHealth >= 0)
+			if(percentHealth > 0)
 			{
 				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = QuarterHealth;
+				break;
+			}
+			// Just in case of negative value
+			else
+			{
+				card.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = EmptyHealth;
 				break;
 			}
 		}
