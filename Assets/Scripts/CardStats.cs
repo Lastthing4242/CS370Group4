@@ -83,17 +83,17 @@ public class CardStats : NetworkBehaviour
 		
         if (card.transform.IsChildOf(GameObject.Find("PlayerArea").transform) && !playerCard)
         {
-            Debug.Log("im a player card my id is" + Id);
+            //Debug.Log("im a player card my id is" + Id);
             playerCard = true;
         }
         else if (card.transform.IsChildOf(GameObject.Find("OpponentArea").transform) && !enemyCard)
         {
-            Debug.Log("im a enemy card my id is" + Id);
+            //Debug.Log("im a enemy card my id is" + Id);
             enemyCard = true;
         }
         if (triggered == false && GameObject.Find("TurnText").GetComponent<Text>().text == "ETB Triggers")//this triggers all of the abilities currently
         {
-            Debug.Log("im using my ability my id is" + Id);
+            //Debug.Log("im using my ability my id is" + Id);
             //NetworkIdentity networkIdentity = NetworkClient.connection.identity;
             //playermanager = networkIdentity.GetComponent<PlayerManager>();
 

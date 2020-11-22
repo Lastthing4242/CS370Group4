@@ -9,15 +9,15 @@ using UnityEngine.SceneManagement;
 
 public class PlayerManager : NetworkBehaviour
 {
-    public TurnOrder TurnOrder;
+    public TurnOrder TurnOrder; //Not used
     public Battle battle;
     public GameManager GameManager;
     public GameObject PlayerLibraryText;
     public GameObject OpponentLibraryText;
 	public GameObject PlayerHealth;
 	public GameObject EnemyHealth;
-    public bool HavePlayedCard = false;
-	public PlayerManager playerManager;
+    public bool HavePlayedCard = false;  //Not used
+	public PlayerManager playerManager;  
 	
 	public GameObject CardHealth;
 	public GameObject CardAttack;
@@ -141,7 +141,7 @@ public class PlayerManager : NetworkBehaviour
 		PlayerHealth = GameObject.Find("PlayerHealth");
 		EnemyHealth = GameObject.Find("OpponentHealth");
         endTurn = GameObject.Find("endTurn");
-        TurnTimer = GameObject.Find("TurnTimer").GetComponent<Text>();
+        //TurnTimer = GameObject.Find("TurnTimer").GetComponent<Text>();
 
         Card1 = GameObject.Find("Card1");
         Card2 = GameObject.Find("Card2");
@@ -210,9 +210,9 @@ public class PlayerManager : NetworkBehaviour
 		// Set initial health to 100 for both players in HealthScript and on Health gameObjects on screen
 		// Should eventually get this value from some input?
 		PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
-		PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
+		PlayerHealth.gameObject.GetComponent<HealthScript>().setInitialHealth(100);
 		EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
-		EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(100);
+		EnemyHealth.gameObject.GetComponent<HealthScript>().setInitialHealth(100);
 		
 		// Set initial cards left text to 27.
 		// must be done on start client to update upon re-connect.
@@ -248,6 +248,10 @@ public class PlayerManager : NetworkBehaviour
 			PlayerSockets[i].gameObject.tag = "EmptySlot";
 			EnemySockets[i].gameObject.tag = "EmptySlot";
 		}
+		
+		// Reset Button text and played variable when disconnecting / reconnecting host client
+		played = false;
+		TurnText.text = "Start";
     }
 
     [Server]
@@ -265,6 +269,8 @@ public class PlayerManager : NetworkBehaviour
 		Name = GameManager.NameGenerator();
     }
 
+	
+	// Couldn't get this code to work without the dead slot bug.  I think something to do with not reseting the played variable
     void Update()//this runs the timer in real time and controls card effects
     {
 		/*
@@ -358,71 +364,32 @@ public class PlayerManager : NetworkBehaviour
         }
 		*/
     }
-
-   void DealCards()
-    {
-        CmdDealCards();
-    }
-
-    [Server]
-    public override void OnStartServer()
-    {
-        
-    }
-
-    [Command]//helps comminicate on click to server
-    public void CmdStartGame()
-    {
-        rpcStartGame();
-    }
-
-    [ClientRpc]//don't know why but this be working like this;
-    void rpcStartGame()
-    {
-
-        if (hasAuthority)
-        {
-            if (!readyp1)
-            {
-                gameStarting++;
-                readyp1 = true;
-                Debug.Log("Player one has pushed the button");
-            }
-        }
-
-        else if (!hasAuthority)
-        {
-            if (!readyp2)
-            {
-                gameStarting++;
-                readyp2 = true;
-                Debug.Log("Player two has pushed the button");
-            }
-        }
-
-    }
-	
 	
 	//  New Game control methods---------------------------------------------------------------------------START
 	
 	public void ProgressTurn()
 	{
-		if(TurnText.text == "End Turn" && played)
+		if(TurnText.text == "Start")
+		{
+			for(int i = 0; i < 3; i++)
+			{
+				DealCards();
+			}
+			TurnText.text = "End Turn";
+		}
+		else if(TurnText.text == "End Turn" && played)
 		{
 			TurnText.text = "Pressed";
 			
 			if(gameState == "Battle")
 			{
-				Debug.Log("Inside if(gameState == Battle)");
 				CmdProgressTurn();
 				battle.Fight();		
 				CmdResetPlayed();
-
 				CmdChangeGameState();
 			}
 			else
 			{
-				Debug.Log("Inside if(gameState == Battle)    ELSE");
 				CmdChangeGameState();
 			}
 		}	
@@ -431,17 +398,12 @@ public class PlayerManager : NetworkBehaviour
 	[Command]
 	void CmdChangeGameState()
 	{
-		Debug.Log("Inside CmdChangeGameState()");
 		if(gameState == "Playing")
 		{
-			Debug.Log("if(gameState == Playing)");
-			//gameState = "Battle";
 			RpcChangeGameState("Battle");
 		}
 		else if(gameState == "Battle")
 		{
-			Debug.Log("if(gameState == Battle)");
-			//gameState = "Playing";
 			RpcChangeGameState("Playing");
 		}
 	}
@@ -455,14 +417,12 @@ public class PlayerManager : NetworkBehaviour
     [Command]
     public void CmdProgressTurn()
     {
-		Debug.Log("CmdProgressTurn()");
 		RpcFlipAndShow();
     }
 	
 	[ClientRpc]
 	void RpcFlipAndShow()
 	{
-		Debug.Log("RpcFlipAndShow()");
 		for (int i = 0; i < EnemySockets.Count; i++)//flips the cards so they can fight it out
 		{
 			//Debug.Log("Hit the loop");
@@ -492,45 +452,62 @@ public class PlayerManager : NetworkBehaviour
 	[Command]
 	void CmdResetPlayed()
 	{
-		Debug.Log("CmdResetPlayed()");
 		RpcResetPlayed();
 	}
 	
 	[ClientRpc]
 	void RpcResetPlayed()
 	{
-		Debug.Log("RpcResetPlayed()");
 		NetworkIdentity networkIdentity = NetworkClient.connection.identity;
         playerManager = networkIdentity.GetComponent<PlayerManager>();
 		playerManager.played = false;
 		TurnText.text = "End Turn";
 		playerManager.DealCards();	
 	}
-		
-	// Modified conditional variable to played
-	 public void PlayCard(GameObject Card, GameObject dropZone)
-    {
-		Debug.Log("ARE WE GETTING HERE?");
-		Debug.Log("Why is played " + played);
-        if (played == false)
-        {
-            //played = true;
-            CmdPlayCard(Card, dropZone);
-            //CardsPlayed++;
-			played = true;
-
-            Debug.Log("PLAYED" + played);
-        }
-        else
-        {
-			Debug.Log("COULDNT PLAY CARD");
-            Card.gameObject.GetComponent<DragDrop>().isDraggable = true;
-            Card.transform.SetParent(PlayerArea.transform, false);
-        }
-    }
-	
 	
 	//  New Game control methods----------------------------------------------------------------------------END
+	
+	   void DealCards()
+    {
+        CmdDealCards();
+    }
+
+    [Server]
+    public override void OnStartServer()
+    {
+        
+    }
+
+    [Command]//helps comminicate on click to server
+    public void CmdStartGame()
+    {
+        rpcStartGame();
+    }
+
+    [ClientRpc]//don't know why but this be working like this;
+    void rpcStartGame()
+    {
+
+        if (hasAuthority)
+        {
+            if (!readyp1)
+            {
+                gameStarting++;
+                readyp1 = true;
+                //Debug.Log("Player one has pushed the button");
+            }
+        }
+
+        else if (!hasAuthority)
+        {
+            if (!readyp2)
+            {
+                gameStarting++;
+                readyp2 = true;
+                //Debug.Log("Player two has pushed the button");
+            }
+        }
+    }
 
     [ClientRpc]//don't know why but this be working like this;
     void rpcRunTurn()
@@ -594,7 +571,7 @@ public class PlayerManager : NetworkBehaviour
         //There was a line that prevented errors in a worst case scenario. It's gone now, because it stopped the while loop from working.
 		//It was there to prevent players from drawing from the library while all cards were in play.
         } while (!(Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().getInDeck()));
-            Debug.Log(CardsLeftInLibrary);
+            //Debug.Log(CardsLeftInLibrary);
             GameObject Card = Instantiate(Fetch(CardIds[CardsLeftInLibrary]), new Vector2(0, 0), Quaternion.identity);
             NetworkServer.Spawn(Card, connectionToClient);
 			Fetch(CardIds[CardsLeftInLibrary]).GetComponent<CardStats>().setInDeck(false);
@@ -649,7 +626,20 @@ public class PlayerManager : NetworkBehaviour
     }
 	*/
 	
-
+	// Modified conditional variable to played
+	 public void PlayCard(GameObject Card, GameObject dropZone)
+    {
+        if (played == false)
+        {
+            CmdPlayCard(Card, dropZone);
+			played = true;
+        }
+        else
+        {
+            Card.gameObject.GetComponent<DragDrop>().isDraggable = true;
+            Card.transform.SetParent(PlayerArea.transform, false);
+        }
+    }
 
     [Command]
     void CmdPlayCard(GameObject Card, GameObject dropZone)
@@ -822,7 +812,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 if (newHealth == 0)
                 {
-                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Lose";
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Win";
                     SceneManager.LoadScene("winScreen");
                 }
                 else
