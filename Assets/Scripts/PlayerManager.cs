@@ -792,6 +792,7 @@ public class PlayerManager : NetworkBehaviour
 	[ClientRpc]
 	public void RpcSetHealth(int newHealth, string whoHit)
     {
+		// We need a case for a tie
         if (newHealth < 0)
         {
             newHealth = 0;
@@ -807,6 +808,7 @@ public class PlayerManager : NetworkBehaviour
                 }
                 else
                     PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+					PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
             }
             if (whoHit == "EnemyHit")
             {
@@ -817,6 +819,7 @@ public class PlayerManager : NetworkBehaviour
                 }
                 else
                     EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+					EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
             }
         }
         if (!hasAuthority)
@@ -830,6 +833,7 @@ public class PlayerManager : NetworkBehaviour
                 }
                 else
                     EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+					EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
             }
             if (whoHit == "EnemyHit")
             {
@@ -840,7 +844,7 @@ public class PlayerManager : NetworkBehaviour
                 }
                 else
                     PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
-                //PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = newHealth.ToString();				
+					PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);				
             }
         }
     }
@@ -900,41 +904,4 @@ public class PlayerManager : NetworkBehaviour
 	}
 	
 	
-	
-	
-	/*
-	// Updates OnCardStats
-	public void SetOCS(GameObject card)
-	{
-		Debug.Log("GOT THIS FAR 1");
-		CmdSetOCS(card);
-	}
-	
-	[Command]
-	void CmdSetOCS(GameObject card)
-	{
-		Debug.Log("GOT THIS FAR 2");
-		RpcSetOCS(card);
-	}
-	
-	[ClientRpc]
-	void RpcSetOCS(GameObject card)
-	{
-		/*
-		if(hasAuthority)
-		{
-			Debug.Log("GOT THIS FAR 3");
-			card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
-		}
-		if(!hasAuthority)
-		{
-			Debug.Log("GOT THIS FAR 4");
-			card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
-		}
-			
-		
-		Debug.Log("GOT THIS FAR 5");
-		card.gameObject.GetComponent<CardStats>().SetOnCardStats(card);
-	}
-	*/
 }
