@@ -6,7 +6,6 @@ using Mirror;
 
 public class DrawCards : NetworkBehaviour
 {
-
     public PlayerManager PlayerManager;
 
 

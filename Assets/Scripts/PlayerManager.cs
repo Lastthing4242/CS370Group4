@@ -595,7 +595,8 @@ public class PlayerManager : NetworkBehaviour
 			
 			//Make Rpc call instead...
 			//Don't need Name - use Authority instead.
-			RpcUpdateLibraryText(CardsLeftInLibrary);
+			// divide cards left by 2 to give for half deck.
+			RpcUpdateLibraryText(CardsLeftInLibrary / 2);
     }
 	
 	[ClientRpc]

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Zoom : MonoBehaviour
-{/*
+{
+	// commented out because second card was throwing errors
+	
+	/*
     public GameManager GameManager;
     public CardStats CardStats;
     public GameObject Canvas;

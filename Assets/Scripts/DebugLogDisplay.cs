@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class DebugLogDisplay : MonoBehaviour
 {
+	// commented out for finished product.  May be re-implemented later if more debugging needed.
+	
+	/*
     public string output = "";
     public string stack = "";
 
@@ -29,5 +32,6 @@ public class DebugLogDisplay : MonoBehaviour
         GUI.Label(new Rect(150, 5, 800, 60), output);
         GUI.Label(new Rect(150, 65, 800, 60), stack);
     }
+	*/
 
 }
