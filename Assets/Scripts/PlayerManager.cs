@@ -677,49 +677,52 @@ public class PlayerManager : NetworkBehaviour
         {
 			if(hasAuthority)
 			{
-				//Debug.Log("slotNumber = " + dropZone + "PlayerSockets num = " + PlayerSockets.Count);
+				// conditional to check if slot is full
+				//if(dropZone.tag == "FullSlot")
+				if(dropZone.transform.childCount != 0)
+				{
+					DestroyCard(dropZone.transform.GetChild(0).gameObject, dropZone);
+					Debug.Log("WTF wasn't card Destroyed??");
+				}
 				Card.transform.SetParent(dropZone.transform, false);
-				// added tag set
 				dropZone.tag = "FullSlot";
                 
 				
 				// What is the point of this??
 				
-                if (dropZone.transform.childCount != 1)
-                {
-                    Destroy(dropZone.transform.GetChild(0).gameObject);
-                    dropZone.tag = "EmptySlot";
-                    dropZone.tag = "FullSlot";
-                }
-				
-				//played = true;
-                //CardPlayed = true;
+                //if (dropZone.transform.childCount != 1)
+                //{
+                //    Destroy(dropZone.transform.GetChild(0).gameObject);
+                 //   dropZone.tag = "EmptySlot";
+                 //   dropZone.tag = "FullSlot";
+                //}
             }
 					
-			if (!hasAuthority)
+			else if (!hasAuthority)
             {
 				for(int i = 0; i < PlayerSockets.Count; i++)
 				{
 					if(dropZone == PlayerSockets[i].gameObject)
 					{
+						//if(EnemySockets[i].gameObject.tag == "FullSlot")
+						if(EnemySockets[i].transform.childCount != 0)	
+						{
+							DestroyCard(EnemySockets[i].gameObject.transform.GetChild(0).gameObject, dropZone);
+							EnemySockets[i].gameObject.tag = "EmptySlot";
+						}
 						Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
-						
-						// Removed call to add OnCardStats
-						// Moved to card flipper loop in Update() method
+						EnemySockets[i].gameObject.tag = "FullSlot";
 				
 						// What is the point of this??
-						
-						EnemySockets[i].gameObject.tag = "FullSlot";
-                        if (EnemySockets[i].transform.childCount != 1)
-                        {
-                            Destroy(EnemySockets[i].transform.GetChild(0).gameObject);
-                        }
+						// shouldn't need since enemy sockets arent playable anyway
+						//EnemySockets[i].gameObject.tag = "FullSlot";
+                        //if (EnemySockets[i].transform.childCount != 1)
+                        //{
+                        //    Destroy(EnemySockets[i].transform.GetChild(0).gameObject);
+                        //}
 						
 					}
-                    //CardPlayed = true;
                 }
-		
-                //Card.GetComponent<FlipCard>().Flip();
             }
         }
     }
@@ -727,7 +730,7 @@ public class PlayerManager : NetworkBehaviour
 	//Added public method for destroying card JRV20201014
 	public void DestroyCard(GameObject card, GameObject dropZone)
 	{
-		CmdDestroyCard(card, dropZone);
+		
         for(int i = 0; i < 54; i++)
         {
             if(card.GetComponent<CardStats>().getId() == GameManager.cards[i].GetComponent<CardStats>().getId())
@@ -735,6 +738,7 @@ public class PlayerManager : NetworkBehaviour
                 GameManager.cards[i].GetComponent<CardStats>().setInDeck(true);
             }
         }
+		CmdDestroyCard(card, dropZone);
 	}
 	
 	//Added Cmd method for destroying card JRV20201014
@@ -759,6 +763,7 @@ public class PlayerManager : NetworkBehaviour
 		{
 		   dropZone.tag = "EmptySlot";
 		}
+		
 		if (!hasAuthority)
 		{
 			for(int i = 0; i < PlayerSockets.Count; i++)
