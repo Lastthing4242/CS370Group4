@@ -252,6 +252,14 @@ public class PlayerManager : NetworkBehaviour
 		// Reset Button text and played variable when disconnecting / reconnecting host client
 		played = false;
 		TurnText.text = "Start";
+		
+		// Remove all cards from player area - incase server adds cards prior to other player joining
+		for(int i = 0; i < PlayerArea.transform.childCount; i++)
+		{
+			GameObject.Destroy(PlayerArea.transform.GetChild(i).gameObject);
+		}
+		
+		TurnText.text = "Start";
     }
 
     [Server]
