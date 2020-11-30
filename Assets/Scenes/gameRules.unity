@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -358,17 +358,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: At the start of the game, each player is given half of a 54 card deck,
-    also known as their library, and 30 life points, each player then draws 3 cards
-    and they each place those cards face down in any unoccupied lane. Once each player
-    has placed their cards, the cards are then flipped face up and the battle phase
-    begins. during the battle phase each card will either; damage the opponent if
-    it is unblocked, or damage the card in the same lane. if a card takes enough
-    damage to defeat it, it is then sent to the cemetary. After this, each player
-    draws 3 more cards and the process repeats. If a player has 5 cards already on
-    the field, a new card may be played over one of the old ones, the old card is
-    then sent to the cemetary. Once a player has exhausted their library, the cards
-    remaining in the opponent's library are shuffled with the cemetary cards and
-    then evenly distributed to each player. if the total cards is odd at distribution,
+    also known as their library, and 100 life points, each player then draws 3 cards
+    and they each place one of those cards face down in any unoccupied lane. Once
+    each player has placed their cards, the cards are then flipped face up and the
+    battle phase begins. during the battle phase each card will either; damage the
+    opponent if it is unblocked, or damage the card in the same lane. if a card takes
+    enough damage to defeat it, it is then sent to the cemetary. After this, each
+    player draws 1 more card and the process repeats. If a player has 5 cards already
+    on the field, a new card may be played over one of the old ones, the old card
+    is then sent to the cemetary. Once a player has exhausted their library, the
+    cards remaining in the opponent's library are shuffled with the cemetary cards
+    and then evenly distributed to each player. if the total cards is odd at distribution,
     the player who ran out first is given the extra card. A player is defeated once
     their life points reach 0.
 --- !u!222 &896079345
@@ -572,13 +572,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6925507, g: 0.74368495, b: 0.745283, a: 1}
+  m_Color: {r: 0.3584906, g: 0.21813814, b: 0.21813814, a: 0.85882354}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 8c1956c634e708441b8ac54a764fb8d2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
