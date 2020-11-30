@@ -209,9 +209,9 @@ public class PlayerManager : NetworkBehaviour
 		
 		// Set initial health to 100 for both players in HealthScript and on Health gameObjects on screen
 		// Should eventually get this value from some input?
-		PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
+		PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "100";
 		PlayerHealth.gameObject.GetComponent<HealthScript>().setInitialHealth(100);
-		EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n100";
+		EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "100";
 		EnemyHealth.gameObject.GetComponent<HealthScript>().setInitialHealth(100);
 		
 		// Set initial cards left text to 27.
@@ -821,7 +821,7 @@ public class PlayerManager : NetworkBehaviour
                     SceneManager.LoadScene("loseScreen");
                 }
                 else
-                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + newHealth;
 					PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
             }
             if (whoHit == "EnemyHit")
@@ -832,7 +832,7 @@ public class PlayerManager : NetworkBehaviour
                     SceneManager.LoadScene("winScreen");
                 }
                 else
-                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + newHealth;
 					EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
             }
         }
@@ -846,7 +846,7 @@ public class PlayerManager : NetworkBehaviour
                     SceneManager.LoadScene("winScreen");
                 }
                 else
-                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+                    EnemyHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + newHealth;
 					EnemyHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);
             }
             if (whoHit == "EnemyHit")
@@ -857,7 +857,7 @@ public class PlayerManager : NetworkBehaviour
                     SceneManager.LoadScene("loseScreen");
                 }
                 else
-                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Health\n" + newHealth;
+                    PlayerHealth.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + newHealth;
 					PlayerHealth.gameObject.GetComponent<HealthScript>().setHealth(newHealth);				
             }
         }

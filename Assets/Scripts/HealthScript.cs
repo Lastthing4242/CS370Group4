@@ -16,9 +16,12 @@ public class HealthScript : NetworkBehaviour
 	public void setHealthTone()
 	{	
 		float percent = (float)Health / (float)InitialHealth;
-		float R = (float)(170 - percent * 120) / 255;
-		float G = (float)(30 + percent * 120) / 255;
-		float B = (float)(30 + percent * 25) / 255;
+		//float R = (float)(170 - percent * 120) / 255;
+		//float G = (float)(30 + percent * 120) / 255;
+		//float B = (float)(30 + percent * 25) / 255;
+		float R = (float)(160 - percent * 30) / 255;
+		float G = (float)(0 + percent * 130) / 255;
+		float B = (float)(0 + percent * 130) / 255;
 		gameObject.GetComponent<Image>().color = new Color(R,G,B, 255);
 	}
 	
