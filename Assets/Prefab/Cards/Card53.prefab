@@ -154,6 +154,11 @@ PrefabInstance:
       propertyPath: suit
       value: 114
       objectReference: {fileID: 0}
+    - target: {fileID: 6722734375960044458, guid: ffac1e12e0239444498379063ce9543f,
+        type: 3}
+      propertyPath: InDeck
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8827171339660267594, guid: ffac1e12e0239444498379063ce9543f,
         type: 3}
       propertyPath: m_AssetId

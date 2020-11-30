@@ -32,6 +32,11 @@ PrefabInstance:
       propertyPath: suit
       value: 111
       objectReference: {fileID: 0}
+    - target: {fileID: 1092044108030310765, guid: 32eb6d851f58bdd49a3cb88523af788a,
+        type: 3}
+      propertyPath: InDeck
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2948769857550027405, guid: 32eb6d851f58bdd49a3cb88523af788a,
         type: 3}
       propertyPath: m_AssetId

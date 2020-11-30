@@ -387,7 +387,7 @@ public class PlayerManager : NetworkBehaviour
 		}
 		else if(TurnText.text == "End Turn" && played)
 		{
-			TurnText.text = "Pressed";
+			TurnText.text = "Waiting";
 			
 			if(gameState == "Battle")
 			{

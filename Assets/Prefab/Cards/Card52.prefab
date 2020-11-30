@@ -27,6 +27,11 @@ PrefabInstance:
       propertyPath: suit
       value: 108
       objectReference: {fileID: 0}
+    - target: {fileID: 2461067860315400154, guid: f59e299609b9c4e439b92a84d901fabf,
+        type: 3}
+      propertyPath: InDeck
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8171629239689023261, guid: f59e299609b9c4e439b92a84d901fabf,
         type: 3}
       propertyPath: m_Sprite

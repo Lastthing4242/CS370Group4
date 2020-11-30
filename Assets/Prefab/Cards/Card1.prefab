@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.85882354, g: 0.82082486, b: 0.73333335, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -183,16 +183,6 @@ MonoBehaviour:
   syncInterval: 0.1
   Canvas: {fileID: 0}
   PlayerManager: {fileID: 0}
-  PlayerSlot1: {fileID: 0}
-  PlayerSlot2: {fileID: 0}
-  PlayerSlot3: {fileID: 0}
-  PlayerSlot4: {fileID: 0}
-  PlayerSlot5: {fileID: 0}
-  EnemySlot1: {fileID: 0}
-  EnemySlot2: {fileID: 0}
-  EnemySlot3: {fileID: 0}
-  EnemySlot4: {fileID: 0}
-  EnemySlot5: {fileID: 0}
   isDraggable: 1
 --- !u!61 &-7400996448157818188
 BoxCollider2D:
