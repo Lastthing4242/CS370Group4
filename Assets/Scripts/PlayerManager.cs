@@ -217,8 +217,8 @@ public class PlayerManager : NetworkBehaviour
 		// Set initial cards left text to 27.
 		// must be done on start client to update upon re-connect.
 		// The number(27) is erroneous atm since cards appear to be comming out of single deck.
-		PlayerLibraryText.GetComponent<Text>().text = "Cards Left\n27";
-		OpponentLibraryText.GetComponent<Text>().text = "Cards Left\n27";
+		PlayerLibraryText.GetComponent<Text>().text = "27";
+		OpponentLibraryText.GetComponent<Text>().text = "27";
 		
 		PlayerSlot1 = GameObject.Find("PlayerSlot1");
 		PlayerSlot2 = GameObject.Find("PlayerSlot2");
@@ -604,11 +604,11 @@ public class PlayerManager : NetworkBehaviour
 	{
 		if(hasAuthority)
 		{
-			PlayerLibraryText.GetComponent<Text>().text = "Cards Left\n" + CardsLeft;
+			PlayerLibraryText.GetComponent<Text>().text = "" + CardsLeft;
 		}
 		if (!hasAuthority)
 		{
-			OpponentLibraryText.GetComponent<Text>().text = "Cards Left\n" + CardsLeft;
+			OpponentLibraryText.GetComponent<Text>().text = "" + CardsLeft;
 		}
 	}
 
