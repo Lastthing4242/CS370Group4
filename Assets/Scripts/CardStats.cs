@@ -91,11 +91,16 @@ public class CardStats : NetworkBehaviour
             //Debug.Log("im a enemy card my id is" + Id);
             enemyCard = true;
         }
-        if (triggered == false && GameObject.Find("TurnText").GetComponent<Text>().text == "ETB Triggers")//this triggers all of the abilities currently
+		
+		// This code seems to be broken, since re-implementation of the trun order.
+		// Player health does not decrement approptiately.
+		// Set to false && ...
+		// to deactivate
+        if (false && triggered == false && GameObject.Find("TurnText").GetComponent<Text>().text == "Waiting")//this triggers all of the abilities currently
         {
             //Debug.Log("im using my ability my id is" + Id);
-            //NetworkIdentity networkIdentity = NetworkClient.connection.identity;
-            //playermanager = networkIdentity.GetComponent<PlayerManager>();
+            NetworkIdentity networkIdentity = NetworkClient.connection.identity;
+            playermanager = networkIdentity.GetComponent<PlayerManager>();
 
             if (suit == 'o')
             {

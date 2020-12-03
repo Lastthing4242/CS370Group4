@@ -195,12 +195,14 @@ public class Battle : NetworkBehaviour
 			else // attack the other players health
 			{				
 				// Determine if only one socket is full - Player attack
-				if(PlayerManager.PlayerSockets[i].gameObject.tag == "FullSlot" && PlayerManager.EnemySockets[i].gameObject.tag == "EmptySlot")
+				//if(PlayerManager.PlayerSockets[i].gameObject.tag == "FullSlot" && PlayerManager.EnemySockets[i].gameObject.tag == "EmptySlot")
+				if(PlayerManager.PlayerSockets[i].transform.childCount == 1 && PlayerManager.EnemySockets[i].transform.childCount == 0)
 				{
 					enemyHealth = enemyHealth - PlayerManager.PlayerSockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 				}
 				// Determine if only one socket is full - Enemy attack
-				if(PlayerManager.PlayerSockets[i].gameObject.tag == "EmptySlot" && PlayerManager.EnemySockets[i].gameObject.tag == "FullSlot")
+				//if(PlayerManager.PlayerSockets[i].gameObject.tag == "EmptySlot" && PlayerManager.EnemySockets[i].gameObject.tag == "FullSlot")
+				if(PlayerManager.PlayerSockets[i].transform.childCount == 0 && PlayerManager.EnemySockets[i].transform.childCount == 1)
 				{
 					playerHealth = playerHealth - PlayerManager.EnemySockets[i].transform.GetChild(0).gameObject.GetComponent<CardStats>().CardPower;
 				}					
