@@ -6,7 +6,7 @@ public class Zoom : MonoBehaviour
 {
 	// commented out because second card was throwing errors
 	
-	/*
+	
     public GameManager GameManager;
     public CardStats CardStats;
     public GameObject Canvas;
@@ -25,7 +25,7 @@ public class Zoom : MonoBehaviour
         foundCard = false;
         while (!foundCard)
         {
-            if (gameObject.GetComponent<CardStats>().getId() == GameManager.CardList[i].getId())
+            if (gameObject.GetComponent<CardStats>().getId() == GameManager.CardList[i].getId() && gameObject.GetComponent<CardStats>().playerCard)
             {
                 bigCard = Instantiate(GameManager.CardList[i].getCard(), new Vector2(Input.mousePosition.x, Input.mousePosition.y + 250), Quaternion.identity);
                 bigCard.transform.SetParent(Canvas.transform, true);
@@ -54,5 +54,5 @@ public class Zoom : MonoBehaviour
     {
         Destroy(bigCard);
     }
-*/
+
 }
