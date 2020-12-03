@@ -713,22 +713,14 @@ public class PlayerManager : NetworkBehaviour
 				{
 					if(dropZone == PlayerSockets[i].gameObject)
 					{
-						//if(EnemySockets[i].gameObject.tag == "FullSlot")
-						if(EnemySockets[i].transform.childCount != 0)	
+						int j = 4 - i;
+						if(EnemySockets[j].transform.childCount != 0)	
 						{
-							DestroyCard(EnemySockets[i].gameObject.transform.GetChild(0).gameObject, dropZone);
-							EnemySockets[i].gameObject.tag = "EmptySlot";
+							DestroyCard(EnemySockets[j].gameObject.transform.GetChild(0).gameObject, dropZone);
+							EnemySockets[j].gameObject.tag = "EmptySlot";
 						}
-						Card.transform.SetParent(EnemySockets[i].gameObject.transform, false);
-						EnemySockets[i].gameObject.tag = "FullSlot";
-				
-						// What is the point of this??
-						// shouldn't need since enemy sockets arent playable anyway
-						//EnemySockets[i].gameObject.tag = "FullSlot";
-                        //if (EnemySockets[i].transform.childCount != 1)
-                        //{
-                        //    Destroy(EnemySockets[i].transform.GetChild(0).gameObject);
-                        //}
+						Card.transform.SetParent(EnemySockets[j].gameObject.transform, false);
+						EnemySockets[j].gameObject.tag = "FullSlot";
 						
 					}
                 }
@@ -779,11 +771,11 @@ public class PlayerManager : NetworkBehaviour
 			{
 				if(dropZone == PlayerSockets[i].gameObject)
 				{
-					EnemySockets[i].gameObject.tag = "EmptySlot";
+					EnemySockets[4-i].gameObject.tag = "EmptySlot";
 				}
 				if(dropZone == EnemySockets[i].gameObject)
 				{
-					PlayerSockets[i].gameObject.tag = "EmptySlot";
+					PlayerSockets[4-i].gameObject.tag = "EmptySlot";
 				}					
 			}
 	   
@@ -900,18 +892,19 @@ public class PlayerManager : NetworkBehaviour
 		}
 		if(!hasAuthority)
 		{
+			int index = 4 - cardIndex;
 			if(who == "Player")
 			{
-				if(EnemySockets[cardIndex].transform.childCount != 0)
+				if(EnemySockets[index].transform.childCount != 0)
 				{
-					EnemySockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+					EnemySockets[index].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
 				}					
 			}
 			if(who == "Enemy")
 			{		
-				if(PlayerSockets[cardIndex].transform.childCount != 0)
+				if(PlayerSockets[index].transform.childCount != 0)
 				{
-					PlayerSockets[cardIndex].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
+					PlayerSockets[index].transform.GetChild(0).gameObject.GetComponent<CardStats>().setHealth(health);
 				}					
 			}
 		}		
