@@ -602,6 +602,9 @@ public class PlayerManager : NetworkBehaviour
 	[ClientRpc]
 	void RpcUpdateLibraryText(int CardsLeft)
 	{
+		// shoddy fix for now
+		if (CardsLeft == 25) CardsLeft = 24;
+		
 		if(hasAuthority)
 		{
 			PlayerLibraryText.GetComponent<Text>().text = "" + CardsLeft;
